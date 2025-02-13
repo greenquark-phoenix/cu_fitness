@@ -1,9 +1,7 @@
-from django.views.generic import ListView
+from django.shortcuts import render
 from .models import WorkoutPlan
 
-class WopListView(ListView):
-    template_name = "workouts/workoutplan.html"  # Ensure this matches your template
-    context_object_name = "all_wops"
-
-    def get_queryset(self):
-        return WorkoutPlan.objects.all()  # Fetch all workout plans
+def workout_plans(request):
+    all_workout_plans = WorkoutPlan.objects.all()
+    context = {"workout_plans": all_workout_plans}
+    return render(request, "workouts/workout_plans.html", context=context)
