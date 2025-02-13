@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import WopListView
+from workouts import views as workout_views
 
 urlpatterns = [
-    path("", WopListView.as_view(), name="wop_list"),  # The empty string matches the root of '/woplan/'
+    path("", workout_views.workout_plans, name="workout_plans_list"),
 ]

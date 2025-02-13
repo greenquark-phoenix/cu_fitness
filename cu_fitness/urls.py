@@ -16,13 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from workouts.views import WopListView  # Import the view
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')),
     path('users/', include('users.urls')),
-    path("workouts/", include('workouts.urls')),  # Point to your app's urls.py
-    path('workouts/', WopListView.as_view(), name='workouts'),  # 👈 Add the name
+    path("workouts/", include('workouts.urls')),
 ]
