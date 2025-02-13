@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'home.apps.HomeConfig',
     'users.apps.UsersConfig',
+    'goals.apps.GoalsConfig'
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
