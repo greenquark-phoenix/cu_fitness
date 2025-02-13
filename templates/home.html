@@ -1,86 +1,46 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
 {% load static %}
-{% load django_bootstrap5 %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CU-Fitness - Home</title>
-    {% bootstrap_css %}
-    {% bootstrap_javascript %}
-</head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'home' %}">CU-Fitness</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                {% if user.is_authenticated %}
-                    <li class="navbar-text text-white">Welcome, {{ user.username }}!</li>
-                {% endif %}
-            </ul>
-            <ul class="navbar-nav ms-auto">
-                {% if not user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'login' %}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'signup' %}">Signup</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'logout' %}">Logout</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-</nav>
 
 <!-- Image Slider -->
-<div id="fitnessCarousel" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#fitnessCarousel" data-bs-slide-to="0" class="active"></button>
-        <button type="button" data-bs-target="#fitnessCarousel" data-bs-slide-to="1"></button>
-        <button type="button" data-bs-target="#fitnessCarousel" data-bs-slide-to="2"></button>
+{% block content %}
+    <div class="container-fluid">
+        <div id="fitnessCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#fitnessCarousel" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#fitnessCarousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#fitnessCarousel" data-bs-slide-to="2"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="{% static 'images/background-1.jpg' %}" class="d-block w-100" alt="Fitness Training">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Push Your Limits</h5>
+                        <p>Join our fitness programs and reach your goals.</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'images/background-2.jpg' %}" class="d-block w-100" alt="Workout Session">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Stay Fit, Stay Strong</h5>
+                        <p>Discover new workouts tailored for you.</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'images/background-3.jpg' %}" class="d-block w-100" alt="Nutrition & Wellness">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Mind & Body Wellness</h5>
+                        <p>Balance your fitness with the right meals.</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#fitnessCarousel"
+                    data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#fitnessCarousel"
+                    data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
     </div>
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="{% static 'images/background-1.jpg' %}" class="d-block w-100" alt="Fitness Training">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Push Your Limits</h5>
-                <p>Join our fitness programs and reach your goals.</p>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <img src="{% static 'images/background-2.jpg' %}" class="d-block w-100" alt="Workout Session">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Stay Fit, Stay Strong</h5>
-                <p>Discover new workouts tailored for you.</p>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <img src="{% static 'images/background-3.jpg' %}" class="d-block w-100" alt="Nutrition & Wellness">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Mind & Body Wellness</h5>
-                <p>Balance your fitness with the right meals.</p>
-            </div>
-        </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#fitnessCarousel"
-            data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#fitnessCarousel"
-            data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-    </button>
-</div>
-
-
-</body>
-</html>
+{% endblock content %}
