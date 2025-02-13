@@ -1,8 +1,17 @@
 {% extends "base.html" %}
 {% load static %}
 
-<!-- Image Slider -->
 {% block content %}
+    <!-- Centered Button at the Top -->
+    <div class="container-fluid text-center mt-3">
+        <a href="{% url 'workouts' %}"
+           style="position: absolute; top: 19px; left: 50%; transform: translateX(-50%);
+                  font-size: 16px; text-decoration: none; color: white; font-weight: bold;">
+            Workout Plans
+        </a>
+    </div>
+
+    <!-- Image Slider -->
     <div class="container-fluid">
         <div id="fitnessCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators">
