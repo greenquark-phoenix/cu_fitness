@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import WorkoutPlan
+from workouts.models import WorkoutPlan
 
 def workout_plans(request):
     all_workout_plans = WorkoutPlan.objects.all()
