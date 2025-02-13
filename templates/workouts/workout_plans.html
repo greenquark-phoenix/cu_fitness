@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block additional_style %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url("{% static 'images/workouts2.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.7); /* Transparent dark background */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease-in-out;
+            color: white;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #f8c146; /* Gold color for title */
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #ddd;
+        }
+
+        .price {
+            font-size: 18px;
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+{% endblock additional_style %}
+
+{% block content %}
+    <div class="container py-5">
+        <h1 class="mb-5">Workout Plans</h1>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            {% for plan in workout_plans %}
+                <div class="col">
+                    <div class="card h-100 shadow-lg p-3 rounded">
+                        <div class="card-body">
+                            <h2 class="card-title">{{ plan.name }}</h2>
+                            <p class="card-text"><strong>Target Group:</strong> {{ plan.target_group }}</p>
+                            <p class="card-text"><strong>Duration:</strong> {{ plan.duration }}</p>
+                            <p class="card-text price"><strong>Price:</strong> ${{ plan.price }}</p>
+                            <p class="card-text"><strong>Focus:</strong> {{ plan.focus }}</p>
+                            <p class="card-text"><strong>Features:</strong> {{ plan.features }}</p>
+                            <p class="card-text"><strong>Schedule:</strong> {{ plan.schedule }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No workout plans available.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}

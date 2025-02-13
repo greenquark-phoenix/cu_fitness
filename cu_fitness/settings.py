@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'home.apps.HomeConfig',
     'users.apps.UsersConfig',
-    'goals.apps.GoalsConfig'
+    'goals.apps.GoalsConfig',
+    'workouts.apps.WorkoutsConfig',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -61,8 +62,7 @@ ROOT_URLCONF = 'cu_fitness.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
