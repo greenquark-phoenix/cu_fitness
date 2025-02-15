@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
 
 {% block content %}
     <div class="container mt-4">
@@ -8,42 +10,46 @@
         </header>
 
         <main class="mt-5">
-            {% if user_goals %}
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                    {% for user_goal in user_goals %}
-                        <div class="col">
-                            <div class="card h-100 shadow-sm">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ user_goal.goal.name }}</h5>
-                                    <p class="card-text">
-                                        <strong>Target:</strong> {{ user_goal.target_value }}
-                                        {% if user_goal.goal.unit %}{{ user_goal.goal.unit }} {% endif %}
-                                    </p>
-                                    {#                                    <p class="card-text">#}
-                                    {#                                        <strong>Progress:</strong> {{ user_goal.progress }}#}
-                                    {#                                    </p>#}
-                                    <p class="card-text">
-                                        <strong>Completion Status:</strong>
-                                        {% if user_goal.is_completed %}
-                                            <span class="badge bg-success">Completed</span>
-                                        {% else %}
-                                            <span class="badge bg-warning text-dark">In Progress</span>
-                                        {% endif %}
-                                    </p>
-                                </div>
-                                <div class="card-footer">
-                                    <small class="text-muted">Last
-                                        updated: {{ user_goal.updated_at|date:"M d, Y H:i" }}</small>
-                                </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for user_goal in user_goals %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ user_goal.goal.name }}</h5>
+                                <p class="card-text">
+                                    <strong>Target:</strong> {{ user_goal.target_value }}
+                                    {% if user_goal.goal.unit %}{{ user_goal.goal.unit }} {% endif %}
+                                </p>
+                                <p class="card-text">
+                                    <strong>Completion Status:</strong>
+                                    {% if user_goal.is_completed %}
+                                        <span class="badge bg-success">Completed</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">In Progress</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">Last
+                                    updated: {{ user_goal.updated_at|date:"M d, Y H:i" }}</small>
                             </div>
                         </div>
-                    {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="text-center">Add Goal</h2>
+                            <form method="POST">
+                                {% csrf_token %}
+                                {{ form|crispy }}
+                                <button type="submit" class="btn btn-primary w-100">Create Goal</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-            {% else %}
-                <div class="alert alert-info text-center" role="alert">
-                    No fitness goals have been set for this user.
-                </div>
-            {% endif %}
+            </div>
         </main>
     </div>
 
