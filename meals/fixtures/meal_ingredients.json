@@ -1,0 +1,174 @@
+[
+    {
+      "model": "meals.mealingredient",
+      "pk": 1,
+      "fields": {
+        "meal": 1,
+        "ingredient": 1,
+        "quantity": 150.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 2,
+      "fields": {
+        "meal": 1,
+        "ingredient": 2,
+        "quantity": 50.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 3,
+      "fields": {
+        "meal": 1,
+        "ingredient": 3,
+        "quantity": 50.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 4,
+      "fields": {
+        "meal": 1,
+        "ingredient": 4,
+        "quantity": 50.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 5,
+      "fields": {
+        "meal": 2,
+        "ingredient": 5,
+        "quantity": 2.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 6,
+      "fields": {
+        "meal": 2,
+        "ingredient": 6,
+        "quantity": 50.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 7,
+      "fields": {
+        "meal": 2,
+        "ingredient": 7,
+        "quantity": 30.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 8,
+      "fields": {
+        "meal": 2,
+        "ingredient": 8,
+        "quantity": 30.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 9,
+      "fields": {
+        "meal": 3,
+        "ingredient": 9,
+        "quantity": 200.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 10,
+      "fields": {
+        "meal": 3,
+        "ingredient": 10,
+        "quantity": 30.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 11,
+      "fields": {
+        "meal": 3,
+        "ingredient": 11,
+        "quantity": 20.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 12,
+      "fields": {
+        "meal": 3,
+        "ingredient": 12,
+        "quantity": 5.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 13,
+      "fields": {
+        "meal": 4,
+        "ingredient": 13,
+        "quantity": 200.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 14,
+      "fields": {
+        "meal": 4,
+        "ingredient": 14,
+        "quantity": 100.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 15,
+      "fields": {
+        "meal": 4,
+        "ingredient": 15,
+        "quantity": 10.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 16,
+      "fields": {
+        "meal": 5,
+        "ingredient": 16,
+        "quantity": 150.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 17,
+      "fields": {
+        "meal": 5,
+        "ingredient": 17,
+        "quantity": 70.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 18,
+      "fields": {
+        "meal": 5,
+        "ingredient": 18,
+        "quantity": 50.0
+      }
+    },
+    {
+      "model": "meals.mealingredient",
+      "pk": 19,
+      "fields": {
+        "meal": 5,
+        "ingredient": 19,
+        "quantity": 10.0
+      }
+    }
+  ]
+  

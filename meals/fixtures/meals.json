@@ -1,0 +1,77 @@
+[
+  {
+    "model": "meals.meal",
+    "pk": 1,
+    "fields": {
+      "meal_name": "Chicken Salad",
+      "meal_type": "Lunch",
+      "recipe_description": "Healthy chicken salad with fresh veggies.",
+      "ingredients": "Chicken, lettuce, tomatoes, cucumber",
+      "cost": "12.50",
+      "cooking_duration": 20,
+      "image": "meals/chicken_salad.jpg",
+      "cooking_instructions": "Grill or bake the chicken until fully cooked. Chop the lettuce, tomatoes, and cucumber. Toss all ingredients with a light vinaigrette and serve chilled.",
+      "diet_type": "non-veg"
+    }
+  },
+  {
+    "model": "meals.meal",
+    "pk": 2,
+    "fields": {
+      "meal_name": "Veggie Omelette",
+      "meal_type": "Breakfast",
+      "recipe_description": "Omelette loaded with vegetables.",
+      "ingredients": "Eggs, bell peppers, onions, spinach",
+      "cost": "8.00",
+      "cooking_duration": 15,
+      "image": "meals/veggie_omelette.jpg",
+      "cooking_instructions": "Beat eggs and season with salt and pepper. Stir in chopped vegetables. Pour into a heated pan and cook until set, then fold and serve.",
+      "diet_type": "veg"
+    }
+  },
+  {
+    "model": "meals.meal",
+    "pk": 3,
+    "fields": {
+      "meal_name": "Grilled Salmon",
+      "meal_type": "Dinner",
+      "recipe_description": "Grilled salmon with lemon butter sauce.",
+      "ingredients": "Salmon, lemon, butter, herbs",
+      "cost": "18.00",
+      "cooking_duration": 25,
+      "image": "meals/grilled_salmon.jpg",
+      "cooking_instructions": "Season salmon with salt, pepper, and herbs. Grill on medium heat until cooked through. Prepare lemon butter sauce by melting butter and mixing in lemon juice, then drizzle over the salmon.",
+      "diet_type": "non-veg"
+    }
+  },
+  {
+    "model": "meals.meal",
+    "pk": 4,
+    "fields": {
+      "meal_name": "Fruit Smoothie",
+      "meal_type": "Snack",
+      "recipe_description": "Refreshing fruit smoothie.",
+      "ingredients": "Mixed fruits, almond milk, honey",
+      "cost": "5.50",
+      "cooking_duration": 10,
+      "image": "meals/fruit_smoothie.jpg",
+      "cooking_instructions": "Combine mixed fruits, almond milk, and honey in a blender. Blend until smooth, add ice if desired, and serve immediately.",
+      "diet_type": "vegan"
+    }
+  },
+  {
+    "model": "meals.meal",
+    "pk": 5,
+    "fields": {
+      "meal_name": "Pasta Primavera",
+      "meal_type": "Dinner",
+      "recipe_description": "Pasta with fresh seasonal vegetables.",
+      "ingredients": "Pasta, zucchini, cherry tomatoes, garlic",
+      "cost": "14.00",
+      "cooking_duration": 30,
+      "image": "meals/pasta_primavera.jpg",
+      "cooking_instructions": "Boil pasta until al dente. Sauté garlic in olive oil, then add chopped zucchini and cherry tomatoes. Mix the vegetables with the pasta and season with salt, pepper, and basil.",
+      "diet_type": "vegan"
+    }
+  }
+]
