@@ -27,6 +27,7 @@ python manage.py migrate
 python manage.py createsuperuser
 
 # Load initial data
+python manage.py loaddata users
 python manage.py loaddata goals
 python manage.py loaddata workouts
 ```
