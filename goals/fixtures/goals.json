@@ -1,0 +1,20 @@
+[
+  {
+    "model": "goals.fitnessgoal",
+    "pk": 1,
+    "fields": {
+      "name": "Weight",
+      "description": "Weight goal",
+      "unit": "Kg"
+    }
+  },
+  {
+    "model": "goals.fitnessgoal",
+    "pk": 2,
+    "fields": {
+      "name": "BMI",
+      "description": "Body Mass Index goal",
+      "unit": ""
+    }
+  }
+]

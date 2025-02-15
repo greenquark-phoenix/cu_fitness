@@ -11,7 +11,7 @@ This project is to fulfill COEN 6311 requirements.
 ### Steps
 ```sh
 # Clone the repository
-git clone https://github.com/your-username/cu_fitness.git
+git clone https://github.com/greenquark-phoenix/cu_fitness.git
 cd cu_fitness
 
 # Create virtual environment
@@ -25,6 +25,11 @@ pip install -r requirements.txt
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser
+
+# Load initial data
+python manage.py loaddata users
+python manage.py loaddata goals
+python manage.py loaddata workouts
 ```
 
 ## Usage
