@@ -1,0 +1,380 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block additional_style %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        /* General Body Styling */
+        body {
+            background-color: #f8f9fa;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .page-header h1 {
+            font-size: 2.75rem;
+            color: #000;
+            margin: 0;
+        }
+
+        .page-header p {
+            font-size: 1.25rem;
+            color: #000;
+            margin: 5px 0 0;
+        }
+
+        /* Main Container Styling */
+        .main-container {
+            background-color: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+
+        /* Section Headings */
+        .section-heading {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.75rem;
+            color: #333;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 5px;
+        }
+
+        /* Card Styling */
+        .meal-card {
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .meal-image {
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .card-body ul {
+            padding-left: 0;
+            list-style: none;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Slider Styling */
+        #priceRange {
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+    </style>
+{% endblock additional_style %}
+{% block content %}
+    <!-- Main Content Container -->
+    <div class="container main-container">
+        <div class="row">
+            <!-- Left Sidebar: Filter Form -->
+            <div class="col-md-3">
+                <div class="sidebar">
+                    <!-- Collapsible Filter Panel -->
+                    <div id="filterPanel">
+                        <div class="card card-body">
+                            <h5>Filter Options</h5>
+                            <form method="get" action="">
+                                <!-- Dietary Restrictions Filter using Checkboxes -->
+                                <div class="form-group">
+                                    <label>Dietary Restrictions</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="dietary" id="dietaryDairy"
+                                               value="dairy">
+                                        <label class="form-check-label" for="dietaryDairy">Dairy</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="dietary"
+                                               id="dietaryGluten"
+                                               value="gluten">
+                                        <label class="form-check-label" for="dietaryGluten">Gluten</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="dietary"
+                                               id="dietaryShellfish"
+                                               value="shellfish">
+                                        <label class="form-check-label" for="dietaryShellfish">Shellfish</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="dietary" id="dietaryEggs"
+                                               value="eggs">
+                                        <label class="form-check-label" for="dietaryEggs">Eggs</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="dietary"
+                                               id="dietaryPeanuts"
+                                               value="peanuts">
+                                        <label class="form-check-label" for="dietaryPeanuts">Peanuts</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="dietary"
+                                               id="dietaryTreeNuts"
+                                               value="tree nuts">
+                                        <label class="form-check-label" for="dietaryTreeNuts">Tree Nuts</label>
+                                    </div>
+                                </div>
+                                <!-- Meal Diet Type Filter (Dropdown) -->
+                                <div class="form-group">
+                                    <label for="dietTypeFilter">Meal Diet Type</label>
+                                    <select class="form-control" id="dietTypeFilter" name="diet_type">
+                                        <option value="">Select Meal Diet Type</option>
+                                        <option value="non-veg">Non-Vegetarian</option>
+                                        <option value="veg">Vegetarian</option>
+                                        <option value="vegan">Vegan</option>
+                                    </select>
+                                </div>
+                                <!-- Price Range Filter using jQuery UI Slider -->
+                                <div class="form-group">
+                                    <label for="priceRange">Price Range: <span id="priceRangeValue"></span></label>
+                                    <div id="priceRange"></div>
+                                    <input type="hidden" id="priceRangeMin" name="price_min" value="0">
+                                    <input type="hidden" id="priceRangeMax" name="price_max" value="50">
+                                </div>
+                                <!-- Cooking Duration Filter (Dropdown) -->
+                                <div class="form-group">
+                                    <label for="durationFilter">Cooking Duration Option</label>
+                                    <select class="form-control" id="durationFilter" name="duration">
+                                        <option value="">Select Duration</option>
+                                        <option value="under15">Under 15 minutes</option>
+                                        <option value="15to30">15-30 minutes</option>
+                                        <option value="above30">Over 30 minutes</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-primary btn-block">Apply Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Meals Content Grouped by Meal Type -->
+            <div class="col-md-9">
+                <!-- Breakfast Items Section -->
+                <h2 class="section-heading">Breakfast Items</h2>
+                <div class="row">
+                    {% for meal in meals %}
+                        {% if meal.meal_type|lower == "breakfast" %}
+                            <div class="col-md-4">
+                                <div class="card meal-card">
+                                    {% if meal.image %}
+                                        <img class="card-img-top meal-image" src="{{ meal.image.url }}"
+                                             alt="{{ meal.meal_name }}">
+                                    {% else %}
+                                        <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}"
+                                             alt="Default Image">
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ meal.meal_name }}</h5>
+                                        <p class="card-text">{{ meal.recipe_description|truncatewords:20 }}</p>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Ingredients:</strong> {{ meal.ingredients }}</li>
+                                            <li><strong>Cost:</strong> ${{ meal.cost }}</li>
+                                            <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
+                                            <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
+                                            <li><strong>Total Calories:</strong> {{ meal.total_calories|floatformat:0 }}
+                                                kcal
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                data-target="#recipeModal{{ meal.id }}">
+                                            View Recipe
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- Lunch Items Section -->
+                <h2 class="section-heading">Lunch Items</h2>
+                <div class="row">
+                    {% for meal in meals %}
+                        {% if meal.meal_type|lower == "lunch" %}
+                            <div class="col-md-4">
+                                <div class="card meal-card">
+                                    {% if meal.image %}
+                                        <img class="card-img-top meal-image" src="{{ meal.image.url }}"
+                                             alt="{{ meal.meal_name }}">
+                                    {% else %}
+                                        <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}"
+                                             alt="Default Image">
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ meal.meal_name }}</h5>
+                                        <p class="card-text">{{ meal.recipe_description|truncatewords:20 }}</p>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Ingredients:</strong> {{ meal.ingredients }}</li>
+                                            <li><strong>Cost:</strong> ${{ meal.cost }}</li>
+                                            <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
+                                            <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
+                                            <li><strong>Total Calories:</strong> {{ meal.total_calories|floatformat:0 }}
+                                                kcal
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                data-target="#recipeModal{{ meal.id }}">
+                                            View Recipe
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- Dinner Items Section -->
+                <h2 class="section-heading">Dinner Items</h2>
+                <div class="row">
+                    {% for meal in meals %}
+                        {% if meal.meal_type|lower == "dinner" %}
+                            <div class="col-md-4">
+                                <div class="card meal-card">
+                                    {% if meal.image %}
+                                        <img class="card-img-top meal-image" src="{{ meal.image.url }}"
+                                             alt="{{ meal.meal_name }}">
+                                    {% else %}
+                                        <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}"
+                                             alt="Default Image">
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ meal.meal_name }}</h5>
+                                        <p class="card-text">{{ meal.recipe_description|truncatewords:20 }}</p>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Ingredients:</strong> {{ meal.ingredients }}</li>
+                                            <li><strong>Cost:</strong> ${{ meal.cost }}</li>
+                                            <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
+                                            <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
+                                            <li><strong>Total Calories:</strong> {{ meal.total_calories|floatformat:0 }}
+                                                kcal
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                data-target="#recipeModal{{ meal.id }}">
+                                            View Recipe
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- Snack Items Section -->
+                <h2 class="section-heading">Snack Items</h2>
+                <div class="row">
+                    {% for meal in meals %}
+                        {% if meal.meal_type|lower == "snack" or meal.meal_type|lower == "snacks" %}
+                            <div class="col-md-4">
+                                <div class="card meal-card">
+                                    {% if meal.image %}
+                                        <img class="card-img-top meal-image" src="{{ meal.image.url }}"
+                                             alt="{{ meal.meal_name }}">
+                                    {% else %}
+                                        <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}"
+                                             alt="Default Image">
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ meal.meal_name }}</h5>
+                                        <p class="card-text">{{ meal.recipe_description|truncatewords:20 }}</p>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Ingredients:</strong> {{ meal.ingredients }}</li>
+                                            <li><strong>Cost:</strong> ${{ meal.cost }}</li>
+                                            <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
+                                            <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
+                                            <li><strong>Total Calories:</strong> {{ meal.total_calories|floatformat:0 }}
+                                                kcal
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                data-target="#recipeModal{{ meal.id }}">
+                                            View Recipe
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Modals for Each Meal -->
+    {% for meal in meals %}
+        <div class="modal fade" id="recipeModal{{ meal.id }}" tabindex="-1" role="dialog"
+             aria-labelledby="recipeModalLabel{{ meal.id }}" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="recipeModalLabel{{ meal.id }}">{{ meal.meal_name }} Recipe</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Cooking Instructions:</strong></p>
+                        <p>{{ meal.cooking_instructions }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <!-- jQuery and jQuery UI (for the slider) -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- Bootstrap JavaScript dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $("#priceRange").slider({
+                range: true,
+                min: 0,
+                max: 100,
+                values: [0, 50],
+                slide: function (event, ui) {
+                    $("#priceRangeValue").text("$" + ui.values[0] + " - $" + ui.values[1]);
+                    $("#priceRangeMin").val(ui.values[0]);
+                    $("#priceRangeMax").val(ui.values[1]);
+                }
+            });
+            var initialValues = $("#priceRange").slider("values");
+            $("#priceRangeValue").text("$" + initialValues[0] + " - $" + initialValues[1]);
+        });
+    </script>
+{% endblock content %}
