@@ -26,8 +26,28 @@ class UserFitnessGoal(models.Model):
         if self.due_at < datetime.date.today():
             raise ValidationError("Due date must be greater than or equal to today")
 
-    class Meta:
-        unique_together = ['user', 'goal']
-
     def __str__(self):
         return f"{self.user.username} - {self.goal.name} - {self.target_value}"
+
+
+    @classmethod
+    def add_new_goal(cls, user, goal, target_value, due_at):
+        """
+        Adds a new UserFitnessGoal after performing necessary validations.
+
+        Parameters:
+        - user: User instance
+        - goal: FitnessGoal instance
+        - target_value: Float, target value for the goal
+        - due_at: Date, due date for the goal
+
+        Returns:
+        - UserFitnessGoal instance if created successfully
+
+        Raises:
+        - ValidationError: If any validation constraint fails
+        """
+        new_goal = cls(user=user, goal=goal, target_value=target_value, due_at=due_at)
+        new_goal.clean()  # Ensures validations are checked explicitly
+        new_goal.save()
+        return new_goal
