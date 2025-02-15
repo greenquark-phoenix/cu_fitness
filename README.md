@@ -11,7 +11,7 @@ This project is to fulfill COEN 6311 requirements.
 ### Steps
 ```sh
 # Clone the repository
-git clone https://github.com/your-username/cu_fitness.git
+git clone https://github.com/greenquark-phoenix/cu_fitness.git
 cd cu_fitness
 
 # Create virtual environment
