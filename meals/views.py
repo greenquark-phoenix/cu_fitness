@@ -5,21 +5,21 @@ from .models import Meal
 def meal_list(request):
     meals = Meal.objects.all()
 
-    # Retrieve filter parameters from GET
-    price = request.GET.get('price', '')
+    # Retrieve filter parameters from GET request
+    price_min = request.GET.get('price_min', '')
+    price_max = request.GET.get('price_max', '')
     duration = request.GET.get('duration', '')
-    # Use getlist to allow multiple dietary restrictions to be selected
-    dietary_list = request.GET.getlist('dietary')
-    diet_type_param = request.GET.get('diet_type', '').strip().lower()  # For meal's assigned diet type
+    dietary_list = request.GET.getlist('dietary')  # Allow multiple dietary restrictions
+    diet_type_param = request.GET.get('diet_type', '').strip().lower()  # Meal diet type
 
-    # Filter by price range
-    if price:
-        if price == 'under10':
-            meals = meals.filter(cost__lt=10)
-        elif price == '10to20':
-            meals = meals.filter(cost__gte=10, cost__lte=20)
-        elif price == 'above20':
-            meals = meals.filter(cost__gt=20)
+    # Filter by dynamic price range
+    if price_min and price_max:
+        try:
+            price_min = float(price_min)
+            price_max = float(price_max)
+            meals = meals.filter(cost__gte=price_min, cost__lte=price_max)
+        except ValueError:
+            pass  # Ignore invalid values
 
     # Filter by cooking duration
     if duration:
