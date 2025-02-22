@@ -38,11 +38,17 @@
             <ul class="navbar-nav ms-auto">
                 {% if not user.is_authenticated %}
                     <li class="nav-item">
+                        <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'signup' %}">Signup</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
                         <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'user_goals' %}">Goals</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'logout' %}">Logout</a>
                     </li>
                 {% endif %}
             </ul>
