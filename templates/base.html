@@ -36,9 +36,15 @@
             </ul>
 
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'user_goals' %}">Goals</a>
-                </li>
+                {% if not user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'signup' %}">Signup</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'user_goals' %}">Goals</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
