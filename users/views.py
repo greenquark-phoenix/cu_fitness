@@ -1,8 +1,10 @@
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
 
-from users.forms import SignupForm
+from users.forms import SignupForm, UserProfileForm
+from users.models import UserProfile
 
 
 # Create your views here.
@@ -16,6 +18,7 @@ def signup_view(request):
     else:
         form = SignupForm()
     return render(request, "users/signup.html", {"form": form})
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -31,6 +34,30 @@ def login_view(request):
 
     return render(request, 'users/login.html', {'form': form})
 
+
+@login_required
 def logout_view(request):
     logout(request)
     return redirect("home")
+
+
+@login_required
+def profile_view(request):
+    try:
+        profile = request.user.profile
+    except UserProfile.DoesNotExist:
+        profile = UserProfile.objects.create(user=request.user)
+
+    if request.method == "POST":
+        form = UserProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = UserProfileForm(instance=profile)
+
+    context = {
+        'form': form,
+        'profile': profile
+    }
+    return render(request, 'users/profile.html', context=context)
