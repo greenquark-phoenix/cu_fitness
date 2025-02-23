@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
 {% load django_bootstrap5 %}
+{% load bootstrap_icons %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -22,7 +23,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% if user.is_authenticated %}
-                    <li class="navbar-text text-white">Hi, {{ user.username }}!</li>
+                    <li class="navbar-text text-white">Hi, {{ user.profile.first_name }}!</li>
                 {% endif %}
             </ul>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center mx-auto">
@@ -40,15 +41,23 @@
                     <li class="nav-item">
                         <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'login' %}">Login</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'signup' %}">Signup</a>
-                    </li>
                 {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'user_goals' %}">Goals</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'logout' %}">Logout</a>
+                    <li class="nav-item dropdown">
+                        <button type="button" class="btn" id="userMenuDropdown" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            {% bs_icon 'person-circle' size='1.5em' extra_classes="bi text-white" %}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'user_goals' %}">Goals</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                            </li>
+                        </ul>
                     </li>
                 {% endif %}
             </ul>
