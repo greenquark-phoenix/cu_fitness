@@ -1,0 +1,54 @@
+[
+  {
+    "model": "workouts.workoutplan",
+    "pk": 1,
+    "fields": {
+      "name": "Beginner Fitness Plan",
+      "target_group": "Beginners, people new to exercise, casual fitness enthusiasts",
+      "duration": "4 Weeks (3 days per week)",
+      "price": "49.00",
+      "focus": "Basic strength, flexibility, and endurance",
+      "features": "Simple exercises for easy learning\r\nBodyweight and light resistance training\r\nFull-body workouts to develop overall fitness\r\nIncludes stretching routines for flexibility",
+      "schedule": "Day 1: Full-body strength (bodyweight squats, push-ups, lunges)\r\nDay 2: Light cardio (walking, cycling, or jogging)\r\nDay 3: Core & mobility (planks, yoga stretches, foam rolling)"
+    }
+  },
+  {
+    "model": "workouts.workoutplan",
+    "pk": 2,
+    "fields": {
+      "name": "Weight Loss & Fat Burn Plan",
+      "target_group": "People looking to lose weight, improve fitness, and burn fat",
+      "duration": "8 Weeks (5 days per week)",
+      "price": "69.00",
+      "focus": "High-intensity workouts, metabolism boost, and fat burning",
+      "features": "HIIT (High-Intensity Interval Training) sessions\r\nFat-burning cardio (running, jump rope, cycling)\r\nMeal guide included for proper nutrition\r\nMinimal equipment required",
+      "schedule": "Day 1: HIIT workout (jump squats, burpees, push-ups)\r\nDay 2: Cardio (fast walking, jogging, cycling)\r\nDay 3: Strength & Core (bodyweight + dumbbells)\r\nDay 4: Full-body HIIT (short bursts of high-energy exercises)\r\nDay 5: Active recovery (yoga, stretching)"
+    }
+  },
+  {
+    "model": "workouts.workoutplan",
+    "pk": 3,
+    "fields": {
+      "name": "Strength & Muscle Growth Plan",
+      "target_group": "Gym-goers, bodybuilders, and athletes looking to gain muscle",
+      "duration": "12 Weeks (4-5 days per week)",
+      "price": "99.00",
+      "focus": "Strength training, muscle building, progressive overload",
+      "features": "Full gym-based strength training program\r\nFocus on progressive overload for muscle growth\r\nPersonalized weight-lifting recommendations\r\nAccess to an online coaching group",
+      "schedule": "Day 1: Chest & Triceps (Bench Press, Dips, Tricep Extensions)\r\nDay 2: Back & Biceps (Deadlifts, Pull-ups, Rows)\r\nDay 3: Legs & Abs (Squats, Lunges, Core Strength)\r\nDay 4: Shoulders & Arms (Overhead Press, Dumbbell Workouts)\r\nDay 5: Optional Cardio & Recovery"
+    }
+  },
+  {
+    "model": "workouts.workoutplan",
+    "pk": 4,
+    "fields": {
+      "name": "Athlete Performance Plan",
+      "target_group": "Professional athletes, football/basketball players, endurance trainers",
+      "duration": "12 Weeks (6 days per week)",
+      "price": "129.00",
+      "focus": "Speed, agility, explosiveness, endurance",
+      "features": "Specialized agility & speed drills\r\nExplosive strength training for power\r\nPersonalized nutrition plan included\r\nOne-on-one coaching option available",
+      "schedule": "Day 1: Speed & Agility (Sprint Intervals, Cone Drills, Box Jumps)\r\nDay 2: Strength & Power (Squats, Deadlifts, Plyometrics)\r\nDay 3: Endurance Training (Long-distance running, cycling)\r\nDay 4: Core & Mobility (Planks, Yoga, Resistance Training)\r\nDay 5: Explosive Training (Battle Ropes, Weighted Jumps, Power Lifts)\r\nDay 6: Recovery & Flexibility (Deep stretching, Ice Baths, Massages)"
+    }
+  }
+]
