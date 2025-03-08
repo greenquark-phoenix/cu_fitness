@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'goals.apps.GoalsConfig',
     'workouts.apps.WorkoutsConfig',
     'meals.apps.MealsConfig',
+    'blog.apps.BlogConfig',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
