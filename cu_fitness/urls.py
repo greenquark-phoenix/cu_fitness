@@ -27,6 +27,7 @@ urlpatterns = [
     path("goals/", include('goals.urls')),
     path("meals/", include('meals.urls')),
     path('blog/', include('blog.urls')),
+    path('assistant/', include('assistant.urls')),
 ]
 
 if settings.DEBUG:

@@ -26,6 +26,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'workouts.apps.WorkoutsConfig',
     'meals.apps.MealsConfig',
     'blog.apps.BlogConfig',
+    'assistant.apps.AssistantConfig'
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -77,6 +79,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'cu_fitness.wsgi.application'
+ASGI_APPLICATION = "cu_fitness.asgi.application"
+LOGIN_URL = '/users/login/'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -116,6 +120,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
