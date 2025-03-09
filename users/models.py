@@ -10,6 +10,8 @@ class UserProfile(models.Model):
     last_name = models.CharField(max_length=50, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     height = models.IntegerField(null=True, blank=True)
+    allergies = models.CharField(max_length=255, blank=True)
+    dietary_preferences = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return self.user.username
@@ -22,5 +24,4 @@ def user_post_save(sender, **kwargs):
             UserProfile.objects.get(user=user)
 
         except UserProfile.DoesNotExist:
-            print("Created")
             UserProfile.objects.create(user=user)
