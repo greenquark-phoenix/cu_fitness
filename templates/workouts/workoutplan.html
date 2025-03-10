@@ -1,0 +1,12 @@
+{% for plan in workout_plans %}
+    <div class="col">
+        <div class="card h-100 shadow-lg p-3 rounded">
+            <div class="card-body">
+                <h2 class="card-title">{{ plan.name }}</h2>
+                <p class="card-text"><strong>Target Group:</strong> {{ plan.target_group }}</p>
+                <p class="card-text"><strong>Price:</strong> ${{ plan.price }}</p>
+                <a href="{% url 'workout_plan_detail' plan.id %}" class="btn btn-warning">View Sub-Plans</a>
+            </div>
+        </div>
+    </div>
+{% endfor %}
