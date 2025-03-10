@@ -4,34 +4,32 @@ class Ingredient(models.Model):
     name = models.CharField(max_length=100)
     calories_per_unit = models.FloatField(help_text="Calories per unit (e.g., per gram)")
     unit = models.CharField(max_length=50, default="g", help_text="Unit of measurement, e.g., g, ml, piece")
-    
-    # Protein (no sub-classification)
+
+    # Macronutrients
     protein_per_unit = models.FloatField(default=0.0, help_text="Protein per unit (g)")
-    
-    # Carbohydrates (with subclasses: fibers and sugars)
+
     carbohydrates_per_unit = models.FloatField(default=0.0, help_text="Total carbohydrates per unit (g)")
     fiber_per_unit = models.FloatField(default=0.0, help_text="Dietary fiber per unit (g)")
     sugars_per_unit = models.FloatField(default=0.0, help_text="Sugars per unit (g)")
-    
-    # Fat (with subclasses: saturated and trans)
+
     fat_per_unit = models.FloatField(default=0.0, help_text="Total fat per unit (g)")
     saturated_fat_per_unit = models.FloatField(default=0.0, help_text="Saturated fat per unit (g)")
     trans_fat_per_unit = models.FloatField(default=0.0, help_text="Trans fat per unit (g)")
-    
-    # Cholesterol (measured in mg)
+
     cholesterol_per_unit = models.FloatField(default=0.0, help_text="Cholesterol per unit (mg)")
-    
-    # Electrolytes (with subclasses: sodium, potassium, calcium - measured in mg)
+
+    # Electrolytes (now including zinc)
     sodium_per_unit = models.FloatField(default=0.0, help_text="Sodium per unit (mg)")
     potassium_per_unit = models.FloatField(default=0.0, help_text="Potassium per unit (mg)")
     calcium_per_unit = models.FloatField(default=0.0, help_text="Calcium per unit (mg)")
-    
-    # Vitamins and Zinc (vitamins can be in IU or mg, zinc in mg)
+    zinc_per_unit = models.FloatField(default=0.0, help_text="Zinc per unit (mg)")
+
+    # Vitamins
     vitamin_A_per_unit = models.FloatField(default=0.0, help_text="Vitamin A per unit (IU or mg)")
     vitamin_C_per_unit = models.FloatField(default=0.0, help_text="Vitamin C per unit (mg)")
+    vitamin_B_per_unit = models.FloatField(default=0.0, help_text="Vitamin B per unit (mg)")
     vitamin_D_per_unit = models.FloatField(default=0.0, help_text="Vitamin D per unit (IU or μg)")
-    zinc_per_unit = models.FloatField(default=0.0, help_text="Zinc per unit (mg)")
-    
+
     def __str__(self):
         return self.name
 
@@ -41,7 +39,7 @@ class Meal(models.Model):
     recipe_description = models.TextField()
     ingredients = models.TextField()  # Plain text listing (optional)
     cost = models.DecimalField(max_digits=6, decimal_places=2)  # e.g., 14.00
-    cooking_duration = models.IntegerField()  # in minutes (renamed from duration)
+    cooking_duration = models.IntegerField()  # in minutes, renamed from duration
     image = models.ImageField(upload_to='meals/', blank=True, null=True)  # Requires Pillow
     cooking_instructions = models.TextField(default="Cooking instructions not provided yet.")
 
@@ -104,6 +102,10 @@ class Meal(models.Model):
         return sum(mi.get_calcium() for mi in self.meal_ingredients.all())
     
     @property
+    def total_zinc(self):
+        return sum(mi.get_zinc() for mi in self.meal_ingredients.all())
+    
+    @property
     def total_vitamin_A(self):
         return sum(mi.get_vitamin_A() for mi in self.meal_ingredients.all())
     
@@ -112,12 +114,12 @@ class Meal(models.Model):
         return sum(mi.get_vitamin_C() for mi in self.meal_ingredients.all())
     
     @property
-    def total_vitamin_D(self):
-        return sum(mi.get_vitamin_D() for mi in self.meal_ingredients.all())
+    def total_vitamin_B(self):
+        return sum(mi.get_vitamin_B() for mi in self.meal_ingredients.all())
     
     @property
-    def total_zinc(self):
-        return sum(mi.get_zinc() for mi in self.meal_ingredients.all())
+    def total_vitamin_D(self):
+        return sum(mi.get_vitamin_D() for mi in self.meal_ingredients.all())
 
 class MealIngredient(models.Model):
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE, related_name="meal_ingredients")
@@ -160,17 +162,20 @@ class MealIngredient(models.Model):
     def get_calcium(self):
         return self.quantity * self.ingredient.calcium_per_unit
 
+    def get_zinc(self):
+        return self.quantity * self.ingredient.zinc_per_unit
+
     def get_vitamin_A(self):
         return self.quantity * self.ingredient.vitamin_A_per_unit
 
     def get_vitamin_C(self):
         return self.quantity * self.ingredient.vitamin_C_per_unit
 
+    def get_vitamin_B(self):
+        return self.quantity * self.ingredient.vitamin_B_per_unit
+
     def get_vitamin_D(self):
         return self.quantity * self.ingredient.vitamin_D_per_unit
-
-    def get_zinc(self):
-        return self.quantity * self.ingredient.zinc_per_unit
 
     def __str__(self):
         return f"{self.quantity} {self.ingredient.unit} of {self.ingredient.name} for {self.meal.meal_name}"
