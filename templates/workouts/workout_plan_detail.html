@@ -5,7 +5,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: url("{% static 'images/workouts2.jpg' %}") no-repeat center center fixed;
+            background: url("{% static 'images/workouts.jpg' %}") no-repeat center center fixed;
             background-size: cover;
             color: white;
             text-align: center;
@@ -42,25 +42,25 @@
 
 {% block content %}
     <div class="container py-5">
-        <h1 class="mb-5">Workout Plans</h1>
+        <h1 class="mb-5">{{ plan.name }} - Sub-Plans</h1>
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-4">
-            {% for plan in workout_plans %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for sub_plan in sub_plans %}
                 <div class="col">
                     <div class="card h-100 shadow-lg p-3 rounded">
                         <div class="card-body">
-                            <h2 class="card-title">{{ plan.name }}</h2>
-                            <p class="card-text"><strong>Target Group:</strong> {{ plan.target_group }}</p>
-                            <p class="card-text"><strong>Price:</strong> ${{ plan.price }}</p>
-                            <a href="{% url 'workout_plan_detail' plan.id %}" class="btn btn-warning">
-                                View Sub-Plans
-                            </a>
+                            <h2 class="card-title">{{ sub_plan.name }}</h2>
+                            <p class="card-text"><strong>Focus:</strong> {{ sub_plan.focus }}</p>
+                            <p class="card-text"><strong>Equipment:</strong> {{ sub_plan.equipment }}</p>
+                            <p class="card-text"><strong>Schedule:</strong> {{ sub_plan.schedule }}</p>
                         </div>
                     </div>
                 </div>
             {% empty %}
-                <p>No workout plans available.</p>
+                <p>No sub-plans available for this workout plan.</p>
             {% endfor %}
         </div>
+
+        <a href="{% url 'workouts' %}" class="btn btn-secondary mt-4">Back to All Workout Plans</a>
     </div>
 {% endblock content %}
