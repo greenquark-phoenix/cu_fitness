@@ -18,7 +18,7 @@ class Ingredient(models.Model):
 
     cholesterol_per_unit = models.FloatField(default=0.0, help_text="Cholesterol per unit (mg)")
 
-    # Electrolytes (now including zinc)
+    # Electrolytes (including zinc)
     sodium_per_unit = models.FloatField(default=0.0, help_text="Sodium per unit (mg)")
     potassium_per_unit = models.FloatField(default=0.0, help_text="Potassium per unit (mg)")
     calcium_per_unit = models.FloatField(default=0.0, help_text="Calcium per unit (mg)")
@@ -39,7 +39,7 @@ class Meal(models.Model):
     recipe_description = models.TextField()
     ingredients = models.TextField()  # Plain text listing (optional)
     cost = models.DecimalField(max_digits=6, decimal_places=2)  # e.g., 14.00
-    cooking_duration = models.IntegerField()  # in minutes, renamed from duration
+    cooking_duration = models.IntegerField()  # in minutes
     image = models.ImageField(upload_to='meals/', blank=True, null=True)  # Requires Pillow
     cooking_instructions = models.TextField(default="Cooking instructions not provided yet.")
 
@@ -179,3 +179,37 @@ class MealIngredient(models.Model):
 
     def __str__(self):
         return f"{self.quantity} {self.ingredient.unit} of {self.ingredient.name} for {self.meal.meal_name}"
+
+# -----------------------------
+# NEW MODEL FOR DAILY INTAKES:
+# -----------------------------
+class RecommendedDailyIntake(models.Model):
+    """
+    Stores the recommended daily values for an 'average' adult.
+    You can customize these fields/values as needed.
+    """
+    name = models.CharField(max_length=100, default="Average Adult")
+
+    # Macros
+    calories = models.FloatField(default=2000.0)    # e.g. 2000 kcal daily
+    protein = models.FloatField(default=50.0)       # e.g. 50 g daily
+    total_fat = models.FloatField(default=70.0)     # e.g. 70 g daily
+    saturated_fat = models.FloatField(default=20.0)
+    trans_fat = models.FloatField(default=2.0)
+    carbohydrates = models.FloatField(default=260.0)
+    fiber = models.FloatField(default=25.0)
+    sugars = models.FloatField(default=50.0)
+    cholesterol = models.FloatField(default=300.0)  # mg
+    sodium = models.FloatField(default=2300.0)      # mg
+    potassium = models.FloatField(default=3500.0)   # mg
+
+    # Vitamins & Minerals
+    vitamin_a = models.FloatField(default=900.0)    # IU or mcg (adjust as needed)
+    vitamin_c = models.FloatField(default=90.0)     # mg
+    vitamin_b = models.FloatField(default=1.3)      # mg (simplified for demonstration)
+    vitamin_d = models.FloatField(default=600.0)    # IU (or 15 mcg)
+    calcium = models.FloatField(default=1000.0)     # mg
+    zinc = models.FloatField(default=11.0)          # mg
+
+    def __str__(self):
+        return self.name
