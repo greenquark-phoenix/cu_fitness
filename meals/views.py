@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Q
-from .models import Meal, RecommendedDailyIntake  # <-- ADDED: Import RecommendedDailyIntake
+from .models import Meal, RecommendedDailyIntake  # <-- Ensure this import is present
 
 def meal_list(request):
     meals = Meal.objects.all()
@@ -54,11 +54,11 @@ def meal_list(request):
                     q_obj |= Q(ingredients__icontains=keyword)
         meals = meals.exclude(q_obj)
 
-    # <-- ADDED: Retrieve the first (or only) RecommendedDailyIntake record
+    # Retrieve the first (or only) RecommendedDailyIntake record
     recommended = RecommendedDailyIntake.objects.first()
 
     context = {
         'meals': meals,
-        'recommended': recommended  # <-- ADDED: Pass it to the template
+        'recommended': recommended  # Pass it to the template for % DV calculations
     }
     return render(request, 'meals/meal_list.html', context)

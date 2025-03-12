@@ -1,4 +1,3 @@
-# meals/templatetags/nutrition_extras.py
 from django import template
 
 register = template.Library()
@@ -7,9 +6,7 @@ register = template.Library()
 def nutrient_percent(nutrient_value, recommended_value):
     """
     Returns what percent 'nutrient_value' is of 'recommended_value'.
-    Example: if recommended_value=200 and nutrient_value=50,
-             this returns 25 (meaning 25%).
-    If recommended_value is 0 or None, returns 0 to avoid division error.
+    Example: if recommended_value=200 and nutrient_value=50, returns 25.
     """
     try:
         if recommended_value:

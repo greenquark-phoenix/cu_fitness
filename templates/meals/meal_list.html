@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load nutrition_extras %} {# <-- Load your custom filter library #}
 {% block additional_style %}
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <style>
@@ -82,7 +83,8 @@
 
     /* Basic Nutrition Facts Style */
     .nutrition-facts {
-        width: 250px;
+        
+        width: 465px;
         border: 2px solid #000;
         padding: 10px;
         font-family: Arial, sans-serif;
@@ -107,6 +109,11 @@
     }
     .nutrition-facts .sub-item {
         margin-left: 1.5em;
+    }
+
+    /* Right-align the percentages */
+    .dv-percentage {
+        float: right;
     }
 </style>
 {% endblock additional_style %}
@@ -417,13 +424,16 @@
                             <hr>
                             <p>
                                 <strong>Serving Size:</strong> 1 meal
+                                <span class="dv-percentage"><strong>% Daily Value</strong></span>
                             </p>
                             <hr>
                             <!-- Calories -->
                             <p>
                                 <strong>Calories:</strong> {{ meal.total_calories|floatformat:0 }}
                                 {% if recommended and recommended.calories %}
-                                  ({{ (meal.total_calories / recommended.calories) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_calories|nutrient_percent:recommended.calories|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
                             <hr>
@@ -431,43 +441,50 @@
                             <p>
                                 <strong>Total Fat:</strong> {{ meal.total_fat|floatformat:1 }} g
                                 {% if recommended and recommended.total_fat %}
-                                  ({{ (meal.total_fat / recommended.total_fat) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_fat|nutrient_percent:recommended.total_fat|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
                             <p class="sub-item">
                                 Saturated Fat: {{ meal.total_saturated_fat|floatformat:1 }} g
                                 {% if recommended and recommended.saturated_fat %}
-                                  ({{ (meal.total_saturated_fat / recommended.saturated_fat) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_saturated_fat|nutrient_percent:recommended.saturated_fat|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
                             <p class="sub-item">
                                 Trans Fat: {{ meal.total_trans_fat|floatformat:1 }} g
                                 {% if recommended and recommended.trans_fat %}
-                                  ({{ (meal.total_trans_fat / recommended.trans_fat) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_trans_fat|nutrient_percent:recommended.trans_fat|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
 
-                            <!-- Cholesterol -->
                             <p>
                                 <strong>Cholesterol:</strong> {{ meal.total_cholesterol|floatformat:1 }} mg
                                 {% if recommended and recommended.cholesterol %}
-                                  ({{ (meal.total_cholesterol / recommended.cholesterol) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_cholesterol|nutrient_percent:recommended.cholesterol|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
-
-                            <!-- Sodium -->
                             <p>
                                 <strong>Sodium:</strong> {{ meal.total_sodium|floatformat:1 }} mg
                                 {% if recommended and recommended.sodium %}
-                                  ({{ (meal.total_sodium / recommended.sodium) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_sodium|nutrient_percent:recommended.sodium|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
-
-                            <!-- Potassium -->
                             <p>
                                 <strong>Potassium:</strong> {{ meal.total_potassium|floatformat:1 }} mg
                                 {% if recommended and recommended.potassium %}
-                                  ({{ (meal.total_potassium / recommended.potassium) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_potassium|nutrient_percent:recommended.potassium|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
 
@@ -475,67 +492,85 @@
                             <p>
                                 <strong>Total Carbohydrates:</strong> {{ meal.total_carbohydrates|floatformat:1 }} g
                                 {% if recommended and recommended.carbohydrates %}
-                                  ({{ (meal.total_carbohydrates / recommended.carbohydrates) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_carbohydrates|nutrient_percent:recommended.carbohydrates|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
                             <p class="sub-item">
                                 Dietary Fiber: {{ meal.total_fiber|floatformat:1 }} g
                                 {% if recommended and recommended.fiber %}
-                                  ({{ (meal.total_fiber / recommended.fiber) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_fiber|nutrient_percent:recommended.fiber|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
                             <p class="sub-item">
                                 Sugars: {{ meal.total_sugars|floatformat:1 }} g
                                 {% if recommended and recommended.sugars %}
-                                  ({{ (meal.total_sugars / recommended.sugars) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_sugars|nutrient_percent:recommended.sugars|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
 
-                            <!-- Protein -->
                             <p>
                                 <strong>Protein:</strong> {{ meal.total_protein|floatformat:1 }} g
                                 {% if recommended and recommended.protein %}
-                                  ({{ (meal.total_protein / recommended.protein) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_protein|nutrient_percent:recommended.protein|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
                             <hr>
-                            <!-- Vitamins -->
+                            <!-- Vitamins and Minerals -->
                             <p>
                                 <strong>Vitamin A:</strong> {{ meal.total_vitamin_A|floatformat:1 }} IU
                                 {% if recommended and recommended.vitamin_a %}
-                                  ({{ (meal.total_vitamin_A / recommended.vitamin_a) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_vitamin_A|nutrient_percent:recommended.vitamin_a|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
                             <p>
                                 <strong>Vitamin C:</strong> {{ meal.total_vitamin_C|floatformat:1 }} mg
                                 {% if recommended and recommended.vitamin_c %}
-                                  ({{ (meal.total_vitamin_C / recommended.vitamin_c) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_vitamin_C|nutrient_percent:recommended.vitamin_c|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
                             <p>
                                 <strong>Vitamin B:</strong> {{ meal.total_vitamin_B|floatformat:1 }} mg
                                 {% if recommended and recommended.vitamin_b %}
-                                  ({{ (meal.total_vitamin_B / recommended.vitamin_b) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_vitamin_B|nutrient_percent:recommended.vitamin_b|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
                             <p>
                                 <strong>Vitamin D:</strong> {{ meal.total_vitamin_D|floatformat:1 }} IU
                                 {% if recommended and recommended.vitamin_d %}
-                                  ({{ (meal.total_vitamin_D / recommended.vitamin_d) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_vitamin_D|nutrient_percent:recommended.vitamin_d|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
                             <hr>
-                            <!-- Minerals -->
                             <p>
                                 <strong>Calcium:</strong> {{ meal.total_calcium|floatformat:1 }} mg
                                 {% if recommended and recommended.calcium %}
-                                  ({{ (meal.total_calcium / recommended.calcium) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_calcium|nutrient_percent:recommended.calcium|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
                             <p>
                                 <strong>Zinc:</strong> {{ meal.total_zinc|floatformat:1 }} mg
                                 {% if recommended and recommended.zinc %}
-                                  ({{ (meal.total_zinc / recommended.zinc) * 100|floatformat:0 }}% DV)
+                                  <span class="dv-percentage">
+                                    {{ meal.total_zinc|nutrient_percent:recommended.zinc|floatformat:0 }}%
+                                  </span>
                                 {% endif %}
                             </p>
                         </div>
