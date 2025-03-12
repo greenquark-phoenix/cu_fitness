@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load nutrition_extras %} {# <-- Load your custom filter library #}
+{% load nutrition_extras %} {# If you have custom filters for something else, keep this #}
 {% block additional_style %}
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <style>
@@ -83,7 +83,6 @@
 
     /* Basic Nutrition Facts Style */
     .nutrition-facts {
-        
         width: 465px;
         border: 2px solid #000;
         padding: 10px;
@@ -430,9 +429,10 @@
                             <!-- Calories -->
                             <p>
                                 <strong>Calories:</strong> {{ meal.total_calories|floatformat:0 }}
-                                {% if recommended and recommended.calories %}
+                                <!-- NO inline math; just show dv_calories -->
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_calories|nutrient_percent:recommended.calories|floatformat:0 }}%
+                                    {{ meal.dv_calories|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
@@ -440,50 +440,50 @@
                             <!-- Fat with sub-classes -->
                             <p>
                                 <strong>Total Fat:</strong> {{ meal.total_fat|floatformat:1 }} g
-                                {% if recommended and recommended.total_fat %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_fat|nutrient_percent:recommended.total_fat|floatformat:0 }}%
+                                    {{ meal.dv_fat|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
                             <p class="sub-item">
                                 Saturated Fat: {{ meal.total_saturated_fat|floatformat:1 }} g
-                                {% if recommended and recommended.saturated_fat %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_saturated_fat|nutrient_percent:recommended.saturated_fat|floatformat:0 }}%
+                                    {{ meal.dv_saturated_fat|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
                             <p class="sub-item">
                                 Trans Fat: {{ meal.total_trans_fat|floatformat:1 }} g
-                                {% if recommended and recommended.trans_fat %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_trans_fat|nutrient_percent:recommended.trans_fat|floatformat:0 }}%
+                                    {{ meal.dv_trans_fat|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
 
                             <p>
                                 <strong>Cholesterol:</strong> {{ meal.total_cholesterol|floatformat:1 }} mg
-                                {% if recommended and recommended.cholesterol %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_cholesterol|nutrient_percent:recommended.cholesterol|floatformat:0 }}%
+                                    {{ meal.dv_cholesterol|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
                             <p>
                                 <strong>Sodium:</strong> {{ meal.total_sodium|floatformat:1 }} mg
-                                {% if recommended and recommended.sodium %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_sodium|nutrient_percent:recommended.sodium|floatformat:0 }}%
+                                    {{ meal.dv_sodium|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
                             <p>
                                 <strong>Potassium:</strong> {{ meal.total_potassium|floatformat:1 }} mg
-                                {% if recommended and recommended.potassium %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_potassium|nutrient_percent:recommended.potassium|floatformat:0 }}%
+                                    {{ meal.dv_potassium|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
@@ -491,34 +491,34 @@
                             <!-- Carbs with sub-classes -->
                             <p>
                                 <strong>Total Carbohydrates:</strong> {{ meal.total_carbohydrates|floatformat:1 }} g
-                                {% if recommended and recommended.carbohydrates %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_carbohydrates|nutrient_percent:recommended.carbohydrates|floatformat:0 }}%
+                                    {{ meal.dv_carbohydrates|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
                             <p class="sub-item">
                                 Dietary Fiber: {{ meal.total_fiber|floatformat:1 }} g
-                                {% if recommended and recommended.fiber %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_fiber|nutrient_percent:recommended.fiber|floatformat:0 }}%
+                                    {{ meal.dv_fiber|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
                             <p class="sub-item">
                                 Sugars: {{ meal.total_sugars|floatformat:1 }} g
-                                {% if recommended and recommended.sugars %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_sugars|nutrient_percent:recommended.sugars|floatformat:0 }}%
+                                    {{ meal.dv_sugars|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
 
                             <p>
                                 <strong>Protein:</strong> {{ meal.total_protein|floatformat:1 }} g
-                                {% if recommended and recommended.protein %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_protein|nutrient_percent:recommended.protein|floatformat:0 }}%
+                                    {{ meal.dv_protein|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
@@ -526,50 +526,50 @@
                             <!-- Vitamins and Minerals -->
                             <p>
                                 <strong>Vitamin A:</strong> {{ meal.total_vitamin_A|floatformat:1 }} IU
-                                {% if recommended and recommended.vitamin_a %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_vitamin_A|nutrient_percent:recommended.vitamin_a|floatformat:0 }}%
+                                    {{ meal.dv_vitamin_A|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
                             <p>
                                 <strong>Vitamin C:</strong> {{ meal.total_vitamin_C|floatformat:1 }} mg
-                                {% if recommended and recommended.vitamin_c %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_vitamin_C|nutrient_percent:recommended.vitamin_c|floatformat:0 }}%
+                                    {{ meal.dv_vitamin_C|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
                             <p>
                                 <strong>Vitamin B:</strong> {{ meal.total_vitamin_B|floatformat:1 }} mg
-                                {% if recommended and recommended.vitamin_b %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_vitamin_B|nutrient_percent:recommended.vitamin_b|floatformat:0 }}%
+                                    {{ meal.dv_vitamin_B|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
                             <p>
                                 <strong>Vitamin D:</strong> {{ meal.total_vitamin_D|floatformat:1 }} IU
-                                {% if recommended and recommended.vitamin_d %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_vitamin_D|nutrient_percent:recommended.vitamin_d|floatformat:0 }}%
+                                    {{ meal.dv_vitamin_D|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
                             <hr>
                             <p>
                                 <strong>Calcium:</strong> {{ meal.total_calcium|floatformat:1 }} mg
-                                {% if recommended and recommended.calcium %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_calcium|nutrient_percent:recommended.calcium|floatformat:0 }}%
+                                    {{ meal.dv_calcium|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
                             <p>
                                 <strong>Zinc:</strong> {{ meal.total_zinc|floatformat:1 }} mg
-                                {% if recommended and recommended.zinc %}
+                                {% if recommended %}
                                   <span class="dv-percentage">
-                                    {{ meal.total_zinc|nutrient_percent:recommended.zinc|floatformat:0 }}%
+                                    {{ meal.dv_zinc|floatformat:0 }}%
                                   </span>
                                 {% endif %}
                             </p>
