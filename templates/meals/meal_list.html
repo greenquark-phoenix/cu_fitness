@@ -3,7 +3,6 @@
 {% block additional_style %}
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <style>
-    /* (Same styles as before) */
     body {
         background-color: #f8f9fa;
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -207,9 +206,6 @@
                                             <li><strong>Cost:</strong> ${{ meal.cost }}</li>
                                             <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
                                             <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
-                                            <!-- REMOVED property-based summation for total_calories -->
-                                            <!-- If you want to show DV% or some cached field, do so. 
-                                                 Otherwise, remove the line entirely. -->
                                         </ul>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between align-items-center">
@@ -250,7 +246,6 @@
                                             <li><strong>Cost:</strong> ${{ meal.cost }}</li>
                                             <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
                                             <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
-                                            <!-- REMOVED property-based summation for total_calories -->
                                         </ul>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between align-items-center">
@@ -291,7 +286,6 @@
                                             <li><strong>Cost:</strong> ${{ meal.cost }}</li>
                                             <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
                                             <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
-                                            <!-- REMOVED property-based summation for total_calories -->
                                         </ul>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between align-items-center">
@@ -332,7 +326,6 @@
                                             <li><strong>Cost:</strong> ${{ meal.cost }}</li>
                                             <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
                                             <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
-                                            <!-- REMOVED property-based summation for total_calories -->
                                         </ul>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between align-items-center">
@@ -360,7 +353,6 @@
              aria-labelledby="recipeModalLabel{{ meal.id }}" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <!-- Modal Header without the 'X' button -->
                     <div class="modal-header">
                         <h5 class="modal-title" id="recipeModalLabel{{ meal.id }}">
                             {{ meal.meal_name }} Recipe
@@ -371,7 +363,6 @@
                         <p>{{ meal.cooking_instructions }}</p>
                     </div>
                     <div class="modal-footer">
-                        <!-- Only the Close button -->
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             Close
                         </button>
@@ -385,7 +376,6 @@
              aria-labelledby="micronutrientsModalLabel{{ meal.id }}" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <!-- Modal Header without the 'X' button -->
                     <div class="modal-header">
                         <h5 class="modal-title" id="micronutrientsModalLabel{{ meal.id }}">
                             Micronutrients for {{ meal.meal_name }}
@@ -400,7 +390,6 @@
                                 <span class="dv-percentage"><strong>% Daily Value</strong></span>
                             </p>
                             <hr>
-                            <!-- We only show dv_ fields, no property-based totals. -->
                             <p>
                                 <strong>Calories %DV:</strong>
                                 <span class="dv-percentage">{{ meal.dv_calories|floatformat:0 }}%</span>
@@ -478,7 +467,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <!-- Only the Close button -->
+                    
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             Close
                         </button>
