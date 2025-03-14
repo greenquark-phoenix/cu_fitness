@@ -1,30 +1,25 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load nutrition_extras %} {# If you have custom filters for something else, keep this #}
 {% block additional_style %}
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <style>
-    /* General Body Styling */
+    /* (Same styles as before) */
     body {
         background-color: #f8f9fa;
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
     }
-
     .page-header h1 {
         font-size: 2.75rem;
         color: #000;
         margin: 0;
     }
-
     .page-header p {
         font-size: 1.25rem;
         color: #000;
         margin: 5px 0 0;
     }
-
-    /* Main Container Styling */
     .main-container {
         background-color: #fff;
         padding: 20px 30px;
@@ -33,8 +28,6 @@
         margin: 20px auto;
         max-width: 1200px;
     }
-
-    /* Section Headings */
     .section-heading {
         margin-top: 30px;
         margin-bottom: 15px;
@@ -43,8 +36,6 @@
         border-bottom: 2px solid #e9ecef;
         padding-bottom: 5px;
     }
-
-    /* Card Styling */
     .meal-card {
         margin-bottom: 20px;
         border: none;
@@ -52,18 +43,14 @@
         overflow: hidden;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
-
     .meal-image {
         height: 150px;
         object-fit: cover;
     }
-
     .card-body ul {
         padding-left: 0;
         list-style: none;
     }
-
-    /* Sidebar Styling */
     .sidebar {
         background-color: #fff;
         padding: 15px;
@@ -71,17 +58,12 @@
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
     }
-
-    /* Slider Styling */
     #priceRange {
         margin-top: 10px;
     }
-
     .form-group {
         margin-bottom: 15px;
     }
-
-    /* Basic Nutrition Facts Style */
     .nutrition-facts {
         width: 465px;
         border: 2px solid #000;
@@ -109,8 +91,6 @@
     .nutrition-facts .sub-item {
         margin-left: 1.5em;
     }
-
-    /* Right-align the percentages */
     .dv-percentage {
         float: right;
     }
@@ -227,9 +207,9 @@
                                             <li><strong>Cost:</strong> ${{ meal.cost }}</li>
                                             <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
                                             <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
-                                            <li><strong>Total Calories:</strong> {{ meal.total_calories|floatformat:0 }}
-                                                kcal
-                                            </li>
+                                            <!-- REMOVED property-based summation for total_calories -->
+                                            <!-- If you want to show DV% or some cached field, do so. 
+                                                 Otherwise, remove the line entirely. -->
                                         </ul>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between align-items-center">
@@ -270,9 +250,7 @@
                                             <li><strong>Cost:</strong> ${{ meal.cost }}</li>
                                             <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
                                             <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
-                                            <li><strong>Total Calories:</strong> {{ meal.total_calories|floatformat:0 }}
-                                                kcal
-                                            </li>
+                                            <!-- REMOVED property-based summation for total_calories -->
                                         </ul>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between align-items-center">
@@ -313,9 +291,7 @@
                                             <li><strong>Cost:</strong> ${{ meal.cost }}</li>
                                             <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
                                             <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
-                                            <li><strong>Total Calories:</strong> {{ meal.total_calories|floatformat:0 }}
-                                                kcal
-                                            </li>
+                                            <!-- REMOVED property-based summation for total_calories -->
                                         </ul>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between align-items-center">
@@ -356,9 +332,7 @@
                                             <li><strong>Cost:</strong> ${{ meal.cost }}</li>
                                             <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
                                             <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
-                                            <li><strong>Total Calories:</strong> {{ meal.total_calories|floatformat:0 }}
-                                                kcal
-                                            </li>
+                                            <!-- REMOVED property-based summation for total_calories -->
                                         </ul>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between align-items-center">
@@ -426,152 +400,80 @@
                                 <span class="dv-percentage"><strong>% Daily Value</strong></span>
                             </p>
                             <hr>
-                            <!-- Calories -->
+                            <!-- We only show dv_ fields, no property-based totals. -->
                             <p>
-                                <strong>Calories:</strong> {{ meal.total_calories|floatformat:0 }}
-                                <!-- NO inline math; just show dv_calories -->
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_calories|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
-                            </p>
-                            <hr>
-                            <!-- Fat with sub-classes -->
-                            <p>
-                                <strong>Total Fat:</strong> {{ meal.total_fat|floatformat:1 }} g
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_fat|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
-                            </p>
-                            <p class="sub-item">
-                                Saturated Fat: {{ meal.total_saturated_fat|floatformat:1 }} g
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_saturated_fat|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
-                            </p>
-                            <p class="sub-item">
-                                Trans Fat: {{ meal.total_trans_fat|floatformat:1 }} g
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_trans_fat|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
-                            </p>
-
-                            <p>
-                                <strong>Cholesterol:</strong> {{ meal.total_cholesterol|floatformat:1 }} mg
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_cholesterol|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
-                            </p>
-                            <p>
-                                <strong>Sodium:</strong> {{ meal.total_sodium|floatformat:1 }} mg
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_sodium|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
-                            </p>
-                            <p>
-                                <strong>Potassium:</strong> {{ meal.total_potassium|floatformat:1 }} mg
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_potassium|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
-                            </p>
-
-                            <!-- Carbs with sub-classes -->
-                            <p>
-                                <strong>Total Carbohydrates:</strong> {{ meal.total_carbohydrates|floatformat:1 }} g
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_carbohydrates|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
-                            </p>
-                            <p class="sub-item">
-                                Dietary Fiber: {{ meal.total_fiber|floatformat:1 }} g
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_fiber|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
-                            </p>
-                            <p class="sub-item">
-                                Sugars: {{ meal.total_sugars|floatformat:1 }} g
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_sugars|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
-                            </p>
-
-                            <p>
-                                <strong>Protein:</strong> {{ meal.total_protein|floatformat:1 }} g
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_protein|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
-                            </p>
-                            <hr>
-                            <!-- Vitamins and Minerals -->
-                            <p>
-                                <strong>Vitamin A:</strong> {{ meal.total_vitamin_A|floatformat:1 }} IU
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_vitamin_A|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
-                            </p>
-                            <p>
-                                <strong>Vitamin C:</strong> {{ meal.total_vitamin_C|floatformat:1 }} mg
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_vitamin_C|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
-                            </p>
-                            <p>
-                                <strong>Vitamin B:</strong> {{ meal.total_vitamin_B|floatformat:1 }} mg
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_vitamin_B|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
-                            </p>
-                            <p>
-                                <strong>Vitamin D:</strong> {{ meal.total_vitamin_D|floatformat:1 }} IU
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_vitamin_D|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
+                                <strong>Calories %DV:</strong>
+                                <span class="dv-percentage">{{ meal.dv_calories|floatformat:0 }}%</span>
                             </p>
                             <hr>
                             <p>
-                                <strong>Calcium:</strong> {{ meal.total_calcium|floatformat:1 }} mg
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_calcium|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
+                                <strong>Fat %DV:</strong>
+                                <span class="dv-percentage">{{ meal.dv_fat|floatformat:0 }}%</span>
+                            </p>
+                            <p class="sub-item">
+                                Saturated Fat %DV:
+                                <span class="dv-percentage">{{ meal.dv_saturated_fat|floatformat:0 }}%</span>
+                            </p>
+                            <p class="sub-item">
+                                Trans Fat %DV:
+                                <span class="dv-percentage">{{ meal.dv_trans_fat|floatformat:0 }}%</span>
+                            </p>
+
+                            <p>
+                                <strong>Cholesterol %DV:</strong>
+                                <span class="dv-percentage">{{ meal.dv_cholesterol|floatformat:0 }}%</span>
                             </p>
                             <p>
-                                <strong>Zinc:</strong> {{ meal.total_zinc|floatformat:1 }} mg
-                                {% if recommended %}
-                                  <span class="dv-percentage">
-                                    {{ meal.dv_zinc|floatformat:0 }}%
-                                  </span>
-                                {% endif %}
+                                <strong>Sodium %DV:</strong>
+                                <span class="dv-percentage">{{ meal.dv_sodium|floatformat:0 }}%</span>
+                            </p>
+                            <p>
+                                <strong>Potassium %DV:</strong>
+                                <span class="dv-percentage">{{ meal.dv_potassium|floatformat:0 }}%</span>
+                            </p>
+
+                            <p>
+                                <strong>Carbohydrates %DV:</strong>
+                                <span class="dv-percentage">{{ meal.dv_carbohydrates|floatformat:0 }}%</span>
+                            </p>
+                            <p class="sub-item">
+                                Fiber %DV:
+                                <span class="dv-percentage">{{ meal.dv_fiber|floatformat:0 }}%</span>
+                            </p>
+                            <p class="sub-item">
+                                Sugars %DV:
+                                <span class="dv-percentage">{{ meal.dv_sugars|floatformat:0 }}%</span>
+                            </p>
+
+                            <p>
+                                <strong>Protein %DV:</strong>
+                                <span class="dv-percentage">{{ meal.dv_protein|floatformat:0 }}%</span>
+                            </p>
+                            <hr>
+                            <p>
+                                <strong>Vitamin A %DV:</strong>
+                                <span class="dv-percentage">{{ meal.dv_vitamin_A|floatformat:0 }}%</span>
+                            </p>
+                            <p>
+                                <strong>Vitamin C %DV:</strong>
+                                <span class="dv-percentage">{{ meal.dv_vitamin_C|floatformat:0 }}%</span>
+                            </p>
+                            <p>
+                                <strong>Vitamin B %DV:</strong>
+                                <span class="dv-percentage">{{ meal.dv_vitamin_B|floatformat:0 }}%</span>
+                            </p>
+                            <p>
+                                <strong>Vitamin D %DV:</strong>
+                                <span class="dv-percentage">{{ meal.dv_vitamin_D|floatformat:0 }}%</span>
+                            </p>
+                            <hr>
+                            <p>
+                                <strong>Calcium %DV:</strong>
+                                <span class="dv-percentage">{{ meal.dv_calcium|floatformat:0 }}%</span>
+                            </p>
+                            <p>
+                                <strong>Zinc %DV:</strong>
+                                <span class="dv-percentage">{{ meal.dv_zinc|floatformat:0 }}%</span>
                             </p>
                         </div>
                     </div>
