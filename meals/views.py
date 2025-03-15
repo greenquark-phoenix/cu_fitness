@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Q
-from .models import Meal, RecommendedDailyIntake  # <-- Ensure this import is present
+from .models import Meal, RecommendedDailyIntake  
 
 def meal_list(request):
     meals = Meal.objects.all()
@@ -36,8 +36,8 @@ def meal_list(request):
 
     # Mapping of dietary restrictions to keywords for exclusion
     dietary_map = {
-        "dairy": ["milk", "yogurt", "cheese", "butter"],
-        "gluten": ["wheat", "barley", "rye"],
+        "dairy": ["milk", "Greek yogurt", "yogurt", "cheese", "butter", "Parmesan Cheese", "Mozzarella Cheese", "Feta Cheese"],
+        "gluten": ["wheat", "barley", "rye", "Breadcrumbs", "Whole Wheat Couscous", "Whole Wheat Flour", "Whole Wheat Tortilla", "Whole Wheat Pita", "Whole-grain Bread", "Pasta", "Whole Grain Cereal"],
         "shellfish": ["shrimp", "prawn", "clam", "mussel", "crab"],
         "eggs": ["egg"],
         "peanuts": ["peanut"],
@@ -59,6 +59,6 @@ def meal_list(request):
 
     context = {
         'meals': meals,
-        'recommended': recommended  # Pass it to the template for % DV calculations
+        'recommended': recommended 
     }
     return render(request, 'meals/meal_list.html', context)
