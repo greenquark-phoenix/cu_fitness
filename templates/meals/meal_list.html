@@ -1,87 +1,122 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load nutrition_extras %} {# If you have custom filters for something else, keep this #}
 {% block additional_style %}
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <style>
-        /* General Body Styling */
-        body {
-            background-color: #f8f9fa;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+<style>
+    /* General Body Styling */
+    body {
+        background-color: #f8f9fa;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
 
-        .page-header h1 {
-            font-size: 2.75rem;
-            color: #000;
-            margin: 0;
-        }
+    .page-header h1 {
+        font-size: 2.75rem;
+        color: #000;
+        margin: 0;
+    }
 
-        .page-header p {
-            font-size: 1.25rem;
-            color: #000;
-            margin: 5px 0 0;
-        }
+    .page-header p {
+        font-size: 1.25rem;
+        color: #000;
+        margin: 5px 0 0;
+    }
 
-        /* Main Container Styling */
-        .main-container {
-            background-color: #fff;
-            padding: 20px 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
-            max-width: 1200px;
-        }
+    /* Main Container Styling */
+    .main-container {
+        background-color: #fff;
+        padding: 20px 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        max-width: 1200px;
+    }
 
-        /* Section Headings */
-        .section-heading {
-            margin-top: 30px;
-            margin-bottom: 15px;
-            font-size: 1.75rem;
-            color: #333;
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 5px;
-        }
+    /* Section Headings */
+    .section-heading {
+        margin-top: 30px;
+        margin-bottom: 15px;
+        font-size: 1.75rem;
+        color: #333;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 5px;
+    }
 
-        /* Card Styling */
-        .meal-card {
-            margin-bottom: 20px;
-            border: none;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+    /* Card Styling */
+    .meal-card {
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
 
-        .meal-image {
-            height: 150px;
-            object-fit: cover;
-        }
+    .meal-image {
+        height: 150px;
+        object-fit: cover;
+    }
 
-        .card-body ul {
-            padding-left: 0;
-            list-style: none;
-        }
+    .card-body ul {
+        padding-left: 0;
+        list-style: none;
+    }
 
-        /* Sidebar Styling */
-        .sidebar {
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
+    /* Sidebar Styling */
+    .sidebar {
+        background-color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
 
-        /* Slider Styling */
-        #priceRange {
-            margin-top: 10px;
-        }
+    /* Slider Styling */
+    #priceRange {
+        margin-top: 10px;
+    }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+    .form-group {
+        margin-bottom: 15px;
+    }
 
-    </style>
+    /* Basic Nutrition Facts Style */
+    .nutrition-facts {
+        width: 465px;
+        border: 2px solid #000;
+        padding: 10px;
+        font-family: Arial, sans-serif;
+        color: #000;
+        background-color: #fff;
+    }
+    .nutrition-facts h2 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+    .nutrition-facts hr {
+        border: 0;
+        border-top: 2px solid #000;
+        margin: 0.5rem 0;
+    }
+    .nutrition-facts p {
+        margin: 0.2rem 0;
+        font-size: 0.9rem;
+    }
+    .nutrition-facts strong {
+        font-weight: bold;
+    }
+    .nutrition-facts .sub-item {
+        margin-left: 1.5em;
+    }
+
+    /* Right-align the percentages */
+    .dv-percentage {
+        float: right;
+    }
+</style>
 {% endblock additional_style %}
+
 {% block content %}
     <!-- Main Content Container -->
     <div class="container main-container">
@@ -175,7 +210,7 @@
                 <div class="row">
                     {% for meal in meals %}
                         {% if meal.meal_type|lower == "breakfast" %}
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="card meal-card">
                                     {% if meal.image %}
                                         <img class="card-img-top meal-image" src="{{ meal.image.url }}"
@@ -197,10 +232,14 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="card-footer">
+                                    <div class="card-footer d-flex justify-content-between align-items-center">
                                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                                 data-target="#recipeModal{{ meal.id }}">
                                             View Recipe
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" data-toggle="modal"
+                                                data-target="#micronutrientsModal{{ meal.id }}">
+                                            Micronutrients
                                         </button>
                                     </div>
                                 </div>
@@ -214,7 +253,7 @@
                 <div class="row">
                     {% for meal in meals %}
                         {% if meal.meal_type|lower == "lunch" %}
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="card meal-card">
                                     {% if meal.image %}
                                         <img class="card-img-top meal-image" src="{{ meal.image.url }}"
@@ -236,10 +275,14 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="card-footer">
+                                    <div class="card-footer d-flex justify-content-between align-items-center">
                                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                                 data-target="#recipeModal{{ meal.id }}">
                                             View Recipe
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" data-toggle="modal"
+                                                data-target="#micronutrientsModal{{ meal.id }}">
+                                            Micronutrients
                                         </button>
                                     </div>
                                 </div>
@@ -253,7 +296,7 @@
                 <div class="row">
                     {% for meal in meals %}
                         {% if meal.meal_type|lower == "dinner" %}
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="card meal-card">
                                     {% if meal.image %}
                                         <img class="card-img-top meal-image" src="{{ meal.image.url }}"
@@ -275,10 +318,14 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="card-footer">
+                                    <div class="card-footer d-flex justify-content-between align-items-center">
                                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                                 data-target="#recipeModal{{ meal.id }}">
                                             View Recipe
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" data-toggle="modal"
+                                                data-target="#micronutrientsModal{{ meal.id }}">
+                                            Micronutrients
                                         </button>
                                     </div>
                                 </div>
@@ -292,7 +339,7 @@
                 <div class="row">
                     {% for meal in meals %}
                         {% if meal.meal_type|lower == "snack" or meal.meal_type|lower == "snacks" %}
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="card meal-card">
                                     {% if meal.image %}
                                         <img class="card-img-top meal-image" src="{{ meal.image.url }}"
@@ -314,10 +361,14 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="card-footer">
+                                    <div class="card-footer d-flex justify-content-between align-items-center">
                                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                                 data-target="#recipeModal{{ meal.id }}">
                                             View Recipe
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" data-toggle="modal"
+                                                data-target="#micronutrientsModal{{ meal.id }}">
+                                            Micronutrients
                                         </button>
                                     </div>
                                 </div>
@@ -325,7 +376,6 @@
                         {% endif %}
                     {% endfor %}
                 </div>
-
             </div>
         </div>
     </div>
@@ -336,18 +386,200 @@
              aria-labelledby="recipeModalLabel{{ meal.id }}" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
+                    <!-- Modal Header without the 'X' button -->
                     <div class="modal-header">
-                        <h5 class="modal-title" id="recipeModalLabel{{ meal.id }}">{{ meal.meal_name }} Recipe</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <h5 class="modal-title" id="recipeModalLabel{{ meal.id }}">
+                            {{ meal.meal_name }} Recipe
+                        </h5>
                     </div>
                     <div class="modal-body">
                         <p><strong>Cooking Instructions:</strong></p>
                         <p>{{ meal.cooking_instructions }}</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <!-- Only the Close button -->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Micronutrients (Nutrition Facts) Modal for Each Meal -->
+        <div class="modal fade" id="micronutrientsModal{{ meal.id }}" tabindex="-1" role="dialog"
+             aria-labelledby="micronutrientsModalLabel{{ meal.id }}" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <!-- Modal Header without the 'X' button -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="micronutrientsModalLabel{{ meal.id }}">
+                            Micronutrients for {{ meal.meal_name }}
+                        </h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="nutrition-facts">
+                            <h2>Nutrition Facts</h2>
+                            <hr>
+                            <p>
+                                <strong>Serving Size:</strong> 1 meal
+                                <span class="dv-percentage"><strong>% Daily Value</strong></span>
+                            </p>
+                            <hr>
+                            <!-- Calories -->
+                            <p>
+                                <strong>Calories:</strong> {{ meal.total_calories|floatformat:0 }}
+                                <!-- NO inline math; just show dv_calories -->
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_calories|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+                            <hr>
+                            <!-- Fat with sub-classes -->
+                            <p>
+                                <strong>Total Fat:</strong> {{ meal.total_fat|floatformat:1 }} g
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_fat|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+                            <p class="sub-item">
+                                Saturated Fat: {{ meal.total_saturated_fat|floatformat:1 }} g
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_saturated_fat|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+                            <p class="sub-item">
+                                Trans Fat: {{ meal.total_trans_fat|floatformat:1 }} g
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_trans_fat|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+
+                            <p>
+                                <strong>Cholesterol:</strong> {{ meal.total_cholesterol|floatformat:1 }} mg
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_cholesterol|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+                            <p>
+                                <strong>Sodium:</strong> {{ meal.total_sodium|floatformat:1 }} mg
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_sodium|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+                            <p>
+                                <strong>Potassium:</strong> {{ meal.total_potassium|floatformat:1 }} mg
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_potassium|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+
+                            <!-- Carbs with sub-classes -->
+                            <p>
+                                <strong>Total Carbohydrates:</strong> {{ meal.total_carbohydrates|floatformat:1 }} g
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_carbohydrates|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+                            <p class="sub-item">
+                                Dietary Fiber: {{ meal.total_fiber|floatformat:1 }} g
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_fiber|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+                            <p class="sub-item">
+                                Sugars: {{ meal.total_sugars|floatformat:1 }} g
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_sugars|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+
+                            <p>
+                                <strong>Protein:</strong> {{ meal.total_protein|floatformat:1 }} g
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_protein|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+                            <hr>
+                            <!-- Vitamins and Minerals -->
+                            <p>
+                                <strong>Vitamin A:</strong> {{ meal.total_vitamin_A|floatformat:1 }} IU
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_vitamin_A|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+                            <p>
+                                <strong>Vitamin C:</strong> {{ meal.total_vitamin_C|floatformat:1 }} mg
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_vitamin_C|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+                            <p>
+                                <strong>Vitamin B:</strong> {{ meal.total_vitamin_B|floatformat:1 }} mg
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_vitamin_B|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+                            <p>
+                                <strong>Vitamin D:</strong> {{ meal.total_vitamin_D|floatformat:1 }} IU
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_vitamin_D|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+                            <hr>
+                            <p>
+                                <strong>Calcium:</strong> {{ meal.total_calcium|floatformat:1 }} mg
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_calcium|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+                            <p>
+                                <strong>Zinc:</strong> {{ meal.total_zinc|floatformat:1 }} mg
+                                {% if recommended %}
+                                  <span class="dv-percentage">
+                                    {{ meal.dv_zinc|floatformat:0 }}%
+                                  </span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- Only the Close button -->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>
