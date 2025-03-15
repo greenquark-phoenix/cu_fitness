@@ -50,9 +50,8 @@ class Meal(models.Model):
     ]
     diet_type = models.CharField(max_length=10, choices=DIET_CHOICES, default='non-veg')
 
-    # --------------------------------------------------
-    # DV FIELDS: store final percentage for each nutrient
-    # --------------------------------------------------
+     # DV FIELDS: store final percentage for each nutrient
+    
     dv_calories = models.FloatField(default=0.0)
     dv_protein = models.FloatField(default=0.0)
     dv_fat = models.FloatField(default=0.0)
@@ -153,8 +152,7 @@ class Meal(models.Model):
             # If there's no recommended daily intake record, skip or set DV=0
             return
 
-        # For each nutrient: dv_calories = (total_calories / rdi.calories)*100
-        # and so on, handle zero or None to avoid division errors:
+        # Calories
         total_cals = self.total_calories
         if rdi.calories:
             self.dv_calories = (total_cals / rdi.calories) * 100
