@@ -25,5 +25,9 @@ def workout_plans(request):
 def workout_plan_detail(request, plan_id):
     plan = get_object_or_404(WorkoutPlan, id=plan_id)
     sub_plans = plan.sub_plans.all()  # Retrieve sub-plans related to this workout plan
+
+    for subplan in sub_plans:
+        subplan.calories_burned = subplan.total_calories()  # Compute calories
+
     context = {"plan": plan, "sub_plans": sub_plans}
     return render(request, "workouts/workout_plan_detail.html", context=context)
