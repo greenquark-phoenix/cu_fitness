@@ -14,7 +14,8 @@ def signup_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect("home")  # Change "home" to your desired redirect URL
+            request.session['user_id'] = user.id
+            return redirect("home")
     else:
         form = SignupForm()
     return render(request, "users/signup.html", {"form": form})
@@ -38,6 +39,10 @@ def login_view(request):
 @login_required
 def logout_view(request):
     logout(request)
+    try:
+        del request.session["member_id"]
+    except KeyError:
+        pass
     return redirect("home")
 
 

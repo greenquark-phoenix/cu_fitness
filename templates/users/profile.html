@@ -25,6 +25,16 @@
                                            value="{{ profile.last_name }}">
                                 </div>
                                 <div class="col-md-6">
+                                    <label for="gender" class="form-label">Gender</label>
+                                    <select class="form-control" id="gender" name="gender">
+                                        <option value="Male" {% if profile.gender == "Male" %}selected{% endif %}>Male
+                                        </option>
+                                        <option value="Female" {% if profile.gender == "Female" %}selected{% endif %}>
+                                            Female
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
                                     <label for="birth_date" class="form-label">Birth Date</label>
                                     <input type="date" class="form-control" id="birth_date" name="birth_date"
                                            value="{{ profile.birth_date|date:'Y-m-d' }}">
@@ -33,6 +43,11 @@
                                     <label for="height" class="form-label">Height (cm)</label>
                                     <input type="number" class="form-control" id="height" name="height"
                                            value="{{ profile.height }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="current_weight" class="form-label">Current Weight (Kg)</label>
+                                    <input type="number" class="form-control" id="current_weight" name="current_weight"
+                                           value="{{ profile.current_weight }}">
                                 </div>
                             </div>
 

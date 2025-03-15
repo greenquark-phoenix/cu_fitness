@@ -5,6 +5,11 @@ from django.dispatch import receiver
 
 
 class UserProfile(models.Model):
+    GENDER_CHOICES = [
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+    ]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     first_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
@@ -12,6 +17,8 @@ class UserProfile(models.Model):
     height = models.IntegerField(null=True, blank=True)
     allergies = models.CharField(max_length=255, blank=True)
     dietary_preferences = models.CharField(max_length=255, blank=True)
+    gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=True)
+    current_weight = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.user.username

@@ -6,7 +6,7 @@ from django.shortcuts import render
 # Create your views here.
 @login_required
 def assistant_view(request):
-    return render(request, "assistant/chat/chat.html")
+    return render(request, "assistant/chat.html")
 
 @login_required
 def new_assistant_view(request):

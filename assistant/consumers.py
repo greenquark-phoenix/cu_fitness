@@ -9,18 +9,22 @@ from langchain_openai import ChatOpenAI
 from assistant.assistant import Agent
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 _ = load_dotenv(BASE_DIR / '.env')
-llm = ChatOpenAI(model="gpt-3.5-turbo")
-agent = Agent(llm)
 
 class ChatConsumer(WebsocketConsumer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.agent = None
+
     def connect(self):
         self.accept()
-
         messages = self.scope["session"].get("messages", [])
         for message in messages:
             self.send(text_data=json.dumps(message))
+
+        username = self.scope["user"].username
+        llm = ChatOpenAI(model="gpt-3.5-turbo")
+        self.agent = Agent(llm, username)
 
     def disconnect(self, close_code):
         pass
@@ -41,7 +45,7 @@ class ChatConsumer(WebsocketConsumer):
         messages.append(user_message)
         self.send(text_data=json.dumps(user_message))
 
-        for response in agent.stream_graph_update(message, thread_id):
+        for response in self.agent.stream_graph_update(message, thread_id):
             bot_message = {
                 "message": {"msg": response, "source": "bot"},
             }
