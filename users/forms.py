@@ -12,11 +12,12 @@ class SignupForm(UserCreationForm):
         model = User
         fields = ["username", "email", "password1", "password2"]
 
+
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['first_name', 'last_name', 'birth_date', 'height', 'allergies', 'dietary_preferences']
+        fields = ['first_name', 'last_name', 'gender', 'birth_date', 'height', 'current_weight', 'allergies',
+                  'dietary_preferences']
         widgets = {
             'birth_date': forms.DateInput(attrs={'type': 'date'}),
         }
-
