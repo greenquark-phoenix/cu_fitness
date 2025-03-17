@@ -11,7 +11,7 @@ from assistant.assistant import Agent
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 _ = load_dotenv(BASE_DIR / '.env')
-llm = ChatOpenAI(model="gpt-3.5-turbo", api_key="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")
+llm = ChatOpenAI(model="gpt-3.5-turbo")
 agent = Agent(llm)
 
 class ChatConsumer(WebsocketConsumer):
