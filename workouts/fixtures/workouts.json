@@ -1,54 +1,1316 @@
 [
-  {
-    "model": "workouts.workoutplan",
-    "pk": 1,
-    "fields": {
-      "name": "Beginner Fitness Plan",
-      "target_group": "Beginners, people new to exercise, casual fitness enthusiasts",
-      "duration": "4 Weeks (3 days per week)",
-      "price": "49.00",
-      "focus": "Basic strength, flexibility, and endurance",
-      "features": "Simple exercises for easy learning\r\nBodyweight and light resistance training\r\nFull-body workouts to develop overall fitness\r\nIncludes stretching routines for flexibility",
-      "schedule": "Day 1: Full-body strength (bodyweight squats, push-ups, lunges)\r\nDay 2: Light cardio (walking, cycling, or jogging)\r\nDay 3: Core & mobility (planks, yoga stretches, foam rolling)"
-    }
-  },
-  {
-    "model": "workouts.workoutplan",
-    "pk": 2,
-    "fields": {
-      "name": "Weight Loss & Fat Burn Plan",
-      "target_group": "People looking to lose weight, improve fitness, and burn fat",
-      "duration": "8 Weeks (5 days per week)",
-      "price": "69.00",
-      "focus": "High-intensity workouts, metabolism boost, and fat burning",
-      "features": "HIIT (High-Intensity Interval Training) sessions\r\nFat-burning cardio (running, jump rope, cycling)\r\nMeal guide included for proper nutrition\r\nMinimal equipment required",
-      "schedule": "Day 1: HIIT workout (jump squats, burpees, push-ups)\r\nDay 2: Cardio (fast walking, jogging, cycling)\r\nDay 3: Strength & Core (bodyweight + dumbbells)\r\nDay 4: Full-body HIIT (short bursts of high-energy exercises)\r\nDay 5: Active recovery (yoga, stretching)"
-    }
-  },
-  {
-    "model": "workouts.workoutplan",
-    "pk": 3,
-    "fields": {
-      "name": "Strength & Muscle Growth Plan",
-      "target_group": "Gym-goers, bodybuilders, and athletes looking to gain muscle",
-      "duration": "12 Weeks (4-5 days per week)",
-      "price": "99.00",
-      "focus": "Strength training, muscle building, progressive overload",
-      "features": "Full gym-based strength training program\r\nFocus on progressive overload for muscle growth\r\nPersonalized weight-lifting recommendations\r\nAccess to an online coaching group",
-      "schedule": "Day 1: Chest & Triceps (Bench Press, Dips, Tricep Extensions)\r\nDay 2: Back & Biceps (Deadlifts, Pull-ups, Rows)\r\nDay 3: Legs & Abs (Squats, Lunges, Core Strength)\r\nDay 4: Shoulders & Arms (Overhead Press, Dumbbell Workouts)\r\nDay 5: Optional Cardio & Recovery"
-    }
-  },
-  {
-    "model": "workouts.workoutplan",
-    "pk": 4,
-    "fields": {
-      "name": "Athlete Performance Plan",
-      "target_group": "Professional athletes, football/basketball players, endurance trainers",
-      "duration": "12 Weeks (6 days per week)",
-      "price": "129.00",
-      "focus": "Speed, agility, explosiveness, endurance",
-      "features": "Specialized agility & speed drills\r\nExplosive strength training for power\r\nPersonalized nutrition plan included\r\nOne-on-one coaching option available",
-      "schedule": "Day 1: Speed & Agility (Sprint Intervals, Cone Drills, Box Jumps)\r\nDay 2: Strength & Power (Squats, Deadlifts, Plyometrics)\r\nDay 3: Endurance Training (Long-distance running, cycling)\r\nDay 4: Core & Mobility (Planks, Yoga, Resistance Training)\r\nDay 5: Explosive Training (Battle Ropes, Weighted Jumps, Power Lifts)\r\nDay 6: Recovery & Flexibility (Deep stretching, Ice Baths, Massages)"
-    }
+{
+  "model": "workouts.workoutplan",
+  "pk": 1,
+  "fields": {
+    "name": "Beginner Fitness Plan",
+    "target_group": "Newcomers to fitness, casual exercisers",
+    "duration": "4 Weeks (3 days/week)",
+    "price": "39.00",
+    "focus": "Building basic strength, endurance, and flexibility",
+    "features": "Simple bodyweight workouts\r\nNo equipment required\r\nImproves movement & posture",
+    "schedule": "Day 1: Full-body bodyweight exercises\r\nDay 2: Light cardio (walking, jogging)\r\nDay 3: Core & flexibility (planks, yoga)"
   }
+},
+{
+  "model": "workouts.workoutplan",
+  "pk": 2,
+  "fields": {
+    "name": "Weight Loss & Fat Burn Plan",
+    "target_group": "People aiming for fat loss and toning",
+    "duration": "8 Weeks (5 days/week)",
+    "price": "59.00",
+    "focus": "Burning calories, improving cardio, and losing fat",
+    "features": "High-intensity interval training (HIIT)\r\nFat-burning workouts\r\nBasic meal guide included",
+    "schedule": "Day 1: HIIT (jump squats, burpees)\r\nDay 2: Cardio (running, cycling)\r\nDay 3: Strength & core (dumbbells, abs)\r\nDay 4: Full-body HIIT\r\nDay 5: Recovery (stretching, yoga)"
+  }
+},
+{
+  "model": "workouts.workoutplan",
+  "pk": 3,
+  "fields": {
+    "name": "Strength & Muscle Growth Plan",
+    "target_group": "Gym-goers, bodybuilders",
+    "duration": "12 Weeks (4-5 days/week)",
+    "price": "99.00",
+    "focus": "Building muscle mass and increasing strength",
+    "features": "Progressive overload weight training\r\nFull gym-based strength program\r\nPersonalized lifting recommendations",
+    "schedule": "Day 1: Chest & Triceps (Bench Press, Dips)\r\nDay 2: Back & Biceps (Pull-ups, Deadlifts)\r\nDay 3: Legs & Core (Squats, Lunges)\r\nDay 4: Shoulders & Arms (Overhead Press)\r\nDay 5: Optional cardio/recovery"
+  }
+},
+{
+  "model": "workouts.workoutplan",
+  "pk": 4,
+  "fields": {
+    "name": "Athlete Performance Plan",
+    "target_group": "Professional athletes, endurance trainers",
+    "duration": "12 Weeks (6 days/week)",
+    "price": "129.00",
+    "focus": "Power, agility, speed, and endurance",
+    "features": "Sport-specific strength training\r\nExplosive power and agility drills\r\nPerformance tracking & recovery optimization",
+    "schedule": "Day 1: Speed & agility (Sprints, Box Jumps)\r\nDay 2: Strength & power (Squats, Deadlifts)\r\nDay 3: Endurance (Long-distance running)\r\nDay 4: Core & mobility (Planks, Yoga)\r\nDay 5: Explosive training (Battle Ropes)\r\nDay 6: Recovery (Stretching, Ice Bath)"
+  }
+},
+{
+  "model": "workouts.workoutplan",
+  "pk": 5,
+  "fields": {
+    "name": "Functional & Mobility Plan",
+    "target_group": "Office workers, older adults, and injury recovery",
+    "duration": "8 Weeks (3 days/week)",
+    "price": "69.00",
+    "focus": "Strength, flexibility, and injury prevention",
+    "features": "Kettlebell & resistance band workouts\r\nCore stability & balance training\r\nLow-impact movements for joint health",
+    "schedule": "Day 1: Functional strength (Kettlebell swings, bodyweight squats)\r\nDay 2: Mobility & Core (Yoga, Resistance bands)\r\nDay 3: Balance & Coordination (Stability ball drills)"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 1,
+  "fields": {
+    "name": "Jump Rope",
+    "unit": "min",
+    "calorie_per_unit": "12.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 2,
+  "fields": {
+    "name": "Stretching",
+    "unit": "min",
+    "calorie_per_unit": "3.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 3,
+  "fields": {
+    "name": "Pull-Ups",
+    "unit": "sets",
+    "calorie_per_unit": "7.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 4,
+  "fields": {
+    "name": "Leg Press",
+    "unit": "sets",
+    "calorie_per_unit": "8.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 5,
+  "fields": {
+    "name": "Treadmill Running",
+    "unit": "min",
+    "calorie_per_unit": "10.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 6,
+  "fields": {
+    "name": "Kettlebell Swings",
+    "unit": "sets",
+    "calorie_per_unit": "10.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 7,
+  "fields": {
+    "name": "Dumbbell Shoulder Press",
+    "unit": "sets",
+    "calorie_per_unit": "6.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 8,
+  "fields": {
+    "name": "Elliptical Trainer",
+    "unit": "min",
+    "calorie_per_unit": "7.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 9,
+  "fields": {
+    "name": "Rowing Machine",
+    "unit": "sets",
+    "calorie_per_unit": "9.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 10,
+  "fields": {
+    "name": "Push-Ups",
+    "unit": "sets",
+    "calorie_per_unit": "5.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 11,
+  "fields": {
+    "name": "Dumbbell Squats",
+    "unit": "sets",
+    "calorie_per_unit": "8.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 12,
+  "fields": {
+    "name": "Ab Wheel Rollouts",
+    "unit": "sets",
+    "calorie_per_unit": "4.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 13,
+  "fields": {
+    "name": "Treadmill Walking",
+    "unit": "min",
+    "calorie_per_unit": "5.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 14,
+  "fields": {
+    "name": "Rowing Machine",
+    "unit": "min",
+    "calorie_per_unit": "9.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 15,
+  "fields": {
+    "name": "Leg Press Machine",
+    "unit": "sets",
+    "calorie_per_unit": "8.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 16,
+  "fields": {
+    "name": "Resistance Bands",
+    "unit": "sets",
+    "calorie_per_unit": "4.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 17,
+  "fields": {
+    "name": "Slam Balls",
+    "unit": "sets",
+    "calorie_per_unit": "10.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 18,
+  "fields": {
+    "name": "Medicine Ball Twists",
+    "unit": "sets",
+    "calorie_per_unit": "6.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 19,
+  "fields": {
+    "name": "Seated Row Machine",
+    "unit": "sets",
+    "calorie_per_unit": "7.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 20,
+  "fields": {
+    "name": "Chest Press Machine",
+    "unit": "sets",
+    "calorie_per_unit": "6.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 21,
+  "fields": {
+    "name": "Lat Pulldown Machine",
+    "unit": "sets",
+    "calorie_per_unit": "6.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 22,
+  "fields": {
+    "name": "Foam Rollers",
+    "unit": "min",
+    "calorie_per_unit": "2.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 23,
+  "fields": {
+    "name": "Dips",
+    "unit": "sets",
+    "calorie_per_unit": "7.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 24,
+  "fields": {
+    "name": "Squats",
+    "unit": "sets",
+    "calorie_per_unit": "8.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 25,
+  "fields": {
+    "name": "Weight Plates",
+    "unit": "sets",
+    "calorie_per_unit": "5.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 26,
+  "fields": {
+    "name": "Smith Machine Rows",
+    "unit": "sets",
+    "calorie_per_unit": "7.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 27,
+  "fields": {
+    "name": "Sprint Intervals",
+    "unit": "rounds",
+    "calorie_per_unit": "15.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 28,
+  "fields": {
+    "name": "Turkish Get-Ups",
+    "unit": "sets",
+    "calorie_per_unit": "10.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 29,
+  "fields": {
+    "name": "Overhead Carries",
+    "unit": "meters",
+    "calorie_per_unit": "3.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 30,
+  "fields": {
+    "name": "Plyometric Jumps",
+    "unit": "sets",
+    "calorie_per_unit": "9.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 31,
+  "fields": {
+    "name": "Bulgarian Split Squats",
+    "unit": "sets",
+    "calorie_per_unit": "8.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 32,
+  "fields": {
+    "name": "Stationary Bike",
+    "unit": "min",
+    "calorie_per_unit": "6.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 33,
+  "fields": {
+    "name": "Deadlifts",
+    "unit": "sets",
+    "calorie_per_unit": "9.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 34,
+  "fields": {
+    "name": "Bench Press",
+    "unit": "sets",
+    "calorie_per_unit": "8.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 35,
+  "fields": {
+    "name": "Shoulder Press",
+    "unit": "sets",
+    "calorie_per_unit": "7.00"
+  }
+},
+{
+  "model": "workouts.exercise",
+  "pk": 36,
+  "fields": {
+    "name": "Barbell Squats",
+    "unit": "sets",
+    "calorie_per_unit": "9.00"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 1,
+  "fields": {
+    "workout_plan": 1,
+    "name": "Bodyweight & Resistance Band Basics",
+    "focus": "Improve mobility & strength",
+    "schedule": "3x10 pull-ups, 3x12 resistance rows, 5 min jump rope"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 2,
+  "fields": {
+    "workout_plan": 1,
+    "name": "Dumbbell-Only Starter",
+    "focus": "Full-body strength & endurance",
+    "schedule": "3x10 squats, 3x10 shoulder press, 3x15 ab rollouts"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 3,
+  "fields": {
+    "workout_plan": 1,
+    "name": "Machine-Based Beginner",
+    "focus": "Learn gym machines",
+    "schedule": "3x12 chest press, 3x10 lat pulldown, 10 min cycling"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 4,
+  "fields": {
+    "workout_plan": 1,
+    "name": "Cardio & Core Focus",
+    "focus": "Fat loss & stamina",
+    "schedule": "15 min treadmill walk, 10 min elliptical, 3x12 ab rollouts"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 5,
+  "fields": {
+    "workout_plan": 1,
+    "name": "Stretch & Recovery",
+    "focus": "Flexibility & muscle recovery",
+    "schedule": "10 min stretching, 5 min foam rolling, 3x15 medicine ball twists"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 6,
+  "fields": {
+    "workout_plan": 2,
+    "name": "Dumbbell HIIT Circuit",
+    "focus": "High-intensity calorie burn",
+    "schedule": "3x15 dumbbell thrusters, 3 min jump rope, 3x12 ball slams"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 7,
+  "fields": {
+    "workout_plan": 2,
+    "name": "Treadmill & Rowing Endurance",
+    "focus": "Build stamina & cardiovascular health",
+    "schedule": "30 sec sprint/30 sec rest x 8 rounds, 200m row x 4, 3x10 slam ball throws"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 8,
+  "fields": {
+    "workout_plan": 2,
+    "name": "Kettlebell & Bodyweight HIIT",
+    "focus": "Explosive strength & agility",
+    "schedule": "4x20 kettlebell swings, 3x8 pull-ups, 3x10 dips"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 9,
+  "fields": {
+    "workout_plan": 2,
+    "name": "Machine-Based Fat Burner",
+    "focus": "Steady-state fat burning",
+    "schedule": "3x12 smith squats, 3x15 leg press, 12 min elliptical"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 10,
+  "fields": {
+    "workout_plan": 2,
+    "name": "Low-Impact Fat Burn",
+    "focus": "Weight loss without joint stress",
+    "schedule": "20 min cycling, 3x15 band exercises, 5 min foam rolling"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 11,
+  "fields": {
+    "workout_plan": 5,
+    "name": "Kettlebell Strength & Mobility",
+    "focus": "Improve joint stability & power",
+    "schedule": "3x12 kettlebell deadlifts, 5 min mobility work, 3x15 resistance band rows"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 12,
+  "fields": {
+    "workout_plan": 5,
+    "name": "Bodyweight & Flexibility",
+    "focus": "Posture & muscle activation",
+    "schedule": "5 min stretching, 3x15 dips, 5 min jump rope"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 13,
+  "fields": {
+    "workout_plan": 5,
+    "name": "Functional Strength (Power Rack)",
+    "focus": "Core stability & controlled movement",
+    "schedule": "3x10 barbell squats, 3x12 lat pulldown, 3x20m farmerx92s carry"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 14,
+  "fields": {
+    "workout_plan": 5,
+    "name": "Low-Impact Core & Cardio",
+    "focus": "Core strength & endurance",
+    "schedule": "15 min cycling, 3x12 ab rollouts, 3x12 seated row"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 15,
+  "fields": {
+    "workout_plan": 5,
+    "name": "Balance & Recovery",
+    "focus": "Injury prevention & flexibility",
+    "schedule": "3x10 balance drills, 5 min foam rolling, 10 min stretching"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 16,
+  "fields": {
+    "workout_plan": 3,
+    "name": "Classic Barbell Strength",
+    "focus": "Progressive overload & compound lifts",
+    "schedule": "4x8 squats, 3x5 deadlifts, 3x10 bench press"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 17,
+  "fields": {
+    "workout_plan": 3,
+    "name": "Dumbbell & Machine Hypertrophy",
+    "focus": "Muscle growth & isolation",
+    "schedule": "3x12 shoulder press, 3x10 smith rows, 3x12 seated row"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 18,
+  "fields": {
+    "workout_plan": 3,
+    "name": "Leg Day Strength",
+    "focus": "Lower body hypertrophy",
+    "schedule": "3x15 leg press, 3x12 resistance band squats, 3x12 wall throws"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 19,
+  "fields": {
+    "workout_plan": 3,
+    "name": "Back & Core Builder",
+    "focus": "Lat & core development",
+    "schedule": "3x12 lat pulldown, 3x200m row, 3x12 ab rollouts"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 20,
+  "fields": {
+    "workout_plan": 3,
+    "name": "Full-Body Strength Cycle",
+    "focus": "Overall strength & endurance",
+    "schedule": "3x12 chest press, 3x12 dumbbell RDLs, 3x5 Turkish get-ups"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 21,
+  "fields": {
+    "workout_plan": 4,
+    "name": "Explosive Power Training",
+    "focus": "Speed & force production",
+    "schedule": "3x12 slams, 3x1 min jump rope, 3x10 plyo jumps"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 22,
+  "fields": {
+    "workout_plan": 4,
+    "name": "Agility & Endurance Focus",
+    "focus": "Sport-specific conditioning",
+    "schedule": "500m row x 4, 10 sprint intervals, 3x10 dips"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 23,
+  "fields": {
+    "workout_plan": 4,
+    "name": "Strength & Speed Hybrid",
+    "focus": "Explosive strength & muscle power",
+    "schedule": "3x5 barbell squats, 3x8 Bulgarian split squats, 3x10 lat pulldown"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 24,
+  "fields": {
+    "workout_plan": 4,
+    "name": "Recovery & Mobility",
+    "focus": "Injury prevention & flexibility",
+    "schedule": "10 min stretching, 5 min foam rolling, 3x15 resistance band pulls"
+  }
+},
+{
+  "model": "workouts.subplan",
+  "pk": 25,
+  "fields": {
+    "workout_plan": 4,
+    "name": "Athlete Core & Balance",
+    "focus": "Stability & endurance",
+    "schedule": "3x15 core throws, 3x15 ab rollouts, 3x20m overhead carries"
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 1,
+  "fields": {
+    "subplan": 1,
+    "exercise": 3,
+    "duration_or_sets": 30
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 2,
+  "fields": {
+    "subplan": 1,
+    "exercise": 16,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 3,
+  "fields": {
+    "subplan": 1,
+    "exercise": 1,
+    "duration_or_sets": 5
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 4,
+  "fields": {
+    "subplan": 2,
+    "exercise": 11,
+    "duration_or_sets": 30
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 5,
+  "fields": {
+    "subplan": 2,
+    "exercise": 7,
+    "duration_or_sets": 30
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 6,
+  "fields": {
+    "subplan": 2,
+    "exercise": 12,
+    "duration_or_sets": 45
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 7,
+  "fields": {
+    "subplan": 3,
+    "exercise": 20,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 8,
+  "fields": {
+    "subplan": 3,
+    "exercise": 21,
+    "duration_or_sets": 30
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 9,
+  "fields": {
+    "subplan": 3,
+    "exercise": 13,
+    "duration_or_sets": 10
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 10,
+  "fields": {
+    "subplan": 4,
+    "exercise": 13,
+    "duration_or_sets": 15
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 11,
+  "fields": {
+    "subplan": 4,
+    "exercise": 8,
+    "duration_or_sets": 10
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 12,
+  "fields": {
+    "subplan": 4,
+    "exercise": 12,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 13,
+  "fields": {
+    "subplan": 5,
+    "exercise": 2,
+    "duration_or_sets": 10
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 14,
+  "fields": {
+    "subplan": 5,
+    "exercise": 22,
+    "duration_or_sets": 5
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 15,
+  "fields": {
+    "subplan": 5,
+    "exercise": 18,
+    "duration_or_sets": 45
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 16,
+  "fields": {
+    "subplan": 6,
+    "exercise": 11,
+    "duration_or_sets": 45
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 17,
+  "fields": {
+    "subplan": 6,
+    "exercise": 1,
+    "duration_or_sets": 3
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 18,
+  "fields": {
+    "subplan": 6,
+    "exercise": 17,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 19,
+  "fields": {
+    "subplan": 7,
+    "exercise": 5,
+    "duration_or_sets": 8
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 20,
+  "fields": {
+    "subplan": 7,
+    "exercise": 9,
+    "duration_or_sets": 8
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 21,
+  "fields": {
+    "subplan": 7,
+    "exercise": 17,
+    "duration_or_sets": 30
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 22,
+  "fields": {
+    "subplan": 8,
+    "exercise": 6,
+    "duration_or_sets": 80
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 23,
+  "fields": {
+    "subplan": 8,
+    "exercise": 3,
+    "duration_or_sets": 24
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 24,
+  "fields": {
+    "subplan": 8,
+    "exercise": 23,
+    "duration_or_sets": 30
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 25,
+  "fields": {
+    "subplan": 9,
+    "exercise": 4,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 26,
+  "fields": {
+    "subplan": 9,
+    "exercise": 21,
+    "duration_or_sets": 45
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 27,
+  "fields": {
+    "subplan": 9,
+    "exercise": 8,
+    "duration_or_sets": 12
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 28,
+  "fields": {
+    "subplan": 10,
+    "exercise": 32,
+    "duration_or_sets": 20
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 29,
+  "fields": {
+    "subplan": 10,
+    "exercise": 16,
+    "duration_or_sets": 45
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 30,
+  "fields": {
+    "subplan": 10,
+    "exercise": 22,
+    "duration_or_sets": 5
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 31,
+  "fields": {
+    "subplan": 11,
+    "exercise": 6,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 32,
+  "fields": {
+    "subplan": 11,
+    "exercise": 2,
+    "duration_or_sets": 5
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 33,
+  "fields": {
+    "subplan": 11,
+    "exercise": 16,
+    "duration_or_sets": 45
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 34,
+  "fields": {
+    "subplan": 12,
+    "exercise": 2,
+    "duration_or_sets": 5
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 35,
+  "fields": {
+    "subplan": 12,
+    "exercise": 23,
+    "duration_or_sets": 45
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 36,
+  "fields": {
+    "subplan": 12,
+    "exercise": 1,
+    "duration_or_sets": 5
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 37,
+  "fields": {
+    "subplan": 13,
+    "exercise": 24,
+    "duration_or_sets": 30
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 38,
+  "fields": {
+    "subplan": 13,
+    "exercise": 21,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 39,
+  "fields": {
+    "subplan": 13,
+    "exercise": 25,
+    "duration_or_sets": 60
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 40,
+  "fields": {
+    "subplan": 14,
+    "exercise": 32,
+    "duration_or_sets": 15
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 41,
+  "fields": {
+    "subplan": 14,
+    "exercise": 12,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 42,
+  "fields": {
+    "subplan": 14,
+    "exercise": 19,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 43,
+  "fields": {
+    "subplan": 15,
+    "exercise": 18,
+    "duration_or_sets": 30
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 44,
+  "fields": {
+    "subplan": 15,
+    "exercise": 22,
+    "duration_or_sets": 5
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 45,
+  "fields": {
+    "subplan": 15,
+    "exercise": 2,
+    "duration_or_sets": 10
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 46,
+  "fields": {
+    "subplan": 16,
+    "exercise": 24,
+    "duration_or_sets": 32
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 47,
+  "fields": {
+    "subplan": 16,
+    "exercise": 33,
+    "duration_or_sets": 15
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 48,
+  "fields": {
+    "subplan": 16,
+    "exercise": 34,
+    "duration_or_sets": 30
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 49,
+  "fields": {
+    "subplan": 17,
+    "exercise": 35,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 50,
+  "fields": {
+    "subplan": 17,
+    "exercise": 19,
+    "duration_or_sets": 30
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 51,
+  "fields": {
+    "subplan": 17,
+    "exercise": 26,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 52,
+  "fields": {
+    "subplan": 18,
+    "exercise": 4,
+    "duration_or_sets": 45
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 53,
+  "fields": {
+    "subplan": 18,
+    "exercise": 16,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 54,
+  "fields": {
+    "subplan": 18,
+    "exercise": 18,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 55,
+  "fields": {
+    "subplan": 19,
+    "exercise": 21,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 56,
+  "fields": {
+    "subplan": 19,
+    "exercise": 9,
+    "duration_or_sets": 3
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 57,
+  "fields": {
+    "subplan": 19,
+    "exercise": 12,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 58,
+  "fields": {
+    "subplan": 20,
+    "exercise": 20,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 59,
+  "fields": {
+    "subplan": 20,
+    "exercise": 11,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 60,
+  "fields": {
+    "subplan": 20,
+    "exercise": 28,
+    "duration_or_sets": 15
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 61,
+  "fields": {
+    "subplan": 21,
+    "exercise": 17,
+    "duration_or_sets": 36
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 62,
+  "fields": {
+    "subplan": 21,
+    "exercise": 1,
+    "duration_or_sets": 3
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 63,
+  "fields": {
+    "subplan": 21,
+    "exercise": 30,
+    "duration_or_sets": 30
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 64,
+  "fields": {
+    "subplan": 22,
+    "exercise": 9,
+    "duration_or_sets": 8
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 65,
+  "fields": {
+    "subplan": 22,
+    "exercise": 27,
+    "duration_or_sets": 10
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 66,
+  "fields": {
+    "subplan": 22,
+    "exercise": 23,
+    "duration_or_sets": 30
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 67,
+  "fields": {
+    "subplan": 23,
+    "exercise": 31,
+    "duration_or_sets": 24
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 68,
+  "fields": {
+    "subplan": 23,
+    "exercise": 21,
+    "duration_or_sets": 30
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 69,
+  "fields": {
+    "subplan": 23,
+    "exercise": 36,
+    "duration_or_sets": 15
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 70,
+  "fields": {
+    "subplan": 24,
+    "exercise": 2,
+    "duration_or_sets": 10
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 71,
+  "fields": {
+    "subplan": 24,
+    "exercise": 22,
+    "duration_or_sets": 5
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 72,
+  "fields": {
+    "subplan": 24,
+    "exercise": 16,
+    "duration_or_sets": 45
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 73,
+  "fields": {
+    "subplan": 25,
+    "exercise": 18,
+    "duration_or_sets": 45
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 74,
+  "fields": {
+    "subplan": 25,
+    "exercise": 12,
+    "duration_or_sets": 45
+  }
+},
+{
+  "model": "workouts.subplanexercise",
+  "pk": 75,
+  "fields": {
+    "subplan": 25,
+    "exercise": 29,
+    "duration_or_sets": 60
+  }
+}
 ]
