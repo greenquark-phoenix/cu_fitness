@@ -4,22 +4,33 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="container mt-4">
-        <header class="text-center">
-            <h1 class="display-4">User Fitness Goals</h1>
-        </header>
+<div class="container mt-4">
+    <header class="text-center">
+        <h1 class="display-4">User Fitness Goals</h1>
+    </header>
 
-        <main class="mt-5">
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <main class="mt-5">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% if user_goals %}
                 {% for user_goal in user_goals %}
                     <div class="col">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
                                 <h5 class="card-title">{{ user_goal.goal.name }}</h5>
+
+                                <!-- 目标信息 -->
                                 <p class="card-text">
-                                    <strong>Target:</strong> {{ user_goal.target_value }}
-                                    {% if user_goal.goal.unit %}{{ user_goal.goal.unit }} {% endif %}
+                                    <strong>Target:</strong>
+                                    {% if user_goal.starting_value %}
+                                        {{ user_goal.starting_value }}
+                                    {% else %}
+                                        ?
+                                    {% endif %}
+                                    → {{ user_goal.target_value }}
+                                    {% if user_goal.goal.unit %}{{ user_goal.goal.unit }}{% endif %}
                                 </p>
+
+                                <!-- 目标状态 -->
                                 <p class="card-text">
                                     <strong>Completion Status:</strong>
                                     {% if user_goal.is_completed %}
@@ -28,32 +39,41 @@
                                         <span class="badge bg-warning text-dark">In Progress</span>
                                     {% endif %}
                                 </p>
+
+                                <!-- 进度条 -->
+                                <p><strong>Progress:</strong> {{ user_goal.progress }}% </p>
+                                <div class="progress mt-2">
+                                    <div class="progress-bar bg-info" role="progressbar"
+                                         style="width: {% if user_goal.progress > 5 %}{{ user_goal.progress }}{% else %}5{% endif %}%"
+                                         aria-valuenow="{{ user_goal.progress }}" aria-valuemin="0" aria-valuemax="100">
+                                         {{ user_goal.progress }}%
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="card-footer">
-                                <small class="text-muted">Last
-                                    updated: {{ user_goal.updated_at|date:"M d, Y H:i" }}</small>
+                                <small class="text-muted">Last updated: {{ user_goal.updated_at|date:"M d, Y H:i" }}</small>
+                                <div class="d-flex justify-content-between mt-2">
+                                    <a href="{% url 'goals:update_goal' user_goal.id %}" class="btn btn-sm btn-primary">Edit</a>
+                                    <a href="{% url 'goals:delete_goal' user_goal.id %}" class="btn btn-sm btn-danger">Delete</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
+            {% endif %}
 
-                <div class="col">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h2 class="text-center">Add Goal</h2>
-                            <form method="POST">
-                                {% csrf_token %}
-                                {{ form|crispy }}
-                                <button type="submit" class="btn btn-primary w-100">Create Goal</button>
-                            </form>
-                        </div>
+            <!-- Set a Goal 按钮 -->
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <h2 class="text-center">Set a Goal</h2>
+                        <a href="{% url 'goals:create_goal' %}" class="btn btn-success w-100">Create Goal</a>
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
 
-    <footer class="text-center mt-5 py-3 border-top">
-        <p>&copy; 2025 Fitness Goals Tracker</p>
-    </footer>
+        </div>
+    </main>
+</div>
 {% endblock content %}
