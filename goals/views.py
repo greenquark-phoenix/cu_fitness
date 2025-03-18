@@ -3,19 +3,23 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import datetime, random, re
 
-from goals.models import UserFitnessGoal
-
+# Make sure you have these imports if they are missing:
+from .models import UserFitnessGoal, FitnessGoal
+from .forms import UserFitnessGoalForm
 
 @login_required
 def goal_list(request):
-    """ 显示用户所有的健身目标 """
+    """
+    Display all fitness goals belonging to the user.
+    """
     user_goals = UserFitnessGoal.objects.filter(user=request.user)
     return render(request, "goals/user_goals.html", {"user_goals": user_goals})
 
-
 @login_required
 def create_goal(request):
-    """ 允许用户创建多个不同类型的目标，而不是覆盖已有目标 """
+    """
+    Allow users to create multiple types of goals instead of overwriting existing ones.
+    """
     if request.method == "POST":
         form = UserFitnessGoalForm(request.POST)
         if form.is_valid():
@@ -30,10 +34,11 @@ def create_goal(request):
 
     return render(request, "goals/create_goal.html", {"form": form})
 
-
 @login_required
 def update_goal(request, goal_id):
-    """ 允许用户更新目标，例如修改目标值、截止日期、状态等 """
+    """
+    Allow users to update goals, such as modifying target value, due date, status, etc.
+    """
     goal = get_object_or_404(UserFitnessGoal, id=goal_id, user=request.user)
 
     if request.method == "POST":
@@ -48,10 +53,11 @@ def update_goal(request, goal_id):
 
     return render(request, "goals/update_goal.html", {"form": form, "goal": goal})
 
-
 @login_required
 def delete_goal(request, goal_id):
-    """ 允许用户删除目标 """
+    """
+    Allow users to delete a goal.
+    """
     goal = get_object_or_404(UserFitnessGoal, id=goal_id, user=request.user)
 
     if request.method == "POST":
@@ -60,10 +66,11 @@ def delete_goal(request, goal_id):
 
     return render(request, "goals/delete_goal.html", {"goal": goal})
 
-
 @login_required
 def recommend_goals(request):
-    """ 根据用户历史数据推荐新目标 """
+    """
+    Recommend new goals based on the user's historical data.
+    """
     user = request.user
     existing_goals = UserFitnessGoal.objects.filter(user=user)
     possible_goals = FitnessGoal.objects.exclude(id__in=existing_goals.values_list('goal_id', flat=True))
@@ -71,22 +78,25 @@ def recommend_goals(request):
 
     return render(request, "goals/recommend_goals.html", {"recommended_goals": recommended_goals})
 
-
 @login_required
 def goal_progress_notification(request):
-    """ 提示用户即将达成目标 """
+    """
+    Notify the user if they are close to achieving their goal (>= 80% progress).
+    """
     user = request.user
     nearing_completion_goals = UserFitnessGoal.objects.filter(user=user, progress__gte=80, status='in_progress')
 
     return render(request, "goals/goal_progress_notification.html", {"nearing_completion_goals": nearing_completion_goals})
 
-
 @login_required
 def create_goal_from_assistant(request):
-    """ 允许用户通过 AI 直接创建目标 """
+    """
+    Allow users to directly create a goal via AI.
+    """
     if request.method == "POST":
         user_input = request.POST.get("text", "")
 
+        # Matches "减肥 (\d+)kg" and "(\d+)个月后" in Chinese.
         weight_loss_match = re.search(r"减肥 (\d+)kg", user_input)
         time_match = re.search(r"(\d+)个月后", user_input)
 
@@ -102,6 +112,32 @@ def create_goal_from_assistant(request):
                 status="not_started"
             )
 
-            return JsonResponse({"message": f"目标已创建：减肥 {weight_loss}kg，目标时间 {months} 个月后。", "goal_id": new_goal.id})
+            return JsonResponse({"message": f"Goal created: lose {weight_loss} kg, target time {months} months from now.",
+                                 "goal_id": new_goal.id})
 
-        return JsonResponse({"error": "无法解析目标，请用更清晰的语言描述。"})
+        return JsonResponse({"error": "Unable to parse the goal. Please use clearer language."})
+
+def bmi_calculator(request):
+    """
+    A simple BMI calculator view.
+    """
+    bmi_result = None  # Used to store the calculated BMI
+    height = None
+    weight = None
+
+    if request.method == 'POST':
+        # Get the submitted values, default to 0 to avoid errors
+        height = float(request.POST.get('height', 0))
+        weight = float(request.POST.get('weight', 0))
+
+        # Ensure height is not 0
+        if height != 0:
+            # Calculate BMI
+            bmi_result = round(weight / ((height / 100) * (height / 100)), 2)
+
+    # Render the template and pass the result
+    return render(request, 'goals/bmi_calculator.html', {
+        'bmi_result': bmi_result,
+        'height': height,
+        'weight': weight
+    })
