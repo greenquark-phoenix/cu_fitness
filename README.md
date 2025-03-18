@@ -27,7 +27,7 @@ python manage.py migrate
 python manage.py createsuperuser
 
 # Load initial data
-./scripts/load_initial_data.sh # On Windows use: .\scripts\load_initial_data.bat
+./scripts/init_data.sh # On Windows use: .\scripts\init_data.bat
 ```
 
 ## Usage
