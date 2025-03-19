@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import blog_list, blog_detail
+from . import views
 
 urlpatterns = [
-    path('', blog_list, name='blog_list'),
-    path('<int:post_id>/', blog_detail, name='blog_detail'),  # Detail page route
-    path('<int:post_id>/', blog_detail, name='blog_detail'),
+    path("", views.blog_list, name="blog_list"),
+    path("<int:post_id>/", views.blog_detail, name="blog_detail"),
+    path("post/<int:post_id>/comment/", views.add_comment, name="add_comment"),
+    path("comment/<int:comment_id>/like/", views.like_comment, name="like_comment"),
+    path("comment/<int:comment_id>/delete/", views.delete_comment, name="delete_comment"),
 ]

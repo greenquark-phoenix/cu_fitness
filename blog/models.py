@@ -4,6 +4,7 @@ from django.utils import timezone
 
 
 class Category(models.Model):
+
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
@@ -18,6 +19,7 @@ class Tag(models.Model):
 
 
 class Post(models.Model):
+
     title = models.CharField(max_length=200)
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -25,7 +27,6 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
-
     def __str__(self):
         return self.title
 
@@ -35,6 +36,7 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-
+    likes = models.PositiveIntegerField(default=0)  # 点赞数量
+    liked_by = models.ManyToManyField(User, related_name="liked_comments", blank=True)  # 记录哪些用户点了赞
     def __str__(self):
-        return f"{self.user.username} - {self.post.title}"
+        return f"{self.user.username}: {self.content[:30]}"
