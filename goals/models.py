@@ -1,12 +1,11 @@
 import datetime
-from django.core.exceptions import ValidationError
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
-
 
 class FitnessGoal(models.Model):
     """
-    A general goal type in the system, such as weight loss, muscle gain, etc.
+    Represents a general goal type, such as weight loss or muscle gain.
     """
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=255)
@@ -27,20 +26,16 @@ class FitnessGoal(models.Model):
 
 class UserFitnessGoal(models.Model):
     """
-    A specific goal created by the user. For example:
-    - Initial weight 80kg, target 70kg
-    - Initial BMI 28, target 24
+    A specific goal created by the user, for example:
+    initial_value=80kg, target_value=70kg, due_at in 2 months, etc.
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
-    goal = models.ForeignKey(FitnessGoal, on_delete=models.CASCADE, null=False, blank=False)
-
-    # 'initial_value' replaced 'starting_value'
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    goal = models.ForeignKey(FitnessGoal, on_delete=models.CASCADE)
     initial_value = models.FloatField(null=True, blank=True, default=0)
-    target_value = models.FloatField(null=False, blank=False)
-
+    target_value = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    due_at = models.DateField(null=False, blank=False)
+    due_at = models.DateField()
 
     STATUS_CHOICES = [
         ('not_started', 'Not Started'),
@@ -51,51 +46,39 @@ class UserFitnessGoal(models.Model):
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='not_started')
 
     def clean(self):
-        """
-        Basic validations:
-        - target_value >= 0
-        - due_at should not be earlier than today
-        """
         if self.target_value < 0:
-            raise ValidationError("Target value must be greater than 0")
+            raise ValidationError("Target value must be greater than 0.")
         if self.due_at < datetime.date.today():
-            raise ValidationError("Due date must be greater than or equal to today")
+            raise ValidationError("Due date must be today or later.")
 
     @property
     def progress(self):
         """
-        Calculate progress based on the latest UserFitnessProgress record.
-        If no record exists, progress=0.
-        This example assumes a transition from initial_value to target_value:
-        ratio = (current_value - initial_value) / (target_value - initial_value)
-        Adjust if needed for weight loss vs. muscle gain.
+        Calculates progress based on the latest UserFitnessProgress record.
+        If no record exists, returns 0.
         """
-        latest_progress = self.progress_logs.order_by('-timestamp').first()
-        if not latest_progress:
-            return 0  # No progress records
-
-        current_value = latest_progress.current_value
+        latest_log = self.progress_logs.order_by('-timestamp').first()
+        if not latest_log:
+            return 0
+        current_value = latest_log.current_value
         delta = self.target_value - self.initial_value
         if abs(delta) < 1e-9:
             return 0
-
         ratio = (current_value - self.initial_value) / delta
-        # If you're doing weight loss (initial_value > target_value),
-        # you might want a different formula or condition.
-
         ratio = max(0, min(ratio, 1))
         return round(ratio * 100, 2)
 
     @property
     def is_completed(self):
-        """A goal is considered completed if progress >= 100%."""
         return self.progress >= 100
+
+    def __str__(self):
+        return f"Goal #{self.id} for {self.user.username}"
 
 
 class UserFitnessProgress(models.Model):
     """
-    A model for multiple check-ins (logs). Each time the user updates the current value,
-    a new record is created here.
+    Logs multiple check-ins for each goal.
     """
     user_goal = models.ForeignKey(UserFitnessGoal, on_delete=models.CASCADE, related_name='progress_logs')
     current_value = models.FloatField()

@@ -1,35 +1,30 @@
 from django import forms
 from .models import UserFitnessGoal, FitnessGoal, UserFitnessProgress
 
-
 class UserFitnessGoalForm(forms.ModelForm):
     """
-    A form for users to create and manage multiple fitness goals.
+    Form for creating or updating a user fitness goal.
     """
     goal = forms.ModelChoiceField(
         queryset=FitnessGoal.objects.filter(category__in=['bmi_target', 'weight_loss']),
         label="Target Type",
         empty_label="Select your target type",
     )
-
     initial_value = forms.FloatField(
         label="Initial Value",
         required=False,
         initial=0,
         help_text="Enter your initial value (default is 0)",
     )
-
     target_value = forms.FloatField(
         label="Target Value",
         min_value=0,
         help_text="Please enter your target value",
     )
-
     due_at = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-        label="Please enter your due date",
+        label="Due Date",
     )
-
     status = forms.ChoiceField(
         choices=UserFitnessGoal.STATUS_CHOICES,
         label="Status",
@@ -43,7 +38,7 @@ class UserFitnessGoalForm(forms.ModelForm):
 
 class UserFitnessProgressForm(forms.ModelForm):
     """
-    A form for users to log multiple check-ins (current value).
+    Form for logging current_value check-ins.
     """
     class Meta:
         model = UserFitnessProgress
