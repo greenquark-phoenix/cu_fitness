@@ -1,28 +1,41 @@
 {% extends 'base.html' %}
-{% load static %}  <!-- Load static files -->
+{% load static %}
 
 {% block content %}
 <style>
     body {
-        background: url("{% static 'images/background-1.jpg' %}") no-repeat center center fixed;
+        background: url("{% static 'images/white.jpg' %}") no-repeat center center fixed;
         background-size: cover;
     }
-    .blog-container {
-        background: rgba(255, 255, 255, 0.9); /* White transparent background */
+    .community-container {
+        background: rgba(255, 255, 255, 0.9);
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     }
+    .text-white {
+        color: white;
+    }
 </style>
 
 <div class="container mt-4">
-    <h1 class="text-center mb-4">Blog Posts</h1>
-    <div class="row">
+    <h1 class="text-center mb-4 text-black">Community Posts</h1>
+
+
+    <div class="card p-3 mb-4">
+        <h3>Publish a New Post</h3>
+        <form id="post-form">
+            {% csrf_token %}
+            <input type="text" id="post-title" class="form-control mb-2" placeholder="Enter Post Title">
+            <textarea id="post-content" class="form-control mb-2" placeholder="Enter Post Content"></textarea>
+            <button type="submit" class="btn btn-success">Publish</button>
+        </form>
+    </div>
+
+    <div class="row" id="post-list">
         {% for post in posts %}
-            <div class="col-md-4">
+            <div class="col-md-4 post-item">
                 <div class="card mb-4 shadow-sm">
-                    <img src="{% static 'images/background-1.jpg' %}" class="card-img-top" alt="Blog Image">
-                    
                     <div class="card-body">
                         <h5 class="card-title">{{ post.title }}</h5>
                         <p class="card-text text-muted">
@@ -33,7 +46,63 @@
                     </div>
                 </div>
             </div>
+        {% empty %}
+            <p class="text-center">No posts available.</p>
         {% endfor %}
     </div>
 </div>
+
+
+<script>
+    document.getElementById('post-form').addEventListener('submit', function(event) {
+        event.preventDefault();  
+
+        var title = document.getElementById('post-title').value;
+        var content = document.getElementById('post-content').value;
+        var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        if (!title.trim() || !content.trim()) {
+            alert("Title and Content cannot be empty.");
+            return;
+        }
+
+        fetch("{% url 'blog_list' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrftoken,
+            },
+            body: 'title=' + encodeURIComponent(title) + '&content=' + encodeURIComponent(content)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                var newPost = `
+                    <div class="col-md-4 post-item">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">${data.title}</h5>
+                                <p class="card-text text-muted">
+                                    By: ${data.author} | ${data.created_at}
+                                </p>
+                                <p class="card-text">${data.content}</p>
+                                <a href="/blog/${data.id}/" class="btn btn-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('post-list').insertAdjacentHTML("afterbegin", newPost);
+                document.getElementById('post-title').value = '';
+                document.getElementById('post-content').value = '';
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while creating the post.');
+        });
+    });
+</script>
+
 {% endblock %}

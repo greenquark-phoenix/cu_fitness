@@ -1,67 +1,196 @@
 {% extends 'base.html' %}
-{% load static %}  <!-- Load static files -->
+{% load static %}
 
 {% block content %}
-<style>
-    body {
-        background: url("{% static 'images/background-1.jpg' %}") no-repeat center center fixed;
-        background-size: cover;
-    }
-    .blog-container {
-        background: rgba(255, 255, 255, 0.9); /* White transparent background */
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    }
-</style>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-lg-8 mx-auto blog-container">
-            <div class="card">
-                <img src="{% static 'images/background-1.jpg' %}" class="card-img-top img-fluid rounded" alt="Blog Image">
-                
-                <div class="card-body">
-                    <h1 class="card-title">{{ post.title }}</h1>
-                    <p class="text-muted">By: {{ post.author.username }} | Published: {{ post.created_at|date:"Y-m-d H:i" }}</p>
-                    <hr>
-                    <p class="card-text">{{ post.content|safe }}</p>
-                </div>
-            </div>
+        .community-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
 
-            <!-- Comment Section -->
-            <div class="mt-4">
-                <h4>Comments</h4>
-                {% for comment in post.comments.all %}
-                    <div class="border p-3 my-2 rounded bg-light">
-                        <div class="d-flex align-items-center">
-                            <img src="{% static 'images/background-1.jpg' %}" alt="User Avatar" class="rounded-circle me-2" width="40">
-                            <strong>{{ comment.user.username }}</strong> 
-                        </div>
-                        <span class="text-muted small">on {{ comment.created_at|date:"Y-m-d H:i" }}</span>
-                        <p class="mt-2">{{ comment.content }}</p>
+        .comment-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto community-container">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title">{{ post.title }}</h1>
+                        <p class="text-muted">By: {{ post.author.username }} |
+                            Published: {{ post.created_at|date:"Y-m-d H:i" }}</p>
+                        <hr>
+                        <p class="card-text">{{ post.content|safe }}</p>
                     </div>
-                {% empty %}
-                    <p class="text-muted">No comments yet. Be the first to comment!</p>
-                {% endfor %}
-            </div>
-
-            <!-- Add Comment Form -->
-            {% if user.is_authenticated %}
-                <div class="mt-4">
-                    <h4>Add a Comment</h4>
-                    <form method="POST">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <textarea class="form-control" name="content" rows="3" placeholder="Write your comment here..."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-success">Post Comment</button>
-                    </form>
                 </div>
-            {% else %}
-                <p class="text-muted mt-4">You must be logged in to post a comment.</p>
-            {% endif %}
+
+                <!-- Comment Section -->
+                <div class="mt-4">
+                    <h4>Comments</h4>
+                    <div id="comments">
+                        {% for comment in post.comments.all %}
+                            <div class="border p-3 my-2 rounded bg-light">
+                                <div class="comment-actions">
+                                    <div>
+                                        <strong>{{ comment.user.username }}</strong>
+                                        <span class="text-muted small">on {{ comment.created_at|date:"Y-m-d H:i" }}</span>
+                                    </div>
+                                    <div>
+                                        <!-- Like Button -->
+                                        <button class="btn btn-outline-primary btn-sm like-comment"
+                                                data-comment-id="{{ comment.id }}">
+                                            👍 Like <span class="like-count">{{ comment.likes }}</span>
+                                        </button>
+                                        <!-- Delete Button (only for comment owner) -->
+                                        {% if comment.user == user %}
+                                            <button class="btn btn-danger btn-sm delete-comment"
+                                                    data-comment-id="{{ comment.id }}">
+                                                Delete
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <p class="mt-2">{{ comment.content }}</p>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No comments yet. Be the first to comment!</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Add Comment Form -->
+                {% if user.is_authenticated %}
+                    <div class="mt-4">
+                        <h4>Add a Comment</h4>
+                        <textarea id="comment-content" class="form-control" rows="3"
+                                  placeholder="Write your comment here..."></textarea>
+                        <button id="submit-comment" class="btn btn-success mt-2">Post Comment</button>
+                    </div>
+                {% else %}
+                    <p class="text-muted mt-4">You must be logged in to post a comment.</p>
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
+
+    <script>
+
+        document.getElementById("submit-comment").addEventListener("click", function () {
+            let content = document.getElementById("comment-content").value.trim();
+            if (content === "") {
+                alert("Comment cannot be empty!");
+                return;
+            }
+
+            let csrfToken = "{{ csrf_token }}";
+
+            fetch("{% url 'add_comment' post.id %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrfToken,
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({content: content})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        let commentSection = document.getElementById("comments");
+                        let newComment = document.createElement("div");
+                        newComment.classList.add("border", "p-3", "my-2", "rounded", "bg-light");
+                        newComment.innerHTML = `
+                        <div class="comment-actions">
+                            <div>
+                                <strong>${data.username}</strong>
+                                <span class="text-muted small">on ${data.created_at}</span>
+                            </div>
+                            <div>
+                                <button class="btn btn-outline-primary btn-sm like-comment"
+                                        data-comment-id="${data.comment_id}">
+                                    👍 Like <span class="like-count">0</span>
+                                </button>
+                                <button class="btn btn-danger btn-sm delete-comment"
+                                        data-comment-id="${data.comment_id}">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                        <p class="mt-2">${data.content}</p>
+                    `;
+                        commentSection.appendChild(newComment);
+                        document.getElementById("comment-content").value = "";
+                    } else {
+                        alert("Failed to post comment!");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        });
+
+
+        document.addEventListener("click", function (event) {
+
+            if (event.target.classList.contains("like-comment")) {
+                let commentId = event.target.getAttribute("data-comment-id");
+                let likeCountSpan = event.target.querySelector(".like-count");
+                let csrfToken = "{{ csrf_token }}";
+
+                fetch(`/blog/comment/${commentId}/like/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": csrfToken,
+                        "Content-Type": "application/json"
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            likeCountSpan.innerText = data.likes;
+                            if (data.liked) {
+                                event.target.classList.add("btn-primary");
+                                event.target.classList.remove("btn-outline-primary");
+                            } else {
+                                event.target.classList.add("btn-outline-primary");
+                                event.target.classList.remove("btn-primary");
+                            }
+                        } else {
+                            alert("Failed to like comment.");
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            }
+
+
+            if (event.target.classList.contains("delete-comment")) {
+                let commentId = event.target.getAttribute("data-comment-id");
+                let csrfToken = "{{ csrf_token }}";
+
+                fetch(`/blog/comment/${commentId}/delete/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": csrfToken,
+                        "Content-Type": "application/json"
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            event.target.closest(".border").remove();
+                        } else {
+                            alert("Failed to delete comment.");
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            }
+        });
+    </script>
 {% endblock %}
