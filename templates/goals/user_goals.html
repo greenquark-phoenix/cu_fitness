@@ -18,19 +18,20 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{ user_goal.goal.name }}</h5>
 
-                                <!-- 目标信息 -->
+                                <!-- Goal Info -->
                                 <p class="card-text">
-                                    <strong>Target:</strong>
-                                    {% if user_goal.starting_value %}
-                                        {{ user_goal.starting_value }}
+                                    <strong>From:</strong>
+                                    {% if user_goal.initial_value %}
+                                        {{ user_goal.initial_value }}
                                     {% else %}
                                         ?
                                     {% endif %}
-                                    → {{ user_goal.target_value }}
+                                    →
+                                    {{ user_goal.target_value }}
                                     {% if user_goal.goal.unit %}{{ user_goal.goal.unit }}{% endif %}
                                 </p>
 
-                                <!-- 目标状态 -->
+                                <!-- Goal Status -->
                                 <p class="card-text">
                                     <strong>Completion Status:</strong>
                                     {% if user_goal.is_completed %}
@@ -40,7 +41,7 @@
                                     {% endif %}
                                 </p>
 
-                                <!-- 进度条 -->
+                                <!-- Progress Bar -->
                                 <p><strong>Progress:</strong> {{ user_goal.progress }}% </p>
                                 <div class="progress mt-2">
                                     <div class="progress-bar bg-info" role="progressbar"
@@ -52,10 +53,25 @@
 
                             </div>
                             <div class="card-footer">
-                                <small class="text-muted">Last updated: {{ user_goal.updated_at|date:"M d, Y H:i" }}</small>
+                                <small class="text-muted">
+                                    Last updated: {{ user_goal.updated_at|date:"M d, Y H:i" }}
+                                </small>
                                 <div class="d-flex justify-content-between mt-2">
-                                    <a href="{% url 'goals:update_goal' user_goal.id %}" class="btn btn-sm btn-primary">Edit</a>
-                                    <a href="{% url 'goals:delete_goal' user_goal.id %}" class="btn btn-sm btn-danger">Delete</a>
+                                    <a href="{% url 'goals:update_goal' user_goal.id %}"
+                                       class="btn btn-sm btn-primary">
+                                        Edit
+                                    </a>
+                                    <a href="{% url 'goals:delete_goal' user_goal.id %}"
+                                       class="btn btn-sm btn-danger">
+                                        Delete
+                                    </a>
+                                </div>
+                                <div class="mt-2">
+                                    <!-- New: Update Progress button -->
+                                    <a href="{% url 'goals:log_progress' user_goal.id %}"
+                                       class="btn btn-sm btn-info w-100">
+                                        Update Progress
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -63,7 +79,7 @@
                 {% endfor %}
             {% endif %}
 
-            <!-- Set a Goal 按钮 -->
+            <!-- Set a Goal button -->
             <div class="col">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body text-center">

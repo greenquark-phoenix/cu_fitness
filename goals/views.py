@@ -1,25 +1,24 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-import datetime, random, re
+import datetime
+import random
+import re
 
-# Make sure you have these imports if they are missing:
-from .models import UserFitnessGoal, FitnessGoal
-from .forms import UserFitnessGoalForm
+from .forms import UserFitnessGoalForm, UserFitnessProgressForm
+from .models import UserFitnessGoal, FitnessGoal, UserFitnessProgress
+
 
 @login_required
 def goal_list(request):
-    """
-    Display all fitness goals belonging to the user.
-    """
+    """Display all fitness goals for the current user."""
     user_goals = UserFitnessGoal.objects.filter(user=request.user)
     return render(request, "goals/user_goals.html", {"user_goals": user_goals})
 
+
 @login_required
 def create_goal(request):
-    """
-    Allow users to create multiple types of goals instead of overwriting existing ones.
-    """
+    """Allow users to create multiple types of goals."""
     if request.method == "POST":
         form = UserFitnessGoalForm(request.POST)
         if form.is_valid():
@@ -34,11 +33,10 @@ def create_goal(request):
 
     return render(request, "goals/create_goal.html", {"form": form})
 
+
 @login_required
 def update_goal(request, goal_id):
-    """
-    Allow users to update goals, such as modifying target value, due date, status, etc.
-    """
+    """Allow users to update a goal, e.g. modify value, due date, status, etc."""
     goal = get_object_or_404(UserFitnessGoal, id=goal_id, user=request.user)
 
     if request.method == "POST":
@@ -53,11 +51,10 @@ def update_goal(request, goal_id):
 
     return render(request, "goals/update_goal.html", {"form": form, "goal": goal})
 
+
 @login_required
 def delete_goal(request, goal_id):
-    """
-    Allow users to delete a goal.
-    """
+    """Allow users to delete a goal."""
     goal = get_object_or_404(UserFitnessGoal, id=goal_id, user=request.user)
 
     if request.method == "POST":
@@ -66,11 +63,10 @@ def delete_goal(request, goal_id):
 
     return render(request, "goals/delete_goal.html", {"goal": goal})
 
+
 @login_required
 def recommend_goals(request):
-    """
-    Recommend new goals based on the user's historical data.
-    """
+    """Recommend new goals based on the user's history."""
     user = request.user
     existing_goals = UserFitnessGoal.objects.filter(user=user)
     possible_goals = FitnessGoal.objects.exclude(id__in=existing_goals.values_list('goal_id', flat=True))
@@ -78,66 +74,89 @@ def recommend_goals(request):
 
     return render(request, "goals/recommend_goals.html", {"recommended_goals": recommended_goals})
 
+
 @login_required
 def goal_progress_notification(request):
-    """
-    Notify the user if they are close to achieving their goal (>= 80% progress).
-    """
+    """Notify users that they are close to achieving their goals."""
     user = request.user
-    nearing_completion_goals = UserFitnessGoal.objects.filter(user=user, progress__gte=80, status='in_progress')
+    # This depends on progress >= 80
+    nearing_completion_goals = [
+        g for g in UserFitnessGoal.objects.filter(user=user)
+        if g.progress >= 80 and g.status == 'in_progress'
+    ]
 
-    return render(request, "goals/goal_progress_notification.html", {"nearing_completion_goals": nearing_completion_goals})
+    return render(
+        request,
+        "goals/goal_progress_notification.html",
+        {"nearing_completion_goals": nearing_completion_goals}
+    )
+
 
 @login_required
 def create_goal_from_assistant(request):
     """
-    Allow users to directly create a goal via AI.
+    Allow users to create a goal directly via AI.
+    Example input: "lose 5kg in 2 months later"
     """
     if request.method == "POST":
         user_input = request.POST.get("text", "")
 
-        # Matches "减肥 (\d+)kg" and "(\d+)个月后" in Chinese.
-        weight_loss_match = re.search(r"减肥 (\d+)kg", user_input)
-        time_match = re.search(r"(\d+)个月后", user_input)
+        # e.g., "lose 5kg in 2 months later"
+        weight_loss_match = re.search(r"lose (\d+)kg", user_input)
+        time_match = re.search(r"(\d+) months later", user_input)
 
         if weight_loss_match and time_match:
             weight_loss = int(weight_loss_match.group(1))
             months = int(time_match.group(1))
 
+            fitness_goal = FitnessGoal.objects.filter(name="Weight Loss Target").first()
+            if not fitness_goal:
+                return JsonResponse({"error": "No matching FitnessGoal found."})
+
             new_goal = UserFitnessGoal.objects.create(
                 user=request.user,
-                goal=FitnessGoal.objects.get(name="Weight Loss Target"),
+                goal=fitness_goal,
+                initial_value=0,
                 target_value=weight_loss,
                 due_at=datetime.date.today() + datetime.timedelta(days=30 * months),
                 status="not_started"
             )
 
-            return JsonResponse({"message": f"Goal created: lose {weight_loss} kg, target time {months} months from now.",
-                                 "goal_id": new_goal.id})
+            return JsonResponse({
+                "message": f"Goal created: lose {weight_loss} kg in {months} months.",
+                "goal_id": new_goal.id
+            })
 
-        return JsonResponse({"error": "Unable to parse the goal. Please use clearer language."})
+        return JsonResponse({
+            "error": "Unable to parse the goal. Please describe in clearer language."
+        })
 
-def bmi_calculator(request):
+
+@login_required
+def log_progress(request, goal_id):
     """
-    A simple BMI calculator view.
+    Let the user log (check in) their current value for a specific goal.
     """
-    bmi_result = None  # Used to store the calculated BMI
-    height = None
-    weight = None
+    goal = get_object_or_404(UserFitnessGoal, id=goal_id, user=request.user)
 
     if request.method == 'POST':
-        # Get the submitted values, default to 0 to avoid errors
-        height = float(request.POST.get('height', 0))
-        weight = float(request.POST.get('weight', 0))
+        form = UserFitnessProgressForm(request.POST)
+        if form.is_valid():
+            progress_record = form.save(commit=False)
+            progress_record.user_goal = goal
+            progress_record.save()
+            # Optionally, update status automatically if progress >= 100:
+            # if goal.progress >= 100:
+            #     goal.status = 'completed'
+            #     goal.save()
 
-        # Ensure height is not 0
-        if height != 0:
-            # Calculate BMI
-            bmi_result = round(weight / ((height / 100) * (height / 100)), 2)
+            return redirect('goals:user_goals')
+        else:
+            print(form.errors)
+    else:
+        form = UserFitnessProgressForm()
 
-    # Render the template and pass the result
-    return render(request, 'goals/bmi_calculator.html', {
-        'bmi_result': bmi_result,
-        'height': height,
-        'weight': weight
+    return render(request, 'goals/log_progress.html', {
+        'form': form,
+        'goal': goal
     })

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_filters %}
 {% load crispy_forms_tags %}
 
 {% block content %}
@@ -16,7 +17,7 @@
         <a href="{% url 'goals:user_goals' %}" class="btn btn-secondary">Back to Goals</a>
     </div>
 
-    <!-- 下面是新增的 BMI 计算器区域 -->
+    <!-- BMI Calculator section -->
     <hr>
     <h3 class="mt-4">BMI Calculator</h3>
     <div class="form-group">
@@ -42,12 +43,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   calculateBtn.addEventListener('click', function() {
     var weight = parseFloat(weightInput.value);
-    var height = parseFloat(heightInput.value) / 100.0; // 转换为米
+    var height = parseFloat(heightInput.value) / 100.0; // convert cm to meters
     if (weight > 0 && height > 0) {
       var bmi = weight / (height * height);
       bmiResult.textContent = "Your BMI is " + bmi.toFixed(2);
 
-      // 如果选择的是 BMI 目标，自动填入 target_value
+      // If the selected goal is BMI Target, auto-fill target_value
       if (goalField && goalField.options[goalField.selectedIndex].text.includes("BMI")) {
         targetValueField.value = bmi.toFixed(2);
       }
