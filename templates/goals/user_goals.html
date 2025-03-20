@@ -4,56 +4,93 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="container mt-4">
-        <header class="text-center">
-            <h1 class="display-4">User Fitness Goals</h1>
-        </header>
 
-        <main class="mt-5">
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+<!-- Reminder alerts -->
+{% if nearly_due_goals %}
+<div class="alert alert-warning">
+  <strong>Reminder:</strong> Some of your goals are due soon (within 3 days) and have less than 80% progress.
+</div>
+{% endif %}
+
+{% if overdue_goals %}
+<div class="alert alert-danger">
+  <strong>Alert:</strong> Some of your goals are overdue but not completed.
+</div>
+{% endif %}
+
+{% if almost_done_goals %}
+<div class="alert alert-info">
+  <strong>Keep Going:</strong> Some of your goals have reached 80% progress or more!
+</div>
+{% endif %}
+
+<div class="container mt-4">
+    <header class="text-center">
+        <h1 class="display-4">User Fitness Goals</h1>
+    </header>
+
+    <main class="mt-5">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% if user_goals %}
                 {% for user_goal in user_goals %}
                     <div class="col">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
                                 <h5 class="card-title">{{ user_goal.goal.name }}</h5>
+
                                 <p class="card-text">
-                                    <strong>Target:</strong> {{ user_goal.target_value }}
-                                    {% if user_goal.goal.unit %}{{ user_goal.goal.unit }} {% endif %}
+                                    <strong>From:</strong>
+                                    {{ user_goal.initial_value }} → {{ user_goal.target_value }}
+                                    {% if user_goal.goal.unit %}{{ user_goal.goal.unit }}{% endif %}
                                 </p>
+
                                 <p class="card-text">
-                                    <strong>Completion Status:</strong>
-                                    {% if user_goal.is_completed %}
-                                        <span class="badge bg-success">Completed</span>
-                                    {% else %}
-                                        <span class="badge bg-warning text-dark">In Progress</span>
-                                    {% endif %}
+                                    <strong>Status:</strong> {{ user_goal.get_status_display }}
                                 </p>
+
+                                <p><strong>Progress:</strong> {{ user_goal.progress }}%</p>
+                                <div class="progress mt-2">
+                                    <div class="progress-bar bg-info" role="progressbar"
+                                         style="width: {% if user_goal.progress > 5 %}{{ user_goal.progress }}{% else %}5{% endif %}%"
+                                         aria-valuenow="{{ user_goal.progress }}" aria-valuemin="0" aria-valuemax="100">
+                                         {{ user_goal.progress }}%
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-footer">
-                                <small class="text-muted">Last
-                                    updated: {{ user_goal.updated_at|date:"M d, Y H:i" }}</small>
+                                <small class="text-muted">
+                                    Last updated: {{ user_goal.updated_at|date:"M d, Y H:i" }}
+                                </small>
+                                <div class="d-flex justify-content-between mt-2">
+                                    <a href="{% url 'goals:update_goal' user_goal.id %}" class="btn btn-sm btn-primary">
+                                        Edit
+                                    </a>
+                                    <a href="{% url 'goals:delete_goal' user_goal.id %}" class="btn btn-sm btn-danger">
+                                        Delete
+                                    </a>
+                                </div>
+                                <div class="mt-2">
+                                    <a href="{% url 'goals:log_progress' user_goal.id %}"
+                                       class="btn btn-sm btn-info w-100">
+                                        Update Progress
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
+            {% endif %}
 
-                <div class="col">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h2 class="text-center">Add Goal</h2>
-                            <form method="POST">
-                                {% csrf_token %}
-                                {{ form|crispy }}
-                                <button type="submit" class="btn btn-primary w-100">Create Goal</button>
-                            </form>
-                        </div>
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <h2 class="text-center">Set a Goal</h2>
+                        <a href="{% url 'goals:create_goal' %}" class="btn btn-success w-100">Create Goal</a>
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
 
-    <footer class="text-center mt-5 py-3 border-top">
-        <p>&copy; 2025 Fitness Goals Tracker</p>
-    </footer>
+        </div>
+    </main>
+</div>
 {% endblock content %}
