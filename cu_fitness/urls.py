@@ -28,6 +28,7 @@ urlpatterns = [
     path("meals/", include('meals.urls')),
     path('blog/', include('blog.urls')),
     path('assistant/', include('assistant.urls')),
+    path('schedule/', include('schedule.urls', namespace='schedule')),
 ]
 
 if settings.DEBUG:
