@@ -29,7 +29,6 @@ python manage.py createsuperuser
 # Load initial data
 ./scripts/init_data.sh # On Windows use: .\scripts\init_data.bat
 ```
-
 ## Usage
 ```sh
 python manage.py runserver
