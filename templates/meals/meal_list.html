@@ -103,7 +103,6 @@
         <!-- Left Sidebar: Filter Form -->
         <div class="col-md-3">
             <div class="sidebar">
-                <!-- Collapsible Filter Panel -->
                 <div id="filterPanel">
                     <div class="card card-body">
                         <h5>Filter Options</h5>
@@ -184,6 +183,16 @@
 
         <!-- Right Column: Meals Content Grouped by Meal Type -->
         <div class="col-md-9">
+
+            <!-- Generate Schedule Button (Top Right) -->
+            <div style="text-align: right; margin-bottom: 15px;">
+                <a href="{% url 'schedule:generate_meal_schedule' %}"
+                   class="btn btn-success btn-lg"
+                   style="font-weight: bold;">
+                    Generate Schedule
+                </a>
+            </div>
+
             <!-- Breakfast Items Section -->
             <h2 class="section-heading">Breakfast Items</h2>
             <div class="row">
@@ -217,7 +226,6 @@
                                             data-target="#micronutrientsModal{{ meal.id }}">
                                         Micronutrients
                                     </button>
-                                    <!-- ADDED: Toggle Select Button -->
                                     <button type="button"
                                             class="btn toggle-select-btn"
                                             data-meal-id="{{ meal.id }}"
@@ -264,7 +272,6 @@
                                             data-target="#micronutrientsModal{{ meal.id }}">
                                         Micronutrients
                                     </button>
-                                    <!-- ADDED: Toggle Select Button -->
                                     <button type="button"
                                             class="btn toggle-select-btn"
                                             data-meal-id="{{ meal.id }}"
@@ -311,7 +318,6 @@
                                             data-target="#micronutrientsModal{{ meal.id }}">
                                         Micronutrients
                                     </button>
-                                    <!-- ADDED: Toggle Select Button -->
                                     <button type="button"
                                             class="btn toggle-select-btn"
                                             data-meal-id="{{ meal.id }}"
@@ -358,7 +364,6 @@
                                             data-target="#micronutrientsModal{{ meal.id }}">
                                         Micronutrients
                                     </button>
-                                    <!-- ADDED: Toggle Select Button -->
                                     <button type="button"
                                             class="btn toggle-select-btn"
                                             data-meal-id="{{ meal.id }}"
@@ -522,7 +527,7 @@
         $("#priceRangeValue").text("$" + initialValues[0] + " - $" + initialValues[1]);
     });
 
-    // ADDED: Toggle meal selection via AJAX
+    // Toggle meal selection via AJAX
     $(document).ready(function() {
         $('.toggle-select-btn').click(function() {
             var $btn = $(this);
