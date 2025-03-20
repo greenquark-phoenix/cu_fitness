@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'meals.apps.MealsConfig',
     'blog.apps.BlogConfig',
     'assistant.apps.AssistantConfig'
+    'schedule.apps.ScheduleConfig',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
