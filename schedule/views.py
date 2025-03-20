@@ -40,6 +40,6 @@ def view_meal_schedule(request):
     for plan in plans:
         schedule_by_date.setdefault(plan.date, []).append(plan)
 
-    return render(request, 'schedule.html', {
+    return render(request, 'schedule/schedule.html', {
         'schedule_by_date': schedule_by_date
     })

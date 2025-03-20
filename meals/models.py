@@ -335,7 +335,7 @@ class RecommendedDailyIntake(models.Model):
         return self.name
 
 
-# ADDED: Model to store each user's meal selection status
+# Model to store each user's meal selection status
 class UserMealSelection(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)

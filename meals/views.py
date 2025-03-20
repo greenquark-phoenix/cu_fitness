@@ -1,6 +1,11 @@
 from django.shortcuts import render
 from django.db.models import Q
-from .models import Meal, RecommendedDailyIntake  
+from .models import Meal, RecommendedDailyIntake  # Existing imports
+# -- ADDED IMPORTS BELOW --
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from .models import UserMealSelection
 
 def meal_list(request):
     meals = Meal.objects.all()
@@ -59,6 +64,24 @@ def meal_list(request):
 
     context = {
         'meals': meals,
-        'recommended': recommended 
+        'recommended': recommended
     }
     return render(request, 'meals/meal_list.html', context)
+
+@login_required
+@require_POST
+def toggle_meal_selection(request):
+    meal_id = request.POST.get('meal_id')
+    if not meal_id:
+        return JsonResponse({'error': 'No meal_id provided'}, status=400)
+
+    try:
+        meal = Meal.objects.get(id=meal_id)
+    except Meal.DoesNotExist:
+        return JsonResponse({'error': 'Meal does not exist'}, status=404)
+
+    selection, created = UserMealSelection.objects.get_or_create(user=request.user, meal=meal)
+    selection.selected = not selection.selected
+    selection.save()
+
+    return JsonResponse({'selected': selection.selected})
