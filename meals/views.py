@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Q
-from .models import Meal, RecommendedDailyIntake  
+from .models import Meal, RecommendedDailyIntake
+from .forms import IntakeCaloriesForm
 
 def meal_list(request):
     meals = Meal.objects.all()
@@ -59,6 +60,35 @@ def meal_list(request):
 
     context = {
         'meals': meals,
-        'recommended': recommended 
+        'recommended': recommended
     }
     return render(request, 'meals/meal_list.html', context)
+
+
+def intake_calories(request):
+    """
+    Displays a form allowing users to select meals and calculates the total calorie intake.
+    Meals are categorized by breakfast, lunch, dinner, and snack.
+    """
+    meals = Meal.objects.all()
+
+    # 分类存储不同类别的食物项
+    breakfast_items = meals.filter(meal_type="breakfast")
+    lunch_items = meals.filter(meal_type="lunch")
+    dinner_items = meals.filter(meal_type="dinner")
+    snack_items = meals.filter(meal_type="snack")
+
+    total_calories = 0
+
+    if request.method == "POST":
+        selected_meal_ids = request.POST.getlist("meal_items")  # 获取用户选中的食物项 ID
+        selected_meals = Meal.objects.filter(id__in=selected_meal_ids)
+        total_calories = sum(meal.dv_calories for meal in selected_meals)
+
+    return render(request, "meals/intake_calories.html", {
+        "breakfast_items": breakfast_items,
+        "lunch_items": lunch_items,
+        "dinner_items": dinner_items,
+        "snack_items": snack_items,
+        "total_calories": total_calories,
+    })

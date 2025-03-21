@@ -5,7 +5,7 @@
                 <h2 class="card-title">{{ plan.name }}</h2>
                 <p class="card-text"><strong>Target Group:</strong> {{ plan.target_group }}</p>
                 <p class="card-text"><strong>Price:</strong> ${{ plan.price }}</p>
-                <a href="{% url 'workout_plan_detail' plan.id %}" class="btn btn-warning">View Sub-Plans</a>
+                <a href="{% url 'workouts:workout_plan_detail' plan.id %}" class="btn btn-warning">View Sub-Plans</a>
             </div>
         </div>
     </div>
