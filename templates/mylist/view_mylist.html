@@ -10,21 +10,24 @@
     </div>
     <hr>
 
-    {% if mylist_items %}
+    {% if selected_meals %}
         <div class="row">
-            {% for item in mylist_items %}
+            {% for meal in selected_meals %}
                 <div class="col-md-6">
                     <div class="card mb-3 shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">{{ item.meal.meal_name }}</h5>
-                            <p class="card-text">{{ item.meal.recipe_description|truncatewords:20 }}</p>
+                            <h5 class="card-title">{{ meal.meal_name }}</h5>
+                            <p class="card-text">
+                                {{ meal.recipe_description|truncatewords:20 }}
+                            </p>
                             <ul class="list-unstyled">
-                                <li><strong>Cost:</strong> ${{ item.meal.cost }}</li>
-                                <li><strong>Cooking Duration:</strong> {{ item.meal.cooking_duration }} min</li>
-                                <li><strong>Diet Type:</strong> {{ item.meal.get_diet_type_display }}</li>
+                                <li><strong>Cost:</strong> ${{ meal.cost }}</li>
+                                <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
+                                <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
                             </ul>
                             <!-- Remove button -->
-                            <form action="{% url 'mylist:remove_from_mylist' item.id %}" method="POST" style="display:inline;">
+                            <form action="{% url 'mylist:remove_from_mylist' meal.id %}" 
+                                  method="POST" style="display:inline;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger">Remove</button>
                             </form>

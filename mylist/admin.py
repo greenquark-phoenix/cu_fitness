@@ -1,4 +1,7 @@
 from django.contrib import admin
-from .models import MyListItem
+from .models import MyList
 
-admin.site.register(MyListItem)
+@admin.register(MyList)
+class MyListAdmin(admin.ModelAdmin):
+    list_display = ('user',)
+    filter_horizontal = ('meals',)

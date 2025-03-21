@@ -2,17 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from meals.models import Meal
 
-class MyListItem(models.Model):
-    """
-    A record of a single meal that the user has added to their 'mylist'.
-    In future, you could also link workouts, etc.
-    """
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
-    added_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('user', 'meal')  # Prevent duplicates for the same user+meal
+class MyList(models.Model):
+    """One 'mylist' record per user, storing multiple meals."""
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE,
+        related_name='mylist'
+    )
+    meals = models.ManyToManyField(Meal, blank=True)
 
     def __str__(self):
-        return f"{self.user.username} -> {self.meal.meal_name}"
+        return f"{self.user.username}'s MyList"
