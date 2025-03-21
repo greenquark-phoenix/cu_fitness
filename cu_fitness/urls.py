@@ -29,6 +29,7 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('assistant/', include('assistant.urls')),
     path('schedule/', include('schedule.urls', namespace='schedule')),
+    path('mylist/', include('mylist.urls', namespace='mylist')),
 ]
 
 if settings.DEBUG:

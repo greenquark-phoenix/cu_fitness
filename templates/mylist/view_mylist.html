@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>My Selected Meals</h2>
+        <!-- Generate Schedule button in top right -->
+        <a href="{% url 'schedule:generate_meal_schedule' %}" class="btn btn-success btn-lg">
+            Generate Schedule
+        </a>
+    </div>
+    <hr>
+
+    {% if mylist_items %}
+        <div class="row">
+            {% for item in mylist_items %}
+                <div class="col-md-6">
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.meal.meal_name }}</h5>
+                            <p class="card-text">{{ item.meal.recipe_description|truncatewords:20 }}</p>
+                            <ul class="list-unstyled">
+                                <li><strong>Cost:</strong> ${{ item.meal.cost }}</li>
+                                <li><strong>Cooking Duration:</strong> {{ item.meal.cooking_duration }} min</li>
+                                <li><strong>Diet Type:</strong> {{ item.meal.get_diet_type_display }}</li>
+                            </ul>
+                            <!-- Remove button -->
+                            <form action="{% url 'mylist:remove_from_mylist' item.id %}" method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You have no meals in your list.</p>
+    {% endif %}
+</div>
+{% endblock content %}
