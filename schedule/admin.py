@@ -1,4 +1,7 @@
 from django.contrib import admin
-from .models import MealSchedule
+from .models import Schedule
 
-admin.site.register(MealSchedule)
+@admin.register(Schedule)
+class ScheduleAdmin(admin.ModelAdmin):
+    list_display = ('user',)
+

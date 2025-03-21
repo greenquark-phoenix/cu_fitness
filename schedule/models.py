@@ -1,21 +1,24 @@
 from django.db import models
 from django.contrib.auth.models import User
-from meals.models import Meal
 
-class MealSchedule(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    date = models.DateField()
-
-    MEAL_TYPE_CHOICES = [
-        ("breakfast", "Breakfast"),
-        ("lunch", "Lunch"),
-        ("dinner", "Dinner"),
-        ("snack", "Snack"),
-    ]
-    meal_type = models.CharField(max_length=10, choices=MEAL_TYPE_CHOICES)
-
-    meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
+class Schedule(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='schedule'
+    )
+    # This JSON field will store the schedule as a dictionary.
+    # For example:
+    # {
+    #   "2025-03-21": [
+    #       {"meal_type": "breakfast", "meal_id": 5},
+    #       {"meal_type": "lunch", "meal_id": 8},
+    #       {"meal_type": "dinner", "meal_id": 12},
+    #       {"meal_type": "snack", "meal_id": 3}
+    #   ],
+    #   "2025-03-22": [ ... ]
+    # }
+    scheduled_meals = models.JSONField(default=dict, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.date} - {self.meal_type} - {self.meal.meal_name}"
-    
+        return f"{self.user.username}'s Schedule"

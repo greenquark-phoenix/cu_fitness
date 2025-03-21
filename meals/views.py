@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Q
-from .models import Meal, RecommendedDailyIntake  # Existing imports
-# -- ADDED IMPORTS BELOW --
+from .models import Meal, RecommendedDailyIntake 
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
