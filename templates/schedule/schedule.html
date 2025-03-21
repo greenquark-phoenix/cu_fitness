@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Your 3-Month Meal Schedule</h2>
+
+{% if schedule_by_date %}
+  {% for date, plans_in_day in schedule_by_date.items %}
+    <h3>{{ date }}</h3>
+    <ul>
+      {% for plan in plans_in_day %}
+        <li>{{ plan.meal_type }}: {{ plan.meal.meal_name }}</li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+{% else %}
+  <p>No meals scheduled.</p>
+{% endif %}
+{% endblock content %}

@@ -18,3 +18,4 @@ class MealSchedule(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.date} - {self.meal_type} - {self.meal.meal_name}"
+    
