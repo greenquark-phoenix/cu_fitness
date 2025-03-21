@@ -1,43 +1,210 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block additional_style %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .main-container {
+        background-color: #fff;
+        padding: 20px 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        max-width: 1200px;
+    }
+    .section-heading {
+        margin-top: 30px;
+        margin-bottom: 15px;
+        font-size: 1.75rem;
+        color: #333;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 5px;
+    }
+    .meal-card {
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .meal-image {
+        height: 150px;
+        object-fit: cover;
+    }
+    .card-body ul {
+        padding-left: 0;
+        list-style: none;
+    }
+
+    .btn {
+        transition: transform 0.2s, filter 0.2s;
+    }
+    .btn:hover {
+        transform: scale(1.05);
+        filter: brightness(0.9); /
+    }
+    .btn-remove {
+        background-color: red;
+        color: white;
+    }
+</style>
+{% endblock additional_style %}
+
 {% block content %}
-<div class="container mt-4">
+<div class="container main-container">
+    <!-- Header & Generate Schedule Button -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>My Selected Meals</h2>
-        <!-- Generate Schedule button in top right -->
         <a href="{% url 'schedule:generate_meal_schedule' %}" class="btn btn-success btn-lg">
             Generate Schedule
         </a>
     </div>
     <hr>
 
-    {% if selected_meals %}
+    {% if selected_meals|length == 0 %}
+        <p>You have no meals in your list.</p>
+    {% else %}
+        <!-- Breakfast -->
+        <h2 class="section-heading">Breakfast Items</h2>
         <div class="row">
             {% for meal in selected_meals %}
-                <div class="col-md-6">
-                    <div class="card mb-3 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ meal.meal_name }}</h5>
-                            <p class="card-text">
-                                {{ meal.recipe_description|truncatewords:20 }}
-                            </p>
-                            <ul class="list-unstyled">
-                                <li><strong>Cost:</strong> ${{ meal.cost }}</li>
-                                <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
-                                <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
-                            </ul>
-                            <!-- Remove button -->
-                            <form action="{% url 'mylist:remove_from_mylist' meal.id %}" 
-                                  method="POST" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Remove</button>
-                            </form>
+                {% if meal.meal_type|lower == "breakfast" %}
+                    <div class="col-md-4">
+                        <div class="card meal-card">
+                            {% if meal.image %}
+                                <img class="card-img-top meal-image" src="{{ meal.image.url }}" alt="{{ meal.meal_name }}">
+                            {% else %}
+                                <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}" alt="Default Image">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title font-weight-bold">{{ meal.meal_name }}</h5>
+                                <p class="card-text">{{ meal.recipe_description|truncatewords:20 }}</p>
+                                <ul class="list-unstyled">
+                                    <li><strong>Cost:</strong> ${{ meal.cost }}</li>
+                                    <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
+                                    <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
+                                </ul>
+                            </div>
+                            <div class="card-footer d-flex justify-content-center">
+                                <form action="{% url 'mylist:remove_from_mylist' meal.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-remove">Remove</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% endif %}
             {% endfor %}
         </div>
-    {% else %}
-        <p>You have no meals in your list.</p>
+
+        <!-- Lunch -->
+        <h2 class="section-heading">Lunch Items</h2>
+        <div class="row">
+            {% for meal in selected_meals %}
+                {% if meal.meal_type|lower == "lunch" %}
+                    <div class="col-md-4">
+                        <div class="card meal-card">
+                            {% if meal.image %}
+                                <img class="card-img-top meal-image" src="{{ meal.image.url }}" alt="{{ meal.meal_name }}">
+                            {% else %}
+                                <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}" alt="Default Image">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title font-weight-bold">{{ meal.meal_name }}</h5>
+                                <p class="card-text">{{ meal.recipe_description|truncatewords:20 }}</p>
+                                <ul class="list-unstyled">
+                                    <li><strong>Cost:</strong> ${{ meal.cost }}</li>
+                                    <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
+                                    <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
+                                </ul>
+                            </div>
+                            <div class="card-footer d-flex justify-content-center">
+                                <form action="{% url 'mylist:remove_from_mylist' meal.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-remove">Remove</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Dinner -->
+        <h2 class="section-heading">Dinner Items</h2>
+        <div class="row">
+            {% for meal in selected_meals %}
+                {% if meal.meal_type|lower == "dinner" %}
+                    <div class="col-md-4">
+                        <div class="card meal-card">
+                            {% if meal.image %}
+                                <img class="card-img-top meal-image" src="{{ meal.image.url }}" alt="{{ meal.meal_name }}">
+                            {% else %}
+                                <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}" alt="Default Image">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title font-weight-bold">{{ meal.meal_name }}</h5>
+                                <p class="card-text">{{ meal.recipe_description|truncatewords:20 }}</p>
+                                <ul class="list-unstyled">
+                                    <li><strong>Cost:</strong> ${{ meal.cost }}</li>
+                                    <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
+                                    <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
+                                </ul>
+                            </div>
+                            <div class="card-footer d-flex justify-content-center">
+                                <form action="{% url 'mylist:remove_from_mylist' meal.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-remove">Remove</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Snacks -->
+        <h2 class="section-heading">Snack Items</h2>
+        <div class="row">
+            {% for meal in selected_meals %}
+                {% if meal.meal_type|lower == "snack" or meal.meal_type|lower == "snacks" %}
+                    <div class="col-md-4">
+                        <div class="card meal-card">
+                            {% if meal.image %}
+                                <img class="card-img-top meal-image" src="{{ meal.image.url }}" alt="{{ meal.meal_name }}">
+                            {% else %}
+                                <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}" alt="Default Image">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title font-weight-bold">{{ meal.meal_name }}</h5>
+                                <p class="card-text">{{ meal.recipe_description|truncatewords:20 }}</p>
+                                <ul class="list-unstyled">
+                                    <li><strong>Cost:</strong> ${{ meal.cost }}</li>
+                                    <li><strong>Cooking Duration:</strong> {{ meal.cooking_duration }} min</li>
+                                    <li><strong>Diet Type:</strong> {{ meal.get_diet_type_display }}</li>
+                                </ul>
+                            </div>
+                            <div class="card-footer d-flex justify-content-center">
+                                <form action="{% url 'mylist:remove_from_mylist' meal.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-remove">Remove</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
     {% endif %}
 </div>
 {% endblock content %}

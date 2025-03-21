@@ -48,7 +48,6 @@
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
     }
-    /* Add more vertical spacing between form-group elements */
     .form-group {
         margin-bottom: 20px;
     }
@@ -94,22 +93,19 @@
     }
     .btn:hover {
         transform: scale(1.05);
-        filter: brightness(0.9); /* darker on hover */
+        filter: brightness(0.9);
     }
 
-    /* Blue Buttons (Select, View Recipe, Apply Filter) */
     .btn-blue {
         background-color: blue;
         color: white;
     }
 
-    /* Micronutrients: black */
     .micronutrients-btn {
         background-color: black;
         color: white;
     }
 
-    /* Toggling "Select" between blue & green */
     .select-blue {
         background-color: blue;
         color: white;
@@ -431,7 +427,6 @@
             </div>
             <div class="modal-body">
                 <div class="nutrition-facts">
-                    <!-- Omitted for brevity, same as before -->
                 </div>
             </div>
             <div class="modal-footer">
@@ -479,11 +474,9 @@
                 },
                 success: function(response) {
                     if (response.selected === true) {
-                        // Switch to green background, text "Selected"
                         $btn.removeClass('select-blue').addClass('select-green');
                         $btn.text('Selected');
                     } else {
-                        // Switch back to blue background, text "Select"
                         $btn.removeClass('select-green').addClass('select-blue');
                         $btn.text('Select');
                     }
