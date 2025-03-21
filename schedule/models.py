@@ -7,7 +7,6 @@ class Schedule(models.Model):
         on_delete=models.CASCADE,
         related_name='schedule'
     )
-    # All scheduled meals stored as JSON (one record per user)
     scheduled_meals = models.JSONField(default=dict, blank=True, null=True)
 
     def __str__(self):

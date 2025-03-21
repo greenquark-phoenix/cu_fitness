@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from django.core.paginator import Paginator  # <-- ADDED
+from django.core.paginator import Paginator
 from meals.models import Meal
 from .models import Schedule
 
@@ -21,9 +21,6 @@ def ordinal_day(day):
         return f"{day}th"
 
 def format_date(date_obj):
-    """
-    Returns a nicely formatted date string, e.g. "March 21st, 2025".
-    """
     day_str = ordinal_day(date_obj.day)
     month_str = date_obj.strftime('%B')
     year_str = str(date_obj.year)
@@ -32,9 +29,6 @@ def format_date(date_obj):
 
 @login_required
 def generate_meal_schedule(request):
-    """
-    (Unchanged) Generates a 2-week schedule for the user...
-    """
     schedule, _ = Schedule.objects.get_or_create(user=request.user)
     try:
         mylist = request.user.mylist
@@ -99,11 +93,6 @@ def generate_meal_schedule(request):
 
 @login_required
 def view_meal_schedule(request):
-    """
-    Displays the user's meal schedule in two separate weeks, each with
-    a heading like "Week 1 (March 21st, 2025 – March 27th, 2025)".
-    Each day is shown as "Friday, 21-03-2025" with meal boxes below.
-    """
     schedule_obj = getattr(request.user, 'schedule', None)
     if not schedule_obj or not schedule_obj.scheduled_meals:
         return render(request, 'schedule/schedule.html', {'weeks': None})
@@ -114,13 +103,11 @@ def view_meal_schedule(request):
 
     # Build a sorted list of day objects
     sorted_days = sorted(days_data.items(), key=lambda x: x[0])  
-    # => [(date_str, {day_name, entries}), ...]
 
     enhanced_schedule = []
     for date_str, day_info in sorted_days:
         day_name = day_info.get('day_name', '')
         date_obj = datetime.date.fromisoformat(date_str)
-        # e.g. "Friday, 21-03-2025" => day_name plus DD-MM-YYYY
         display_date = f"{day_name}, {date_obj.strftime('%d-%m-%Y')}"
 
         # Convert each meal_id into a Meal object
@@ -138,22 +125,20 @@ def view_meal_schedule(request):
             })
 
         enhanced_schedule.append({
-            'date_obj': date_obj,         # store the date object for chunking
-            'display_date': display_date, # e.g. "Friday, 21-03-2025"
+            'date_obj': date_obj,
+            'display_date': display_date,
             'entries': entries
         })
 
-    # Now we chunk these 14 days into 2 weeks. Each chunk is 7 days.
     weeks = []
     CHUNK_SIZE = 7
     i = 0
     while i < len(enhanced_schedule):
-        chunk = enhanced_schedule[i:i+CHUNK_SIZE]  # 7 days
+        chunk = enhanced_schedule[i:i+CHUNK_SIZE]
         if chunk:
             # The week's start and end date
             week_start_date = chunk[0]['date_obj']
             week_end_date = chunk[-1]['date_obj']
-            # e.g. "March 21st, 2025 – March 27th, 2025"
             week_range = f"{format_date(week_start_date)} – {format_date(week_end_date)}"
             weeks.append({
                 'week_index': len(weeks) + 1,
@@ -162,12 +147,11 @@ def view_meal_schedule(request):
             })
         i += CHUNK_SIZE
 
-    # ============ PAGINATOR CHANGES START HERE ============
-    paginator = Paginator(weeks, 1)  # 1 week per page
+    paginator = Paginator(weeks, 1) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     context = {
-        'page_obj': page_obj,  # We'll display page_obj in the template
+        'page_obj': page_obj,
     }
     return render(request, 'schedule/schedule.html', context)
