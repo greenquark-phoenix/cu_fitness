@@ -100,12 +100,10 @@
         background-color: blue;
         color: white;
     }
-
     .micronutrients-btn {
         background-color: black;
         color: white;
     }
-
     .select-blue {
         background-color: blue;
         color: white;
@@ -426,7 +424,86 @@
                 </h5>
             </div>
             <div class="modal-body">
+                <!-- Restored from Old Code: Detailed DV fields -->
                 <div class="nutrition-facts">
+                    <h2>Nutrition Facts</h2>
+                    <hr>
+                    <p>
+                        <strong>Serving Size:</strong> 1 meal
+                        <span class="dv-percentage"><strong>% Daily Value</strong></span>
+                    </p>
+                    <hr>
+                    <p>
+                        <strong>Calories:</strong>
+                        <span class="dv-percentage">{{ meal.dv_calories|floatformat:0 }}%</span>
+                    </p>
+                    <hr>
+                    <p>
+                        <strong>Total Fat:</strong>
+                        <span class="dv-percentage">{{ meal.dv_fat|floatformat:0 }}%</span>
+                    </p>
+                    <p class="sub-item">
+                        Saturated Fat:
+                        <span class="dv-percentage">{{ meal.dv_saturated_fat|floatformat:0 }}%</span>
+                    </p>
+                    <p class="sub-item">
+                        Trans Fat:
+                        <span class="dv-percentage">{{ meal.dv_trans_fat|floatformat:0 }}%</span>
+                    </p>
+                    <p>
+                        <strong>Cholesterol:</strong>
+                        <span class="dv-percentage">{{ meal.dv_cholesterol|floatformat:0 }}%</span>
+                    </p>
+                    <p>
+                        <strong>Sodium:</strong>
+                        <span class="dv-percentage">{{ meal.dv_sodium|floatformat:0 }}%</span>
+                    </p>
+                    <p>
+                        <strong>Potassium:</strong>
+                        <span class="dv-percentage">{{ meal.dv_potassium|floatformat:0 }}%</span>
+                    </p>
+                    <p>
+                        <strong>Carbohydrates:</strong>
+                        <span class="dv-percentage">{{ meal.dv_carbohydrates|floatformat:0 }}%</span>
+                    </p>
+                    <p class="sub-item">
+                        Fiber:
+                        <span class="dv-percentage">{{ meal.dv_fiber|floatformat:0 }}%</span>
+                    </p>
+                    <p class="sub-item">
+                        Sugars:
+                        <span class="dv-percentage">{{ meal.dv_sugars|floatformat:0 }}%</span>
+                    </p>
+                    <p>
+                        <strong>Protein:</strong>
+                        <span class="dv-percentage">{{ meal.dv_protein|floatformat:0 }}%</span>
+                    </p>
+                    <hr>
+                    <p>
+                        <strong>Vitamin A:</strong>
+                        <span class="dv-percentage">{{ meal.dv_vitamin_A|floatformat:0 }}%</span>
+                    </p>
+                    <p>
+                        <strong>Vitamin C:</strong>
+                        <span class="dv-percentage">{{ meal.dv_vitamin_C|floatformat:0 }}%</span>
+                    </p>
+                    <p>
+                        <strong>Vitamin B:</strong>
+                        <span class="dv-percentage">{{ meal.dv_vitamin_B|floatformat:0 }}%</span>
+                    </p>
+                    <p>
+                        <strong>Vitamin D:</strong>
+                        <span class="dv-percentage">{{ meal.dv_vitamin_D|floatformat:0 }}%</span>
+                    </p>
+                    <hr>
+                    <p>
+                        <strong>Calcium:</strong>
+                        <span class="dv-percentage">{{ meal.dv_calcium|floatformat:0 }}%</span>
+                    </p>
+                    <p>
+                        <strong>Zinc:</strong>
+                        <span class="dv-percentage">{{ meal.dv_zinc|floatformat:0 }}%</span>
+                    </p>
                 </div>
             </div>
             <div class="modal-footer">

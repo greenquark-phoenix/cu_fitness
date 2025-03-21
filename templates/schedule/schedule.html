@@ -1,17 +1,56 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<h2>Your 3-Month Meal Schedule</h2>
+<div class="container my-4">
+  <h2>Your Meal Plan</h2>
 
-{% if schedule_by_date %}
-  {% for date, plans_in_day in schedule_by_date.items %}
-    <h3>{{ date }}</h3>
-    <ul>
-      {% for plan in plans_in_day %}
-        <li>{{ plan.meal_type }}: {{ plan.meal.meal_name }}</li>
+  {% if weeks %}
+    {% for w in weeks %}
+      <!-- Example: "Week 1 (March 21st, 2025 – March 27th, 2025)" -->
+      <h3 class="fw-bold mt-4">
+        Week {{ w.week_index }} ({{ w.week_range }})
+      </h3>
+
+      {% for day in w.days %}
+        <h4 class="fw-bold mt-3">{{ day.display_date }}</h4>
+        <div class="row">
+          {% for entry in day.entries %}
+            {% with meal=entry.meal meal_type=entry.meal_type %}
+              <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="card h-100">
+                  {% if meal.image %}
+                    <img 
+                      src="{{ meal.image.url }}" 
+                      class="card-img-top" 
+                      alt="{{ meal.meal_name }}" 
+                      style="height: 150px; object-fit: cover;"
+                    >
+                  {% else %}
+                    <img 
+                      src="{% static 'meals/default.jpg' %}" 
+                      class="card-img-top" 
+                      alt="No Image" 
+                      style="height: 150px; object-fit: cover;"
+                    >
+                  {% endif %}
+                  <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ meal.meal_name }}</h5>
+                    <p class="card-text text-muted mb-1">
+                      {{ meal_type }}
+                    </p>
+                    <p class="card-text">
+                      {{ meal.recipe_description|truncatewords:12 }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            {% endwith %}
+          {% endfor %}
+        </div>
       {% endfor %}
-    </ul>
-  {% endfor %}
-{% else %}
-  <p>No meals scheduled.</p>
-{% endif %}
+    {% endfor %}
+  {% else %}
+    <p>No meals scheduled. Please generate your schedule.</p>
+  {% endif %}
+</div>
 {% endblock content %}
