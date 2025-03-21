@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
+from django.core.paginator import Paginator  # <-- ADDED
 from meals.models import Meal
 from .models import Schedule
 
@@ -161,7 +162,12 @@ def view_meal_schedule(request):
             })
         i += CHUNK_SIZE
 
+    # ============ PAGINATOR CHANGES START HERE ============
+    paginator = Paginator(weeks, 1)  # 1 week per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'weeks': weeks,
+        'page_obj': page_obj,  # We'll display page_obj in the template
     }
     return render(request, 'schedule/schedule.html', context)
