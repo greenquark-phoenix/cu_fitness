@@ -2,7 +2,7 @@
 {% load static %}
 {% load django_bootstrap5 %}
 {% load bootstrap_icons %}
-<html lang="en">
+<html lang="en"
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,15 +28,15 @@
             </ul>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'workouts' %}">Workout
+                    <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'workouts:workouts' %}">Workout
                         Plans</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'meals_list' %}">Meals</a>
+                </li>
                 <<li class="nav-item">
                     <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'schedule:view_meal_schedule' %}">
-                        Schedule
-                    </a>
+                        Schedule</a>
                 </li>                
                 <li class="nav-item">
                     <a class="nav-link btn btn-primary mx-1 text-white" href="{% url 'blog_list' %}">Community</a>
