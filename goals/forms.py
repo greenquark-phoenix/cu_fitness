@@ -1,48 +1,11 @@
 from django import forms
-from .models import UserFitnessGoal, FitnessGoal, UserFitnessProgress
+from goals.models import UserFitnessGoal
+
 
 class UserFitnessGoalForm(forms.ModelForm):
-    """
-    Form for creating or updating a user fitness goal.
-    """
-    goal = forms.ModelChoiceField(
-        queryset=FitnessGoal.objects.filter(category__in=['bmi_target', 'weight_loss']),
-        label="Target Type",
-        empty_label="Select your target type",
-    )
-    initial_value = forms.FloatField(
-        label="Initial Value",
-        required=False,
-        initial=0,
-        help_text="Enter your initial value (default is 0)",
-    )
-    target_value = forms.FloatField(
-        label="Target Value",
-        min_value=0,
-        help_text="Please enter your target value",
-    )
-    due_at = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-        label="Due Date",
-    )
-    status = forms.ChoiceField(
-        choices=UserFitnessGoal.STATUS_CHOICES,
-        label="Status",
-        initial='not_started'
-    )
-
     class Meta:
         model = UserFitnessGoal
-        fields = ['goal', 'initial_value', 'target_value', 'due_at', 'status']
-
-
-class UserFitnessProgressForm(forms.ModelForm):
-    """
-    Form for logging current_value check-ins.
-    """
-    class Meta:
-        model = UserFitnessProgress
-        fields = ['current_value']
-        labels = {
-            'current_value': 'Current Value',
+        fields = ['goal', 'target_value', 'due_at']
+        widgets = {
+            'due_at': forms.DateInput(attrs={'type': 'date'}),
         }
