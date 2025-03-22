@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container my-4">
+  <h2>Your Meal Plan</h2>
+
+  {% if page_obj %}
+    {% for w in page_obj %}
+      <h3 class="fw-bold mt-4">
+        Week {{ w.week_index }} ({{ w.week_range }})
+      </h3>
+
+      {% for day in w.days %}
+        <h4 class="fw-bold mt-3">{{ day.display_date }}</h4>
+        <div class="row">
+          {% for entry in day.entries %}
+            {% with meal=entry.meal meal_type=entry.meal_type %}
+              <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="card h-100">
+                  {% if meal.image %}
+                    <img 
+                      src="{{ meal.image.url }}" 
+                      class="card-img-top" 
+                      alt="{{ meal.meal_name }}" 
+                      style="height: 150px; object-fit: cover;"
+                    >
+                  {% else %}
+                    <img 
+                      src="{% static 'meals/default.jpg' %}" 
+                      class="card-img-top" 
+                      alt="No Image" 
+                      style="height: 150px; object-fit: cover;"
+                    >
+                  {% endif %}
+                  <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ meal.meal_name }}</h5>
+                    <p class="card-text text-muted mb-1">
+                      {{ meal_type }}
+                    </p>
+                    <p class="card-text">
+                      {{ meal.recipe_description|truncatewords:12 }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            {% endwith %}
+          {% endfor %}
+        </div>
+      {% endfor %}
+    {% endfor %}
+
+    <!-- Pagination Controls -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
+      {% if page_obj.has_previous %}
+        <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}">
+          Previous Week
+        </a>
+      {% else %}
+        <span></span>
+      {% endif %}
+
+      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+      {% if page_obj.has_next %}
+        <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}">
+          Next Week
+        </a>
+      {% else %}
+        <span></span>
+      {% endif %}
+    </div>
+
+  {% else %}
+    <p>No meals scheduled. Please generate your schedule.</p>
+  {% endif %}
+</div>
+{% endblock content %}

@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'workouts.apps.WorkoutsConfig',
     'meals.apps.MealsConfig',
     'blog.apps.BlogConfig',
-    'assistant.apps.AssistantConfig'
+    'assistant.apps.AssistantConfig',
+    'schedule.apps.ScheduleConfig',
+    'mylist.apps.MylistConfig',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

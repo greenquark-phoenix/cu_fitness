@@ -1,5 +1,4 @@
 from django.urls import path
-
 from goals import views as goal_views
 
 urlpatterns = [
