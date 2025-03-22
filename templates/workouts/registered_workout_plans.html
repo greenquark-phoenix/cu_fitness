@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url("{% static 'images/workouts.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease-in-out;
+            color: white;
+        }
+
+        .card h2, .card h3 {
+            color: #f8c146;
+        }
+
+        .card-text {
+            font-size: 14px;
+            color: #ddd;
+        }
+    </style>
+
+<div class="container py-5">
+    <h1 class="mb-4">Select Your Workout Plan</h1>
+
+    <!-- Show Current Selection -->
+    {% if selected_workout_plan %}
+        <div class="card mb-4 p-3">
+            <h3>Registered Workout Plan: {{ selected_workout_plan.name }}</h3>
+            {% if selected_sub_plan %}
+                <p><strong>Selected Sub-Plan:</strong> {{ selected_sub_plan.name }}</p>
+            {% endif %}
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" name="unregister" class="btn btn-danger">Unregister</button>
+            </form>
+        </div>
+    {% endif %}
+
+    <!-- Select Workout Plan -->
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for plan in workout_plans %}
+                <div class="col">
+                    <div class="card h-100 shadow-lg p-3 rounded">
+                        <div class="card-body">
+                            <h2 class="card-title">{{ plan.name }}</h2>
+                            <p class="card-text"><strong>Target Group:</strong> {{ plan.target_group }}</p>
+                            <p class="card-text"><strong>Price:</strong> ${{ plan.price }}</p>
+                            <input type="radio" name="workout_plan" value="{{ plan.id }}"
+                                onchange="this.form.submit()" {% if selected_workout_plan.id == plan.id %}checked{% endif %}>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </form>
+
+    <!-- Select Sub-Plan (Only Visible If a Main Plan Is Selected) -->
+    {% if selected_workout_plan %}
+        <h2 class="mt-4">Select a Sub-Plan for {{ selected_workout_plan.name }}</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for sub_plan in sub_plans %}
+                    <div class="col">
+                        <div class="card h-100 shadow-lg p-3 rounded">
+                            <div class="card-body">
+                                <h3 class="card-title">{{ sub_plan.name }}</h3>
+                                <p><strong>Focus:</strong> {{ sub_plan.focus }}</p>
+                                <input type="radio" name="sub_plan" value="{{ sub_plan.id }}"
+                                    onchange="this.form.submit()" {% if selected_sub_plan.id == sub_plan.id %}checked{% endif %}>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </form>
+    {% endif %}
+</div>
+{% endblock content %}
