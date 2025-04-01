@@ -1,0 +1,8 @@
+<h1>我参加的活动</h1>
+<ul>
+  {% for p in participations %}
+    <li>{{ p.event.title }} - {{ p.event.event_date|date:"Y-m-d H:i" }}</li>
+  {% empty %}
+    <li>你还没有报名任何活动</li>
+  {% endfor %}
+</ul>

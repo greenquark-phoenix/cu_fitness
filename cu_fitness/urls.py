@@ -30,6 +30,7 @@ urlpatterns = [
     path('assistant/', include('assistant.urls')),
     path('schedule/', include('schedule.urls', namespace='schedule')),
     path('mylist/', include('mylist.urls', namespace='mylist')),
+    path('events/', include('events.urls')),
 ]
 
 if settings.DEBUG:
