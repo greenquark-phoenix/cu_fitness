@@ -1,0 +1,8 @@
+<h1>my events</h1>
+<ul>
+  {% for p in participations %}
+    <li>{{ p.event.title }} - {{ p.event.event_date|date:"Y-m-d H:i" }}</li>
+  {% empty %}
+    <li>no available events</li>
+  {% endfor %}
+</ul>
