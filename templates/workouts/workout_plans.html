@@ -2,65 +2,100 @@
 {% load static %}
 
 {% block additional_style %}
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: url("{% static 'images/workouts2.jpg' %}") no-repeat center center fixed;
-            background-size: cover;
-            color: white;
-            text-align: center;
-        }
-
-        .card {
-            background: rgba(0, 0, 0, 0.7); /* Transparent dark background */
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s ease-in-out;
-            color: white;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-        }
-
-        .card h2 {
-            color: #f8c146; /* Gold color for title */
-        }
-
-        .card-text {
-            font-size: 14px;
-            color: #ddd;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: auto;
-        }
-    </style>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: url("{% static 'images/workouts2.jpg' %}") no-repeat center center fixed;
+        background-size: cover;
+        color: white;
+        text-align: center;
+    }
+    .card {
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s ease-in-out;
+        color: white;
+    }
+    .card:hover {
+        transform: scale(1.05);
+    }
+    .card h2 {
+        color: #f8c146;
+    }
+    .card-text {
+        font-size: 14px;
+        color: #ddd;
+    }
+    .container {
+        max-width: 1400px;
+        margin: auto;
+    }
+</style>
 {% endblock additional_style %}
 
 {% block content %}
-    <div class="container py-5">
-        <h1 class="mb-5">Workout Plans</h1>
+<div class="container py-5">
+    <h1 class="mb-5">Workout Plans</h1>
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-4">
-            {% for plan in workout_plans %}
-                <div class="col">
-                    <div class="card h-100 shadow-lg p-3 rounded">
-                        <div class="card-body">
-                            <h2 class="card-title">{{ plan.name }}</h2>
-                            <p class="card-text"><strong>Target Group:</strong> {{ plan.target_group }}</p>
-                            <p class="card-text"><strong>Price:</strong> ${{ plan.price }}</p>
-                            <a href="{% url 'workout_plan_detail' plan.id %}" class="btn btn-warning">
-                                View Sub-Plans
-                            </a>
-                        </div>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-4">
+        {% for plan in workout_plans %}
+            <div class="col">
+                <div class="card h-100 shadow-lg p-3 rounded">
+                    <div class="card-body">
+                        <h2 class="card-title">{{ plan.name }}</h2>
+                        <p class="card-text"><strong>Target Group:</strong> {{ plan.target_group }}</p>
+                        <p class="card-text"><strong>Price:</strong> ${{ plan.price }}</p>
+                        <a href="{% url 'workout_plan_detail' plan.id %}" class="btn btn-warning">
+                            View Sub-Plans
+                        </a>
+                        <!-- New Select Button for Workout Plan -->  
+                        <button class="btn btn-warning toggle-workout-btn mt-2" data-plan-id="{{ plan.id }}">
+                            {% if plan in request.user.mylist.workout_plans.all %}Selected{% else %}Select{% endif %}
+                        </button>
                     </div>
                 </div>
-            {% empty %}
-                <p>No workout plans available.</p>
-            {% endfor %}
-        </div>
+            </div>
+        {% empty %}
+            <p>No workout plans available.</p>
+        {% endfor %}
     </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.toggle-workout-btn').forEach(function(button) {
+        button.addEventListener('click', function () {
+            var planId = this.getAttribute('data-plan-id');
+            var csrfToken = '{{ csrf_token }}';
+            var btn = this;
+            fetch("{% url 'mylist:toggle_mylist_workout' %}", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
+                },
+                body: new URLSearchParams({ 'workout_id': planId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.selected === true) {
+                    btn.classList.remove('btn-warning');
+                    btn.classList.add('btn-success');
+                    btn.textContent = 'Selected';
+                } else {
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-warning');
+                    btn.textContent = 'Select';
+                }
+            })
+            .catch(error => {
+                alert('Error toggling workout selection.');
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+</script>
 {% endblock content %}
