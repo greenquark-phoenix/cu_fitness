@@ -45,13 +45,12 @@
         padding-left: 0;
         list-style: none;
     }
-
     .btn {
         transition: transform 0.2s, filter 0.2s;
     }
     .btn:hover {
         transform: scale(1.05);
-        filter: brightness(0.9); /
+        filter: brightness(0.9);
     }
     .btn-remove {
         background-color: red;
@@ -64,7 +63,7 @@
 <div class="container main-container">
     <!-- Header & Generate Schedule Button -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>My Selected Meals</h2>
+        <h2>My Selected Meals and Workouts</h2>
         <a href="{% url 'schedule:generate_meal_schedule' %}" class="btn btn-success btn-lg">
             Generate Schedule
         </a>
@@ -203,6 +202,38 @@
                         </div>
                     </div>
                 {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <!-- New Section: Selected Workouts (No Images) -->
+    <hr>
+    <h2 class="section-heading">Selected Workouts</h2>
+    {% if selected_workouts|length == 0 %}
+        <p>You have no workouts selected.</p>
+    {% else %}
+        <div class="row">
+            {% for workout in selected_workouts %}
+                <div class="col-md-4">
+                    <div class="card meal-card">
+                        {# No image for selected workouts; maintain box size via CSS if needed #}
+                        <div class="card-body">
+                            <h2 class="card-title">{{ workout.name }}</h2>
+                            <p class="card-text"><strong>Target Group:</strong> {{ workout.target_group }}</p>
+                            <p class="card-text"><strong>Price:</strong> ${{ workout.price }}</p>
+                            <a href="{% url 'workout_plan_detail' workout.id %}" class="btn btn-warning">
+                                View Sub-Plans
+                            </a>
+                        </div>
+                        <div class="card-footer d-flex justify-content-center">
+                            <form method="POST" action="{% url 'mylist:toggle_mylist_workout' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="workout_id" value="{{ workout.id }}">
+                                <button type="submit" class="btn btn-remove">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
         </div>
     {% endif %}
