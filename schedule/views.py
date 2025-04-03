@@ -31,15 +31,33 @@ def format_date(date_obj):
 def generate_schedule(request):
     """
     Generates a combined schedule for meals and workouts.
-    Meals: For each day, for each category (breakfast, lunch, dinner, snack),
+    Meals: For each day and for each category (breakfast, lunch, dinner, snack),
            if the user has selected any meals in that category, one is chosen;
            otherwise, that meal slot remains empty.
     Workouts: If a workout plan is selected (only one allowed),
               assign its subplans to weekdays (Monday–Friday) and mark weekends as "Rest Day".
-              Also store the subplan's schedule (description) and focus.
     """
     schedule, _ = Schedule.objects.get_or_create(user=request.user)
     
+    # ----- PROCESS SCHEDULE PREFERENCES -----
+    start_date_str = request.GET.get('start_date')
+    weeks_str = request.GET.get('weeks')
+    try:
+        start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else datetime.date.today()
+    except ValueError:
+        start_date = datetime.date.today()
+
+    try:
+        weeks = int(weeks_str) if weeks_str else 2
+        if weeks < 1:
+            weeks = 1
+        elif weeks > 6:
+            weeks = 6
+    except ValueError:
+        weeks = 2
+
+    end_date = start_date + datetime.timedelta(days=weeks * 7 - 1)
+
     # ----- MEALS SCHEDULE -----
     try:
         mylist = request.user.mylist
@@ -51,9 +69,6 @@ def generate_schedule(request):
     if not all_meals:
         messages.error(request, "Your MyList is empty. Please add meals first.")
         return redirect('mylist:view_mylist')
-
-    start_date = datetime.date.today()
-    end_date = start_date + datetime.timedelta(days=13)  # 2-week schedule
 
     # Categorize meals by type—only those selected by the user.
     categorized_meals = {
@@ -79,7 +94,6 @@ def generate_schedule(request):
     while current_date <= end_date:
         day_str = current_date.isoformat()
         day_name = current_date.strftime('%A')
-        # For each day, only add a meal for a category if available.
         day_entries = []
         for mt_key in ['breakfast', 'lunch', 'dinner', 'snack']:
             if categorized_meals[mt_key]:
@@ -118,7 +132,6 @@ def generate_schedule(request):
                     if day.weekday() < len(subplans):
                         subplan = subplans[day.weekday()]
                         assigned_workout = subplan.name
-                        # Provide fallback if fields are empty
                         workout_description = subplan.schedule.strip() or "No schedule info provided"
                         workout_focus = subplan.focus.strip() or "No focus info provided"
                     else:
@@ -150,7 +163,7 @@ def generate_schedule(request):
     schedule.scheduled_meals = combined_schedule
     schedule.save()
 
-    messages.success(request, "Meal and workout schedule generated successfully for the next 2 weeks.")
+    messages.success(request, f"Meal and workout schedule generated successfully for {weeks} week(s).")
     return redirect('schedule:view_schedule')
 
 @login_required
