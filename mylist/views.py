@@ -44,7 +44,7 @@ def view_mylist(request):
         'selected_workouts': mylist.workout_plans.all(),  # Include selected workouts
     })
 
-# New view: Toggle Workout Plan selection via AJAX
+# Existing AJAX view for toggling workout plan selection
 @login_required
 def toggle_mylist_workout(request):
     if request.method == "POST":
@@ -59,3 +59,12 @@ def toggle_mylist_workout(request):
             mylist.workout_plans.add(plan)
             return JsonResponse({"selected": True})
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+# NEW VIEW: Remove a workout plan from MyList
+@login_required
+def remove_from_mylist_workout(request, workout_id):
+    if request.method == "POST":
+        plan = get_object_or_404(WorkoutPlan, pk=workout_id)
+        mylist, _ = MyList.objects.get_or_create(user=request.user)
+        mylist.workout_plans.remove(plan)
+    return redirect('mylist:view_mylist')

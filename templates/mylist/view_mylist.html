@@ -60,26 +60,26 @@
     /* Schedule form styling */
     .schedule-form-container {
         display: flex;
-        justify-content: center;   /* Center horizontally */
+        justify-content: center;
         margin-bottom: 20px;
     }
     .schedule-form-row {
         display: flex;
         align-items: center;
-        gap: 15px;                /* Spacing between form elements */
+        gap: 15px;
     }
     .schedule-form-row label {
-        margin-bottom: 0;         /* Remove default label bottom margin */
+        margin-bottom: 0;
         font-weight: 500;
     }
     .schedule-form-row .form-control {
-        width: 220px;             /* Increase input width */
-        font-size: 1rem;          /* Increase font size */
-        padding: 8px 10px;        /* Increase padding */
+        width: 220px;
+        font-size: 1rem;
+        padding: 8px 10px;
     }
     .schedule-form-row button {
-        font-size: 1rem;          /* Increase button font size */
-        padding: 8px 16px;        /* Increase button padding */
+        font-size: 1rem;
+        padding: 8px 16px;
     }
 </style>
 {% endblock additional_style %}
@@ -256,9 +256,8 @@
                                 </a>
                             </div>
                             <div class="card-footer d-flex justify-content-center">
-                                <form method="POST" action="{% url 'mylist:toggle_mylist_workout' %}">
+                                <form action="{% url 'mylist:remove_from_mylist_workout' workout.id %}" method="POST">
                                     {% csrf_token %}
-                                    <input type="hidden" name="workout_id" value="{{ workout.id }}">
                                     <button type="submit" class="btn btn-remove">Remove</button>
                                 </form>
                             </div>
