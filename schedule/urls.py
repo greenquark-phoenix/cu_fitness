@@ -4,6 +4,6 @@ from . import views
 app_name = "schedule"
 
 urlpatterns = [
-    path('generate/', views.generate_meal_schedule, name='generate_meal_schedule'),
-    path('view/', views.view_meal_schedule, name='view_meal_schedule'),
+    path('generate/', views.generate_schedule, name='generate_schedule'),
+    path('view/', views.view_schedule, name='view_schedule'),
 ]
