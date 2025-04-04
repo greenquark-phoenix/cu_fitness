@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
 from .models import FitnessEvent, EventParticipation
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -6,24 +7,22 @@ from django.utils.timezone import now
 
 
 def event_list(request):
-    query = request.GET.get('q', '')  # Get the search keyword from the user
-    sort_by = request.GET.get('sort', 'date')  # Get the sorting method, default is by date
+    query = request.GET.get('q', '')
+    sort_by = request.GET.get('sort', 'date')
 
     if query:
-        # If there is a search keyword, filter events by title, description, and location
         events = FitnessEvent.objects.filter(
-            Q(title__icontains=query) |  # Fuzzy search for event title
-            Q(description__icontains=query) |  # Fuzzy search for event description
-            Q(location__icontains=query)  # Fuzzy search for event location
+            Q(title__icontains=query) |
+            Q(description__icontains=query) |
+            Q(location__icontains=query)
         )
     else:
-        # If no search keyword, return all events
         events = FitnessEvent.objects.all()
 
     if sort_by == 'popularity':
-        events = events.order_by('-popularity')  # Assuming you have a "popularity" field
+        events = events.order_by('-popularity')
     else:
-        events = events.order_by('event_date')  # Default to sorting by event date
+        events = events.order_by('event_date')
 
     return render(request, 'events/event_list.html', {'events': events})
 
@@ -47,3 +46,19 @@ def join_event(request, event_id):
 def my_events(request):
     participations = EventParticipation.objects.filter(user=request.user)
     return render(request, 'events/my_events.html', {'participations': participations})
+
+def calendar_view(request):
+    return render(request, 'events/calendar.html')
+
+def event_json(request):
+    events = FitnessEvent.objects.all()
+    data = []
+
+    for event in events:
+        data.append({
+            'title': event.title,
+            'start': event.event_date.isoformat(),
+            'url': f"/events/{event.id}/"
+        })
+
+    return JsonResponse(data, safe=False)
