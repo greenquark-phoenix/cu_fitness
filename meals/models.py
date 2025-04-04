@@ -38,10 +38,10 @@ class Meal(models.Model):
     meal_name = models.CharField(max_length=200)
     meal_type = models.CharField(max_length=50)  # e.g., Breakfast, Lunch, Dinner, Snack
     recipe_description = models.TextField()
-    ingredients = models.TextField()  # Plain text listing (optional)
+    ingredients = models.TextField()
     cost = models.DecimalField(max_digits=6, decimal_places=2)  # e.g., 14.00
     cooking_duration = models.IntegerField()  # in minutes
-    image = models.ImageField(upload_to='meals/', blank=True, null=True)  # Requires Pillow
+    image = models.ImageField(upload_to='meals/', blank=True, null=True)
     cooking_instructions = models.TextField(default="Cooking instructions not provided yet.")
 
     DIET_CHOICES = [
