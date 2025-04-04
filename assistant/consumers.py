@@ -4,7 +4,7 @@ from pathlib import Path
 
 from channels.generic.websocket import WebsocketConsumer
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 from assistant.assistant import Agent
 
@@ -23,7 +23,7 @@ class ChatConsumer(WebsocketConsumer):
             self.send(text_data=json.dumps(message))
 
         username = self.scope["user"].username
-        llm = ChatOpenAI(model="gpt-3.5-turbo")
+        llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro-exp-03-25")
         self.agent = Agent(llm, username)
 
     def disconnect(self, close_code):

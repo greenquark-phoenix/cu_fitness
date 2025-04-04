@@ -58,6 +58,20 @@ class WorkoutService:
 
         return json.dumps(result)
 
+    @staticmethod
+    def add_workout(username: str, workout_name: str) -> None:
+        user = User.objects.get(username=username)
+        user_profile = UserProfile.objects.get(user=user)
+        sub_plan = SubPlan.objects.get(name=workout_name)
+
+        if user_profile.selected_workout_plan is None:
+            user_profile.selected_workout_plan = sub_plan.workout_plan
+            user_profile.selected_sub_plan = sub_plan
+        else:
+            user_profile.selected_sub_plan = sub_plan
+
+        user_profile.save()
+
 class NutritionService:
     @staticmethod
     def get_available_meals() -> json:
