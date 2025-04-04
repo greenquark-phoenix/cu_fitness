@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'assistant.apps.AssistantConfig',
     'schedule.apps.ScheduleConfig',
     'mylist.apps.MylistConfig',
+    'events',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

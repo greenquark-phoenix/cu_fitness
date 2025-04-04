@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Hero Banner Section -->
+<section class="hero-banner" style="background-image: url('/static/images/running.jpg');">
+  <div class="hero-content text-center" style="color: #f2f2f2; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);">
+    <h1 style="font-size: 3.5rem; font-weight: bold;">Join the Fitness Revolution</h1>
+    <p style="font-size: 1.3rem; margin-bottom: 40px;">Discover the Best Campus Fitness Events and Get Involved!</p>
+    <a href="#events" class="btn btn-light btn-lg">Browse Events</a>
+  </div>
+</section>
+
+<style>
+  /* Hero Banner Styling */
+  .hero-banner {
+    background-size: cover;
+    background-position: center;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 0 20px;
+  }
+
+  /* Hero Banner Text */
+  .hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  }
+
+  .hero-content p {
+    font-size: 1.3rem;
+    margin-bottom: 40px;
+  }
+
+  .hero-content .btn {
+    font-size: 1.2rem;
+    padding: 14px 35px;
+    border-radius: 50px; /* Pill-shaped button */
+    text-transform: uppercase;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .hero-content .btn:hover {
+    background-color: #ff5733;
+    color: white;
+  }
+
+  /* Fitness Events Section */
+  .fitness-events-section {
+    background: linear-gradient(135deg, #ffcc00, #ff9900); /* Yellow gradient background */
+    padding: 40px 0;
+    text-align: center;
+    color: #333;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Fitness Events Title */
+  .fitness-events-section h2 {
+    font-size: 1.5rem; /* Reduced font size */
+    font-weight: bold;
+    text-align: center;
+    color: #333;  /* Black color for the title */
+    position: relative;
+    margin-bottom: 30px;
+    display: inline-block;
+    padding: 15px 50px;
+    background-color: rgba(255, 255, 255, 0.7); /* Light background to ensure text readability */
+    color: #333;
+    border-radius: 50px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Search Box Styling */
+  .search-box {
+    margin: 30px auto 40px auto; /* Center the search box */
+    display: flex;
+    justify-content: center;
+    width: 80%;  /* Limit the width */
+    max-width: 800px; /* Set a max-width for large screens */
+  }
+
+  .search-box input {
+    width: 80%;  /* Takes up 80% of the space */
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    border: 2px solid #ffcc00; /* Yellow border */
+    margin-right: 15px;
+    background-color: #fff; /* White background */
+  }
+
+  .search-box input:focus {
+    border-color: #ff9900; /* Darker yellow when focused */
+    outline: none;
+  }
+
+  .search-box button {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    background-color: #ffcc00; /* Yellow button background */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .search-box button:hover {
+    background-color: #ff9900; /* Darker yellow when hovered */
+  }
+
+  /* Event Cards Styling */
+  .event-card {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    background-color: #fff; /* White background */
+  }
+
+  .event-card:hover {
+    transform: translateY(-5px); /* Elevates card on hover */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+  }
+
+  /* Event Label Styling */
+  .event-label {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  /* Specific colors for each status */
+  .event-label.upcoming {
+    background-color: #ff5733; /* Red: Upcoming events */
+  }
+
+  .event-label.popular {
+    background-color: #ffcc00; /* Yellow: Popular events */
+  }
+
+  .event-label.completed {
+    background-color: #4caf50; /* Green: Completed events */
+  }
+
+  /* Event Image Styling */
+  .event-image {
+    height: 250px;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 15px 15px 0 0; /* Rounded top corners */
+  }
+
+  /* Event Card Body Styling */
+  .event-body {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 0 0 15px 15px; /* Rounded bottom corners */
+  }
+
+  .event-title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .event-date {
+    color: #777;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .event-description {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  .btn-custom {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .btn-custom:hover {
+    background-color: #0056b3;
+    color: #fff;
+  }
+
+  .no-activity {
+    text-align: center;
+    color: #888;
+    font-size: 1.2rem;
+  }
+
+  /* Responsive Styling */
+  @media (max-width: 768px) {
+    .hero-content h1 {
+      font-size: 2.5rem;
+    }
+
+    .hero-content p {
+      font-size: 1.1rem;
+    }
+
+    .event-title {
+      font-size: 1.3rem;
+    }
+
+    .search-box input {
+      width: 60%;
+    }
+
+    .search-box button {
+      width: 35%;
+    }
+  }
+</style>
+
+<!-- Fitness Events Section -->
+<div class="fitness-events-section">
+  <h2>Fitness Events</h2>
+</div>
+
+<!-- Search Box Section -->
+<div class="search-box">
+  <form method="get" class="d-flex">
+    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search for events..." class="form-control" />
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+</div>
+
+<!-- Events List Section -->
+<div class="container py-4" id="events">
+  <div class="row">
+    {% for event in events %}
+    <div class="col-lg-4 col-md-6 mb-4 d-flex">
+      <div class="event-card w-100" data-aos="fade-up" data-aos-duration="800">
+        {% if event.status == 'upcoming' %}
+          <div class="event-label upcoming">Upcoming</div> <!-- Red for upcoming events -->
+        {% elif event.status == 'popular' %}
+          <div class="event-label popular">Popular</div> <!-- Yellow for popular events -->
+        {% elif event.status == 'completed' %}
+          <div class="event-label completed">Completed</div> <!-- Green for completed events -->
+        {% endif %}
+        {% if event.image %}
+        <img src="{{ event.image.url }}" class="event-image" alt="{{ event.title }}">
+        {% endif %}
+        <div class="event-body">
+          <div class="event-title">{{ event.title }}</div>
+          <div class="event-date">{{ event.event_date|date:"F d, Y H:i" }}</div>
+          <p class="event-description">{{ event.description|truncatewords:20 }}</p>
+          <a href="{% url 'events:event_detail' event.id %}" class="btn-custom">Learn More</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p class="no-activity">No events available</p>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  AOS.init(); // Initialize AOS animation library
+</script>
+
+{% endblock %}
