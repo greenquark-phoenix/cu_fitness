@@ -10,10 +10,11 @@ def assistant_view(request):
 
 @login_required
 def new_assistant_view(request):
-    if "messages" in request.session:
-        del request.session["messages"]
+    if request.method == "POST":
+        if "messages" in request.session:
+            del request.session["messages"]
 
-    if "thread_id" in request.session:
-        del request.session["thread_id"]
+        if "thread_id" in request.session:
+            del request.session["thread_id"]
 
     return JsonResponse({"status": "success"})
