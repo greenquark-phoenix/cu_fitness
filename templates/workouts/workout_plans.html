@@ -50,7 +50,6 @@
                         <a href="{% url 'workout_plan_detail' plan.id %}" class="btn btn-warning">
                             View Sub-Plans
                         </a>
-                        <!-- New Select Button for Workout Plan -->  
                         <button class="btn btn-warning toggle-workout-btn mt-2" data-plan-id="{{ plan.id }}">
                             {% if plan in request.user.mylist.workout_plans.all %}Selected{% else %}Select{% endif %}
                         </button>

@@ -12,7 +12,6 @@
       {% for day in w.days %}
         <h4 class="fw-bold mt-3">{{ day.display_date }}</h4>
         
-        <!-- Meals Section for the Day in a single row -->
         <h5 class="mt-3">Meals</h5>
         <div class="row">
           {% if day.meals.breakfast %}
@@ -81,7 +80,6 @@
           {% endif %}
         </div>
         
-        <!-- Workout Section for the Day -->
         <h5 class="mt-5">Workout</h5>
         {% if day.workout %}
           <div class="card h-100 shadow-lg p-3 rounded mb-4" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); border: 2px solid #adb5bd;">

@@ -29,17 +29,9 @@ def format_date(date_obj):
 
 @login_required
 def generate_schedule(request):
-    """
-    Generates a combined schedule for meals and workouts.
-    Meals: For each day and for each category (breakfast, lunch, dinner, snack),
-           if the user has selected any meals in that category, one is chosen;
-           otherwise, that meal slot remains empty.
-    Workouts: If a workout plan is selected (only one allowed),
-              assign its subplans to weekdays (Monday–Friday) and mark weekends as "Rest Day".
-    """
+
     schedule, _ = Schedule.objects.get_or_create(user=request.user)
     
-    # ----- PROCESS SCHEDULE PREFERENCES -----
     start_date_str = request.GET.get('start_date')
     weeks_str = request.GET.get('weeks')
     try:
@@ -69,8 +61,6 @@ def generate_schedule(request):
     if not all_meals:
         messages.error(request, "Your MyList is empty. Please add meals first.")
         return redirect('mylist:view_mylist')
-
-    # Categorize meals by type—only those selected by the user.
     categorized_meals = {
         'breakfast': [],
         'lunch': [],
@@ -113,7 +103,6 @@ def generate_schedule(request):
     workout_schedule = None
     if mylist.workout_plans.exists():
         workout_plan = mylist.workout_plans.first()
-        # Retrieve subplans in order (assume 5 subplans exist)
         subplans = list(workout_plan.sub_plans.all().order_by('pk'))
         workout_schedule = {
             'metadata': {
@@ -158,7 +147,7 @@ def generate_schedule(request):
     # ----- COMBINE SCHEDULES -----
     combined_schedule = {
         'meals': meal_schedule,
-        'workouts': workout_schedule  # May be None if no workout plan is selected.
+        'workouts': workout_schedule  
     }
     schedule.scheduled_meals = combined_schedule
     schedule.save()
@@ -168,12 +157,6 @@ def generate_schedule(request):
 
 @login_required
 def view_schedule(request):
-    """
-    Displays the combined schedule.
-    The meal schedule is grouped into days and then into weekly chunks (with pagination).
-    For each day, meals are grouped by category and the workout data (including its description and focus)
-    is merged from the workout schedule lookup.
-    """
     schedule_obj = getattr(request.user, 'schedule', None)
     if not schedule_obj or not schedule_obj.scheduled_meals:
         return render(request, 'schedule/schedule.html', {'page_obj': None})
@@ -182,7 +165,6 @@ def view_schedule(request):
     meal_data = data.get('meals', {})
     workout_data = data.get('workouts', None)
 
-    # Build a lookup dictionary for workouts (mapping ISO date to a dict with workout info).
     workout_lookup = {}
     if workout_data:
         for week in workout_data.get('weeks', []):
@@ -198,7 +180,6 @@ def view_schedule(request):
     for date_str, day_info in sorted_meal_days:
         date_obj = datetime.date.fromisoformat(date_str)
         display_date = f"{day_info.get('day_name')}, {date_obj.strftime('%d-%m-%Y')}"
-        # Group meals by category. Initialize all to None.
         meals_by_category = {'breakfast': None, 'lunch': None, 'dinner': None, 'snack': None}
         for item in day_info.get('entries', []):
             cat = item.get('meal_category')

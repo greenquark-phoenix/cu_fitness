@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from meals.models import Meal
-from workouts.models import WorkoutPlan  # Import WorkoutPlan
+from workouts.models import WorkoutPlan 
 from .models import MyList
 
 @login_required
@@ -41,10 +41,9 @@ def view_mylist(request):
     mylist, _ = MyList.objects.get_or_create(user=request.user)
     return render(request, 'mylist/view_mylist.html', {
         'selected_meals': mylist.meals.all(),
-        'selected_workouts': mylist.workout_plans.all(),  # Include selected workouts
+        'selected_workouts': mylist.workout_plans.all(), 
     })
 
-# Existing AJAX view for toggling workout plan selection
 @login_required
 def toggle_mylist_workout(request):
     if request.method == "POST":
@@ -60,7 +59,6 @@ def toggle_mylist_workout(request):
             return JsonResponse({"selected": True})
     return JsonResponse({"error": "Invalid request"}, status=400)
 
-# NEW VIEW: Remove a workout plan from MyList
 @login_required
 def remove_from_mylist_workout(request, workout_id):
     if request.method == "POST":
