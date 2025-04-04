@@ -1,10 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.db.models import Q
+from .models import Meal, RecommendedDailyIntake 
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
-from .models import Meal, RecommendedDailyIntake
-from mylist.models import MyList
+from .models import UserMealSelection
 
 def meal_list(request):
     meals = Meal.objects.all()
@@ -61,16 +61,9 @@ def meal_list(request):
     # Retrieve the first (or only) RecommendedDailyIntake record
     recommended = RecommendedDailyIntake.objects.first()
 
-    # Get selected meal IDs from MyList if the user is authenticated
-    selected_meal_ids = []
-    if request.user.is_authenticated:
-        mylist, _ = MyList.objects.get_or_create(user=request.user)
-        selected_meal_ids = list(mylist.meals.values_list('id', flat=True))
-
     context = {
         'meals': meals,
-        'recommended': recommended,
-        'selected_meal_ids': selected_meal_ids,
+        'recommended': recommended
     }
     return render(request, 'meals/meal_list.html', context)
 
@@ -81,14 +74,42 @@ def toggle_meal_selection(request):
     if not meal_id:
         return JsonResponse({'error': 'No meal_id provided'}, status=400)
 
-    meal = get_object_or_404(Meal, pk=meal_id)
-    mylist, _ = MyList.objects.get_or_create(user=request.user)
+    try:
+        meal = Meal.objects.get(id=meal_id)
+    except Meal.DoesNotExist:
+        return JsonResponse({'error': 'Meal does not exist'}, status=404)
 
-    if meal in mylist.meals.all():
-        mylist.meals.remove(meal)
-        selected = False
+    selection, created = UserMealSelection.objects.get_or_create(user=request.user, meal=meal)
+    selection.selected = not selection.selected
+    selection.save()
+
+    return JsonResponse({'selected': selection.selected})
+
+
+@login_required
+def intake_calories(request):
+    if request.method == "POST":
+        selected_ids = request.POST.getlist('meal_items')
+        selected_meals = Meal.objects.filter(id__in=selected_ids)
+        total_calories = sum(m.dv_calories for m in selected_meals)
+
+        #  Force save to trigger signal
+        for meal in Meal.objects.all():
+            selection, _ = UserMealSelection.objects.get_or_create(user=request.user, meal=meal)
+            selection.selected = str(meal.id) in selected_ids
+            selection.save()  #  This triggers the signal
+
+
     else:
-        mylist.meals.add(meal)
-        selected = True
+        selected_meals = []
+        total_calories = None
 
-    return JsonResponse({'selected': selected})
+    meals = Meal.objects.all()
+    context = {
+        'breakfast_items': meals.filter(meal_type__iexact='breakfast'),
+        'lunch_items': meals.filter(meal_type__iexact='lunch'),
+        'dinner_items': meals.filter(meal_type__iexact='dinner'),
+        'snack_items': meals.filter(meal_type__iexact='snack'),
+        'total_calories': total_calories,
+    }
+    return render(request, 'meals/intake_calories.html', context)

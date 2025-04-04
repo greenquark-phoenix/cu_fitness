@@ -56,3 +56,21 @@ class SubPlanExercise(models.Model):
 
     def __str__(self):
         return f"{self.subplan.name} - {self.exercise.name} ({self.exercise.unit}): {self.duration_or_sets}"
+
+
+
+
+
+from django.contrib.auth.models import User
+
+class UserWorkoutSelection(models.Model):
+        user = models.ForeignKey(User, on_delete=models.CASCADE)
+        subplan_exercise = models.ForeignKey(SubPlanExercise, on_delete=models.CASCADE)
+        selected = models.BooleanField(default=False)
+
+        def calories_burned(self):
+            return self.subplan_exercise.calories_burned()
+
+        def __str__(self):
+            return f"{self.user.username} - {self.subplan_exercise} - selected={self.selected}"
+

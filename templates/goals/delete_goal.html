@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Delete Goal</h2>
+    <p>Are you sure you want to delete the goal "{{ goal.goal.name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+    <a href="{% url 'goals:user_goals' %}" class="btn btn-secondary mt-3">Cancel</a>
+</div>
+{% endblock %}

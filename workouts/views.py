@@ -2,6 +2,8 @@ from django.contrib.auth.decorators import login_required
 from users.models import UserProfile
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import WorkoutPlan, SubPlan
+from .models import  SubPlanExercise
+from .models import UserWorkoutSelection
 
 
 def workout_plans(request):
@@ -68,3 +70,31 @@ def registered_workout_plans(request):
         "selected_sub_plan": selected_sub_plan,
     }
     return render(request, "workouts/registered_workout_plans.html", context)
+
+
+def workout_calories(request):
+    """
+    Displays a form allowing users to select workout exercises and calculates the total calories burned.
+    Workouts are categorized by sub-plans.
+    """
+    subplans = SubPlan.objects.all()
+
+    total_calories = 0
+    selected_exercises = []
+
+    if request.method == "POST":
+        selected_exercise_ids = request.POST.getlist("workout_items")
+        selected_exercises = SubPlanExercise.objects.filter(id__in=selected_exercise_ids)
+        total_calories = sum(exercise.calories_burned() for exercise in selected_exercises)
+
+        # ✅ Trigger signal for calories  calculations
+        for ex in SubPlanExercise.objects.all():
+            selection, _ = UserWorkoutSelection.objects.get_or_create(user=request.user, subplan_exercise=ex)
+            selection.selected = str(ex.id) in selected_exercise_ids
+            selection.save()  #  ✅ Trigger signal for calories  calculations
+
+    return render(request, "workouts/workout_calories.html", {
+        "subplans": subplans,
+        "selected_exercises": selected_exercises,
+        "total_calories": total_calories,
+    })
