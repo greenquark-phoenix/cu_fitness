@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} 
 {% load static %}
 {% block additional_style %}
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -84,7 +84,6 @@
     .dv-percentage {
         float: right;
     }
-
     .btn {
         transition: transform 0.2s, filter 0.2s;
     }
@@ -92,7 +91,6 @@
         transform: scale(1.05);
         filter: brightness(0.9);
     }
-
     .btn-blue {
         background-color: blue;
         color: white;
@@ -126,37 +124,27 @@
                             <div class="form-group">
                                 <label>Dietary Restrictions</label>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="dietary" id="dietaryDairy"
-                                           value="dairy">
+                                    <input class="form-check-input" type="checkbox" name="dietary" id="dietaryDairy" value="dairy">
                                     <label class="form-check-label" for="dietaryDairy">Dairy</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="dietary"
-                                           id="dietaryGluten"
-                                           value="gluten">
+                                    <input class="form-check-input" type="checkbox" name="dietary" id="dietaryGluten" value="gluten">
                                     <label class="form-check-label" for="dietaryGluten">Gluten</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="dietary"
-                                           id="dietaryShellfish"
-                                           value="shellfish">
+                                    <input class="form-check-input" type="checkbox" name="dietary" id="dietaryShellfish" value="shellfish">
                                     <label class="form-check-label" for="dietaryShellfish">Shellfish</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="dietary" id="dietaryEggs"
-                                           value="eggs">
+                                    <input class="form-check-input" type="checkbox" name="dietary" id="dietaryEggs" value="eggs">
                                     <label class="form-check-label" for="dietaryEggs">Eggs</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="dietary"
-                                           id="dietaryPeanuts"
-                                           value="peanuts">
+                                    <input class="form-check-input" type="checkbox" name="dietary" id="dietaryPeanuts" value="peanuts">
                                     <label class="form-check-label" for="dietaryPeanuts">Peanuts</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="dietary"
-                                           id="dietaryTreeNuts"
-                                           value="tree nuts">
+                                    <input class="form-check-input" type="checkbox" name="dietary" id="dietaryTreeNuts" value="tree nuts">
                                     <label class="form-check-label" for="dietaryTreeNuts">Tree Nuts</label>
                                 </div>
                             </div>
@@ -187,7 +175,7 @@
                                     <option value="above30">Over 30 minutes</option>
                                 </select>
                             </div>
-                            <!-- Apply Filter Button (blue, same hover effect) -->
+                            <!-- Apply Filter Button -->
                             <div class="form-group">
                                 <button type="submit" class="btn btn-blue btn-block">
                                     Apply Filter
@@ -209,11 +197,9 @@
                         <div class="col-md-6">
                             <div class="card meal-card mb-3">
                                 {% if meal.image %}
-                                    <img class="card-img-top meal-image" src="{{ meal.image.url }}"
-                                         alt="{{ meal.meal_name }}">
+                                    <img class="card-img-top meal-image" src="{{ meal.image.url }}" alt="{{ meal.meal_name }}">
                                 {% else %}
-                                    <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}"
-                                         alt="Default Image">
+                                    <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}" alt="Default Image">
                                 {% endif %}
                                 <div class="card-body">
                                     <h5 class="card-title">{{ meal.meal_name }}</h5>
@@ -226,22 +212,24 @@
                                     </ul>
                                 </div>
                                 <div class="card-footer d-flex justify-content-between align-items-center">
-                                    <!-- View Recipe: blue -->
-                                    <button type="button" class="btn btn-blue" data-toggle="modal"
-                                            data-target="#recipeModal{{ meal.id }}">
+                                    <!-- View Recipe Button -->
+                                    <button type="button" class="btn btn-blue" data-toggle="modal" data-target="#recipeModal{{ meal.id }}">
                                         View Recipe
                                     </button>
-                                    <!-- Micronutrients: black -->
-                                    <button type="button" class="btn micronutrients-btn" data-toggle="modal"
-                                            data-target="#micronutrientsModal{{ meal.id }}">
+                                    <!-- Micronutrients Button -->
+                                    <button type="button" class="btn micronutrients-btn" data-toggle="modal" data-target="#micronutrientsModal{{ meal.id }}">
                                         Micronutrients
                                     </button>
-                                    <!-- Toggling select: starts blue, toggles green on click -->
-                                    <button type="button"
-                                            class="btn select-blue toggle-mylist-btn"
-                                            data-meal-id="{{ meal.id }}">
-                                        Select
-                                    </button>
+                                    <!-- Toggle Select Button -->
+                                    {% if meal.id in selected_meal_ids %}
+                                        <button type="button" class="btn select-green toggle-mylist-btn" data-meal-id="{{ meal.id }}">
+                                            Selected
+                                        </button>
+                                    {% else %}
+                                        <button type="button" class="btn select-blue toggle-mylist-btn" data-meal-id="{{ meal.id }}">
+                                            Select
+                                        </button>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -257,11 +245,9 @@
                         <div class="col-md-6">
                             <div class="card meal-card mb-3">
                                 {% if meal.image %}
-                                    <img class="card-img-top meal-image" src="{{ meal.image.url }}"
-                                         alt="{{ meal.meal_name }}">
+                                    <img class="card-img-top meal-image" src="{{ meal.image.url }}" alt="{{ meal.meal_name }}">
                                 {% else %}
-                                    <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}"
-                                         alt="Default Image">
+                                    <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}" alt="Default Image">
                                 {% endif %}
                                 <div class="card-body">
                                     <h5 class="card-title">{{ meal.meal_name }}</h5>
@@ -274,19 +260,21 @@
                                     </ul>
                                 </div>
                                 <div class="card-footer d-flex justify-content-between align-items-center">
-                                    <button type="button" class="btn btn-blue" data-toggle="modal"
-                                            data-target="#recipeModal{{ meal.id }}">
+                                    <button type="button" class="btn btn-blue" data-toggle="modal" data-target="#recipeModal{{ meal.id }}">
                                         View Recipe
                                     </button>
-                                    <button type="button" class="btn micronutrients-btn" data-toggle="modal"
-                                            data-target="#micronutrientsModal{{ meal.id }}">
+                                    <button type="button" class="btn micronutrients-btn" data-toggle="modal" data-target="#micronutrientsModal{{ meal.id }}">
                                         Micronutrients
                                     </button>
-                                    <button type="button"
-                                            class="btn select-blue toggle-mylist-btn"
-                                            data-meal-id="{{ meal.id }}">
-                                        Select
-                                    </button>
+                                    {% if meal.id in selected_meal_ids %}
+                                        <button type="button" class="btn select-green toggle-mylist-btn" data-meal-id="{{ meal.id }}">
+                                            Selected
+                                        </button>
+                                    {% else %}
+                                        <button type="button" class="btn select-blue toggle-mylist-btn" data-meal-id="{{ meal.id }}">
+                                            Select
+                                        </button>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -302,11 +290,9 @@
                         <div class="col-md-6">
                             <div class="card meal-card mb-3">
                                 {% if meal.image %}
-                                    <img class="card-img-top meal-image" src="{{ meal.image.url }}"
-                                         alt="{{ meal.meal_name }}">
+                                    <img class="card-img-top meal-image" src="{{ meal.image.url }}" alt="{{ meal.meal_name }}">
                                 {% else %}
-                                    <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}"
-                                         alt="Default Image">
+                                    <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}" alt="Default Image">
                                 {% endif %}
                                 <div class="card-body">
                                     <h5 class="card-title">{{ meal.meal_name }}</h5>
@@ -319,19 +305,21 @@
                                     </ul>
                                 </div>
                                 <div class="card-footer d-flex justify-content-between align-items-center">
-                                    <button type="button" class="btn btn-blue" data-toggle="modal"
-                                            data-target="#recipeModal{{ meal.id }}">
+                                    <button type="button" class="btn btn-blue" data-toggle="modal" data-target="#recipeModal{{ meal.id }}">
                                         View Recipe
                                     </button>
-                                    <button type="button" class="btn micronutrients-btn" data-toggle="modal"
-                                            data-target="#micronutrientsModal{{ meal.id }}">
+                                    <button type="button" class="btn micronutrients-btn" data-toggle="modal" data-target="#micronutrientsModal{{ meal.id }}">
                                         Micronutrients
                                     </button>
-                                    <button type="button"
-                                            class="btn select-blue toggle-mylist-btn"
-                                            data-meal-id="{{ meal.id }}">
-                                        Select
-                                    </button>
+                                    {% if meal.id in selected_meal_ids %}
+                                        <button type="button" class="btn select-green toggle-mylist-btn" data-meal-id="{{ meal.id }}">
+                                            Selected
+                                        </button>
+                                    {% else %}
+                                        <button type="button" class="btn select-blue toggle-mylist-btn" data-meal-id="{{ meal.id }}">
+                                            Select
+                                        </button>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -347,11 +335,9 @@
                         <div class="col-md-6">
                             <div class="card meal-card mb-3">
                                 {% if meal.image %}
-                                    <img class="card-img-top meal-image" src="{{ meal.image.url }}"
-                                         alt="{{ meal.meal_name }}">
+                                    <img class="card-img-top meal-image" src="{{ meal.image.url }}" alt="{{ meal.meal_name }}">
                                 {% else %}
-                                    <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}"
-                                         alt="Default Image">
+                                    <img class="card-img-top meal-image" src="{% static 'meals/default.jpg' %}" alt="Default Image">
                                 {% endif %}
                                 <div class="card-body">
                                     <h5 class="card-title">{{ meal.meal_name }}</h5>
@@ -364,19 +350,21 @@
                                     </ul>
                                 </div>
                                 <div class="card-footer d-flex justify-content-between align-items-center">
-                                    <button type="button" class="btn btn-blue" data-toggle="modal"
-                                            data-target="#recipeModal{{ meal.id }}">
+                                    <button type="button" class="btn btn-blue" data-toggle="modal" data-target="#recipeModal{{ meal.id }}">
                                         View Recipe
                                     </button>
-                                    <button type="button" class="btn micronutrients-btn" data-toggle="modal"
-                                            data-target="#micronutrientsModal{{ meal.id }}">
+                                    <button type="button" class="btn micronutrients-btn" data-toggle="modal" data-target="#micronutrientsModal{{ meal.id }}">
                                         Micronutrients
                                     </button>
-                                    <button type="button"
-                                            class="btn select-blue toggle-mylist-btn"
-                                            data-meal-id="{{ meal.id }}">
-                                        Select
-                                    </button>
+                                    {% if meal.id in selected_meal_ids %}
+                                        <button type="button" class="btn select-green toggle-mylist-btn" data-meal-id="{{ meal.id }}">
+                                            Selected
+                                        </button>
+                                    {% else %}
+                                        <button type="button" class="btn select-blue toggle-mylist-btn" data-meal-id="{{ meal.id }}">
+                                            Select
+                                        </button>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -389,14 +377,11 @@
 
 <!-- Recipe & Micronutrient Modals for Each Meal -->
 {% for meal in meals %}
-<div class="modal fade" id="recipeModal{{ meal.id }}" tabindex="-1" role="dialog"
-     aria-labelledby="recipeModalLabel{{ meal.id }}" aria-hidden="true">
+<div class="modal fade" id="recipeModal{{ meal.id }}" tabindex="-1" role="dialog" aria-labelledby="recipeModalLabel{{ meal.id }}" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="recipeModalLabel{{ meal.id }}">
-                    {{ meal.meal_name }} Recipe
-                </h5>
+                <h5 class="modal-title" id="recipeModalLabel{{ meal.id }}">{{ meal.meal_name }} Recipe</h5>
             </div>
             <div class="modal-body">
                 <p><strong>Cooking Instructions:</strong></p>
@@ -411,14 +396,11 @@
     </div>
 </div>
 
-<div class="modal fade" id="micronutrientsModal{{ meal.id }}" tabindex="-1" role="dialog"
-     aria-labelledby="micronutrientsModalLabel{{ meal.id }}" aria-hidden="true">
+<div class="modal fade" id="micronutrientsModal{{ meal.id }}" tabindex="-1" role="dialog" aria-labelledby="micronutrientsModalLabel{{ meal.id }}" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="micronutrientsModalLabel{{ meal.id }}">
-                    Micronutrients for {{ meal.meal_name }}
-                </h5>
+                <h5 class="modal-title" id="micronutrientsModalLabel{{ meal.id }}">Micronutrients for {{ meal.meal_name }}</h5>
             </div>
             <div class="modal-body">
                 <div class="nutrition-facts">
@@ -539,7 +521,7 @@
             var mealId = $btn.data('meal-id');
 
             $.ajax({
-                url: "{% url 'mylist:toggle_mylist' %}",
+                url: "{% url 'toggle_meal_selection' %}",
                 type: "POST",
                 data: {
                     meal_id: mealId,
