@@ -1,13 +1,15 @@
 # File: goals/signals.py
 
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from meals.models import UserMealSelection
-from workouts.models import UserWorkoutSelection
-from goals.models import DailyCalorieLog
 from datetime import date
 
-# ✅ Automatically record total meal intake when user selects meals
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+from goals.models import DailyCalorieLog
+from meals.models import UserMealSelection
+from workouts.models import UserWorkoutSelection
+
+
 def calculate_total_meal_calories(user):
     selected_meals = UserMealSelection.objects.filter(user=user, selected=True)
     return sum(sel.meal.dv_calories for sel in selected_meals)
@@ -21,9 +23,6 @@ def update_calorie_log_on_meal_selection(sender, instance, **kwargs):
     log.calories_intake = intake
     log.save()
 
-    print("✅ Meal signal triggered for:", user.username)  #
-
-# ✅ Automatically record total calories burned when user selects workouts
 def calculate_total_workout_calories(user):
     selected_workouts = UserWorkoutSelection.objects.filter(user=user, selected=True)
     return sum(sel.subplan_exercise.calories_burned() for sel in selected_workouts)
@@ -36,5 +35,3 @@ def update_calorie_log_on_workout_selection(sender, instance, **kwargs):
     log, _ = DailyCalorieLog.objects.get_or_create(user=user, date=date.today())
     log.calories_burned = burned
     log.save()
-
-    print("✅ Workout signal triggered for:", user.username)  #
