@@ -7,7 +7,6 @@ from workouts.models import WorkoutPlan, SubPlan
 
 
 class UserProfile(models.Model):
-    # force migration update
     GENDER_CHOICES = [
         ('Male', 'Male'),
         ('Female', 'Female'),

@@ -84,16 +84,12 @@ def workout_calories(request):
 
     if request.method == "POST":
         selected_exercise_ids = request.POST.getlist("workout_items")
-        selected_exercises = SubPlanExercise.objects.filter(id__in=selected_exercise_ids)
-        total_calories = sum(exercise.calories_burned() for exercise in selected_exercises)
 
-        #  Update selection model to trigger signal
         for ex in SubPlanExercise.objects.all():
             selection, _ = UserWorkoutSelection.objects.get_or_create(user=request.user, subplan_exercise=ex)
             selection.selected = str(ex.id) in selected_exercise_ids
-            selection.save()  #  Triggers the signal
+            selection.save()
 
-        #  Redirect to net calorie chart
         return redirect("goals:net_calorie_chart")
 
     return render(request, "workouts/workout_calories.html", {
