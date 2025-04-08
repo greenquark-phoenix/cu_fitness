@@ -1,7 +1,43 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-5">
+
+    <!-- 🔁 Back to Goals Button -->
+    <div class="text-end mb-3">
+        <a href="{% url 'goals:user_goals' %}" class="btn btn-outline-secondary">
+            ← Back to Goals
+        </a>
+    </div>
+    <!-- 🔢 Summary Statistics -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-start border-success border-4">
+            <div class="card-body">
+                <h6 class="card-title text-success">Total Calories Burned</h6>
+                <p class="h5">{{ total_burned }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-start border-primary border-4">
+            <div class="card-body">
+                <h6 class="card-title text-primary">Total Calories Intake</h6>
+                <p class="h5">{{ total_intake }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-start border-info border-4">
+            <div class="card-body">
+                <h6 class="card-title text-info">Total Net Calories</h6>
+                <p class="h5">{{ total_net }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
     <h2 class="text-center mb-4">Net Calorie Trend (Past 14 Days)</h2>
+
     <!-- Canvas for Chart.js -->
     <canvas id="calorieChart" height="100"></canvas>
 </div>
@@ -14,27 +50,27 @@
 
     // Create the chart instance
     const calorieChart = new Chart(ctx, {
-        type: 'line',  // Chart type
+        type: 'line',
         data: {
-            labels: {{ labels|safe }},  // X-axis labels (dates)
+            labels: {{ labels|safe }},
             datasets: [
                 {
                     label: 'Calories Intake',
-                    data: {{ intake_data|safe }},  // Y-axis data for intake
+                    data: {{ intake_data|safe }},
                     borderColor: 'rgba(54, 162, 235, 1)',
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    tension: 0.3  // Smoothness of the line
+                    tension: 0.3
                 },
                 {
                     label: 'Calories Burned',
-                    data: {{ burned_data|safe }},  // Y-axis data for burned
+                    data: {{ burned_data|safe }},
                     borderColor: 'rgba(255, 99, 132, 1)',
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     tension: 0.3
                 },
                 {
                     label: 'Net Calories',
-                    data: {{ net_data|safe }},  // Y-axis data for net calories
+                    data: {{ net_data|safe }},
                     borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     tension: 0.3
@@ -42,7 +78,7 @@
             ]
         },
         options: {
-            responsive: true,  // Make chart responsive to screen size
+            responsive: true,
             plugins: {
                 title: {
                     display: false
@@ -50,7 +86,7 @@
             },
             scales: {
                 y: {
-                    beginAtZero: true,  // Start Y-axis at 0
+                    beginAtZero: true,
                     title: {
                         display: true,
                         text: 'Calories'

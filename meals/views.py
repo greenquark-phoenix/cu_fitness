@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Q
 from .models import Meal, RecommendedDailyIntake 
 from django.http import JsonResponse
@@ -93,12 +93,14 @@ def intake_calories(request):
         selected_meals = Meal.objects.filter(id__in=selected_ids)
         total_calories = sum(m.dv_calories for m in selected_meals)
 
-        #  Force save to trigger signal
+        # Force save to trigger signal
         for meal in Meal.objects.all():
             selection, _ = UserMealSelection.objects.get_or_create(user=request.user, meal=meal)
             selection.selected = str(meal.id) in selected_ids
-            selection.save()  #  This triggers the signal
+            selection.save()  # This triggers the signal
 
+        # ✅ Redirect to net calorie chart
+        return redirect('goals:net_calorie_chart')
 
     else:
         selected_meals = []

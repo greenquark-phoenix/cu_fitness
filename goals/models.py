@@ -18,6 +18,7 @@ class UserFitnessGoal(models.Model):
     goal = models.ForeignKey(FitnessGoal, on_delete=models.CASCADE, null=False, blank=False)
     target_value = models.FloatField(null=False, blank=False)
     current_value = models.FloatField(default=0.0)  # ✅ New paremeter
+    starting_value = models.FloatField(default=0.0)  # ✅ New field you asked for
     created_at = models.DateTimeField(auto_now_add=True)
     due_at = models.DateField(null=False, blank=False)
 
@@ -31,6 +32,10 @@ class UserFitnessGoal(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.goal.name} - {self.target_value}"
 
+    def save(self, *args, **kwargs):
+        if self._state.adding and self.starting_value == 0.0:
+            self.starting_value = self.current_value
+        super().save(*args, **kwargs)
 
     @classmethod
     def add_new_goal(cls, user, goal, target_value, due_at):
