@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -97,8 +97,6 @@ def toggle_meal_selection(request):
 def intake_calories(request):
     if request.method == "POST":
         selected_ids = request.POST.getlist('meal_items')
-        selected_meals = Meal.objects.filter(id__in=selected_ids)
-        total_calories = sum(m.dv_calories for m in selected_meals)
 
         #  Force save to trigger signal
         for meal in Meal.objects.all():
@@ -106,9 +104,9 @@ def intake_calories(request):
             selection.selected = str(meal.id) in selected_ids
             selection.save()  #  This triggers the signal
 
+        return redirect('goals:net_calorie_chart')
 
     else:
-        selected_meals = []
         total_calories = None
 
     meals = Meal.objects.all()
@@ -119,5 +117,5 @@ def intake_calories(request):
         'snack_items': meals.filter(meal_type__iexact='snack'),
         'total_calories': total_calories,
     }
-    return render(request, 'meals/intake_calories.html', context)
 
+    return render(request, 'meals/intake_calories.html', context)
