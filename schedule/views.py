@@ -3,10 +3,13 @@ import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.shortcuts import redirect, render
+from django.http import JsonResponse
+from django.shortcuts import redirect, render, get_object_or_404
 
 from meals.models import Meal
+from schedule.models import MyList
 from service.service import ScheduleService
+from workouts.models import WorkoutPlan
 
 
 def ordinal_day(day):
@@ -167,3 +170,71 @@ def _get_selected_days(schedule):
         current_day += datetime.timedelta(days=1)
 
     return result
+
+
+@login_required
+def add_to_mylist(request, meal_id):
+    if request.method == "POST":
+        meal = get_object_or_404(Meal, pk=meal_id)
+        mylist, _ = MyList.objects.get_or_create(user=request.user)
+        mylist.meals.add(meal)
+    return redirect('mylist:view_mylist')
+
+
+@login_required
+def remove_from_mylist(request, meal_id):
+    if request.method == "POST":
+        meal = get_object_or_404(Meal, pk=meal_id)
+        mylist, _ = MyList.objects.get_or_create(user=request.user)
+        mylist.meals.remove(meal)
+    return redirect('mylist:view_mylist')
+
+
+@login_required
+def toggle_mylist(request):
+    if request.method == "POST":
+        meal_id = request.POST.get('meal_id')
+        meal = get_object_or_404(Meal, pk=meal_id)
+        mylist, _ = MyList.objects.get_or_create(user=request.user)
+
+        if meal in mylist.meals.all():
+            mylist.meals.remove(meal)
+            return JsonResponse({"selected": False})
+        else:
+            mylist.meals.add(meal)
+            return JsonResponse({"selected": True})
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+@login_required
+def view_mylist(request):
+    mylist, _ = MyList.objects.get_or_create(user=request.user)
+    return render(request, 'mylist/view_mylist.html', {
+        'selected_meals': mylist.meals.all(),
+        'selected_workouts': mylist.workout_plans.all(),
+    })
+
+
+@login_required
+def toggle_mylist_workout(request):
+    if request.method == "POST":
+        workout_id = request.POST.get("workout_id")
+        plan = get_object_or_404(WorkoutPlan, pk=workout_id)
+        mylist, _ = MyList.objects.get_or_create(user=request.user)
+
+        if plan in mylist.workout_plans.all():
+            mylist.workout_plans.remove(plan)
+            return JsonResponse({"selected": False})
+        else:
+            mylist.workout_plans.add(plan)
+            return JsonResponse({"selected": True})
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+@login_required
+def remove_from_mylist_workout(request, workout_id):
+    if request.method == "POST":
+        plan = get_object_or_404(WorkoutPlan, pk=workout_id)
+        mylist, _ = MyList.objects.get_or_create(user=request.user)
+        mylist.workout_plans.remove(plan)
+    return redirect('mylist:view_mylist')

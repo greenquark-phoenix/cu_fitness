@@ -4,7 +4,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from .models import Meal, RecommendedDailyIntake, UserMealSelection
-from mylist.models import MyList
+from schedule.models import MyList
+
 
 def meal_list(request):
     meals = Meal.objects.all()
