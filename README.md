@@ -22,13 +22,16 @@ source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
 pip install -r requirements.txt
 
 # Setup
+echo OPENAI_API_KEY=<add_your_key> > .env # Replace <add_your_key> with a valid key
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser
 
 # Load initial data
+# Initially there are 5 users with usernames: belal, hamed, aurora, andy, sudip. The password is the username followed by 123.
+
 ./scripts/init_data.sh # On Windows use: .\scripts\init_data.bat
-```
+
 ## Usage
 ```sh
 python manage.py runserver
