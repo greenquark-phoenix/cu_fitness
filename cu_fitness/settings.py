@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'assistant.apps.AssistantConfig',
     'schedule.apps.ScheduleConfig',
-    'mylist.apps.MylistConfig',
     'events',
 ]
 

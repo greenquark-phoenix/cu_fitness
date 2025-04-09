@@ -26,8 +26,6 @@ def update_calorie_log_on_meal_selection(sender, instance, **kwargs):
     log.calories_intake = intake
     log.save()
 
-    print("✅ Meal signal triggered for:", user.username)
-
 # ✅ Calculate total workout calories
 def calculate_total_workout_calories(user):
     selected_workouts = UserWorkoutSelection.objects.filter(user=user, selected=True)

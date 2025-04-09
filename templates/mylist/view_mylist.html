@@ -131,7 +131,7 @@
                                 </ul>
                             </div>
                             <div class="card-footer d-flex justify-content-center">
-                                <form action="{% url 'mylist:remove_from_mylist' meal.id %}" method="POST">
+                                <form action="{% url 'schedule:remove_from_mylist' meal.id %}" method="POST">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-remove">Remove</button>
                                 </form>
@@ -163,7 +163,7 @@
                                 </ul>
                             </div>
                             <div class="card-footer d-flex justify-content-center">
-                                <form action="{% url 'mylist:remove_from_mylist' meal.id %}" method="POST">
+                                <form action="{% url 'schedule:remove_from_mylist' meal.id %}" method="POST">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-remove">Remove</button>
                                 </form>
@@ -195,7 +195,7 @@
                                 </ul>
                             </div>
                             <div class="card-footer d-flex justify-content-center">
-                                <form action="{% url 'mylist:remove_from_mylist' meal.id %}" method="POST">
+                                <form action="{% url 'schedule:remove_from_mylist' meal.id %}" method="POST">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-remove">Remove</button>
                                 </form>
@@ -227,7 +227,7 @@
                                 </ul>
                             </div>
                             <div class="card-footer d-flex justify-content-center">
-                                <form action="{% url 'mylist:remove_from_mylist' meal.id %}" method="POST">
+                                <form action="{% url 'schedule:remove_from_mylist' meal.id %}" method="POST">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-remove">Remove</button>
                                 </form>
@@ -255,7 +255,7 @@
                                 </a>
                             </div>
                             <div class="card-footer d-flex justify-content-center">
-                                <form action="{% url 'mylist:remove_from_mylist_workout' workout.id %}" method="POST">
+                                <form action="{% url 'schedule:remove_from_mylist_workout' workout.id %}" method="POST">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-remove">Remove</button>
                                 </form>
