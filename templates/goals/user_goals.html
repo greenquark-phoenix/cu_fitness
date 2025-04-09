@@ -2,116 +2,95 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-4">
+    <h2 class="text-center mb-4">My Goals</h2>
 
-    <!-- Section: Functional Cards (Add Goal, Workout, Meals, Net Calories) -->
-    <div class="row row-cols-1 row-cols-md-4 g-4">
-        <!-- Add Goal Card -->
-        <div class="col">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Add a New Goal</h5>
-                    <p class="card-text">Set a new goal to improve your fitness journey.</p>
-                    <a href="{% url 'goals:create_goal' %}" class="btn btn-primary w-100">Add Goal</a>
-                </div>
-            </div>
+    <!-- Top Navigation Cards -->
+    <div class="d-flex justify-content-center flex-wrap gap-3 mb-5">
+        <!-- Add Goal -->
+        <div class="card text-center p-3 shadow-sm" style="width: 220px;">
+            <h5 class="mb-2">Add a New Goal</h5>
+            <p class="small">Set a new goal to improve your fitness journey.</p>
+            <a href="{% url 'goals:create_goal' %}" class="btn btn-primary">Add Goal</a>
         </div>
 
         <!-- Workout Calories -->
-        <div class="col">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Workout Calories</h5>
-                    <p class="card-text">Track your calories burned through workouts.</p>
-                    <a href="{% url 'workout_calories' %}" class="btn btn-outline-primary w-100">Go to Workout</a>
-                </div>
-            </div>
+        <div class="card text-center p-3 shadow-sm" style="width: 220px;">
+            <h5 class="mb-2">Workout Calories</h5>
+            <p class="small">Track your calories burned through workouts.</p>
+            <a href="/workouts/calories/" class="btn btn-outline-primary">Go to Workout</a>
         </div>
 
         <!-- Meals Calories -->
-        <div class="col">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Meals Calories</h5>
-                    <p class="card-text">Monitor your daily calorie intake from meals.</p>
-                    <a href="{% url 'intake_calories' %}" class="btn btn-outline-success w-100">Go to Meals</a>
-                </div>
-            </div>
+        <div class="card text-center p-3 shadow-sm" style="width: 220px;">
+            <h5 class="mb-2">Meals Calories</h5>
+            <p class="small">Monitor your daily calorie intake from meals.</p>
+            <a href="/meals/intake_calories/" class="btn btn-outline-success">Go to Meals</a>
         </div>
 
         <!-- Net Calorie Trend -->
-        <div class="col">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Net Calorie Trend</h5>
-                    <p class="card-text">View your calorie intake vs. burned trend over time.</p>
-                    <a href="{% url 'goals:net_calorie_chart' %}" class="btn btn-outline-info w-100">View Trend</a>
-                </div>
-            </div>
+        <div class="card text-center p-3 shadow-sm" style="width: 220px;">
+            <h5 class="mb-2">Net Calorie Trend</h5>
+            <p class="small">View your calorie intake vs. burned trend over time.</p>
+            <a href="{% url 'goals:net_calorie_chart' %}" class="btn btn-outline-info">View Trend</a>
+        </div>
+
+        <!-- ✅ Registered Event -->
+        <div class="card text-center p-3 shadow-sm" style="width: 220px;">
+            <h5 class="mb-2">Registered Event</h5>
+            <p class="small">Check your registered events.</p>
+            <a href="/events/calendar/" class="btn btn-outline-warning">View Events</a>
         </div>
     </div>
 
-    <!-- Section Divider -->
-    <hr class="my-5">
+    <!-- Goal Cards -->
+    {% for goal in user_goals %}
+    <div class="card shadow-sm p-4 mb-4">
+        <h5 class="text-primary">{{ goal.goal.name }}</h5>
+        <div class="d-flex align-items-center mb-2">
+            <span class="badge bg-secondary me-2">Target</span> {{ goal.target_value }} {{ goal.goal.unit }}
+        </div>
+        <div class="d-flex align-items-center mb-2">
+            <span class="badge bg-info text-dark me-2">Current</span> {{ goal.current_value }} {{ goal.goal.unit }}
+        </div>
+        <div class="d-flex align-items-center mb-2">
+            <span class="badge bg-light text-dark me-2">Due</span> {{ goal.due_at }}
+        </div>
 
-    <!-- Section: User Goals Overview -->
-    <h3 class="text-center mb-4">My Goals</h3>
-
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-        {% for goal in user_goals %}
-        <div class="col">
-            <!-- User Goal Card -->
-            <div class="card h-100 shadow-lg border-0 rounded-4">
-                <div class="card-body">
-                    <!-- Goal Title -->
-                    <h5 class="card-title text-primary fw-bold">{{ goal.goal.name }}</h5>
-
-                    <!-- Goal Details -->
-                    <p class="card-text mb-2">
-                        <span class="badge bg-secondary me-2">Target</span> 
-                        {{ goal.target_value }} {{ goal.goal.unit }}<br>
-                        <span class="badge bg-info text-dark me-2">Current</span> 
-                        {{ goal.current_value }} {{ goal.goal.unit }}<br>
-                        <span class="badge bg-light text-dark me-2">Due</span> 
-                        {{ goal.due_at }}
-                    </p>
-
-                    <!-- Progress Bar -->
-                    <div class="progress" role="progressbar" aria-valuenow="{{ goal.progress }}" aria-valuemin="0" aria-valuemax="100" style="height: 25px;">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success text-white fw-bold" 
-                             style="width: {{ goal.progress }}%;">
-                            {{ goal.progress|floatformat:0 }}%
-                        </div>
-                    </div>
-
-                    <!-- Update Progress Button -->
-                    <a href="{% url 'goals:update_goal' goal.id %}" class="btn btn-outline-primary btn-sm mt-3">
-                        Update Progress
-                    </a>
-
-                    <!-- 🔥 Weight goal calorie analysis -->
-                    {% if goal.goal.name|lower == "weight" and weight_context %}
-                    <div class="mt-3 p-3 small rounded {% if weight_context.behind_target %}bg-warning-subtle border border-warning{% else %}bg-success-subtle border border-success{% endif %}">
-                        <p class="mb-1">
-                            <strong>Calorie Deficit Target:</strong><br>
-                            • Required: <strong>{{ weight_context.daily_required_deficit|floatformat:0 }} kcal/day</strong><br>
-                            • Current Avg: <strong>{{ weight_context.avg_net_calories|floatformat:0 }} kcal/day</strong><br>
-                            • Days Remaining: {{ weight_context.days_remaining }}
-                        </p>
-                        {% if weight_context.behind_target %}
-                        <div class="text-danger fw-bold">⚠️ You are behind your calorie deficit target.</div>
-                        {% else %}
-                        <div class="text-success fw-bold">✅ You're on track to meet your goal!</div>
-                        {% endif %}
-                    </div>
-                    {% endif %}
-                </div>
+        <!-- Progress Bar -->
+        <div class="progress mb-3" style="height: 20px;">
+            <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                 style="width: {{ goal.progress }}%;" aria-valuenow="{{ goal.progress }}"
+                 aria-valuemin="0" aria-valuemax="100">
+                {{ goal.progress }}%
             </div>
         </div>
-        {% empty %}
-        <p class="text-center">You haven't set any goals yet.</p>
-        {% endfor %}
-    </div>
 
+        <!-- Buttons -->
+        <div class="d-flex gap-2 mb-3">
+            <a href="{% url 'goals:update_goal' goal.pk %}" class="btn btn-outline-primary">Update Progress</a>
+            <a href="{% url 'goals:delete_goal' goal.pk %}" class="btn btn-outline-danger">Delete</a>
+        </div>
+
+        <!-- Weight-specific Details -->
+        {% if goal.goal.name|lower == "weight" and weight_context %}
+        <div class="alert {% if weight_context.behind_target %}alert-warning{% else %}alert-success{% endif %}" role="alert">
+            <strong>Calorie {{ weight_context.goal_type|title }} Target:</strong><br>
+            • Required: <strong>{{ weight_context.daily_required_kcal }} kcal/day</strong><br>
+            • Current Avg: <strong>{{ weight_context.avg_net_calories }} kcal/day</strong><br>
+            • Days Remaining: <strong>{{ weight_context.days_remaining }}</strong><br>
+            {% if weight_context.behind_target %}
+                ⚠️ <span class="text-danger">You are behind your target.</span>
+            {% else %}
+                ✅ <span class="text-success">You're on track to meet your goal!</span>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <div class="alert alert-info text-center mt-4">
+        You haven't set any fitness goals yet. Click "Add Goal" above to get started!
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}
