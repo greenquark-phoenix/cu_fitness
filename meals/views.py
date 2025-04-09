@@ -1,10 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
-from .models import Meal, RecommendedDailyIntake 
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
-from .models import UserMealSelection
+from .models import Meal, RecommendedDailyIntake, UserMealSelection
+from mylist.models import MyList
 
 def meal_list(request):
     meals = Meal.objects.all()
@@ -61,9 +61,16 @@ def meal_list(request):
     # Retrieve the first (or only) RecommendedDailyIntake record
     recommended = RecommendedDailyIntake.objects.first()
 
+    # Get selected meal IDs from MyList if the user is authenticated
+    selected_meal_ids = []
+    if request.user.is_authenticated:
+        mylist, _ = MyList.objects.get_or_create(user=request.user)
+        selected_meal_ids = list(mylist.meals.values_list('id', flat=True))
+
     context = {
         'meals': meals,
-        'recommended': recommended
+        'recommended': recommended,
+        'selected_meal_ids': selected_meal_ids,
     }
     return render(request, 'meals/meal_list.html', context)
 
@@ -74,17 +81,17 @@ def toggle_meal_selection(request):
     if not meal_id:
         return JsonResponse({'error': 'No meal_id provided'}, status=400)
 
-    try:
-        meal = Meal.objects.get(id=meal_id)
-    except Meal.DoesNotExist:
-        return JsonResponse({'error': 'Meal does not exist'}, status=404)
+    meal = get_object_or_404(Meal, pk=meal_id)
+    mylist, _ = MyList.objects.get_or_create(user=request.user)
 
-    selection, created = UserMealSelection.objects.get_or_create(user=request.user, meal=meal)
-    selection.selected = not selection.selected
-    selection.save()
+    if meal in mylist.meals.all():
+        mylist.meals.remove(meal)
+        selected = False
+    else:
+        mylist.meals.add(meal)
+        selected = True
 
-    return JsonResponse({'selected': selection.selected})
-
+    return JsonResponse({'selected': selected})
 
 @login_required
 def intake_calories(request):
@@ -113,3 +120,4 @@ def intake_calories(request):
         'total_calories': total_calories,
     }
     return render(request, 'meals/intake_calories.html', context)
+

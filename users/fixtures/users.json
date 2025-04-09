@@ -3,16 +3,16 @@
     "model": "auth.user",
     "pk": 1,
     "fields": {
-      "password": "pbkdf2_sha256$870000$huHRQDHbE8mfCLb7ZppeXV$gM5BboVojCFhBuBV16aPgVDJGKdtjozk23TFQNndf6M=",
-      "last_login": "2025-02-15T12:04:30.608Z",
+      "password": "pbkdf2_sha256$870000$K07HJDJHGdlx2DjJOS5dWE$ZLdn1KleLfA80ZlYVYTOIqCut8qp+U6XtIboiE3wQTA=",
+      "last_login": "2025-04-06T01:38:30.179Z",
       "is_superuser": false,
-      "username": "bnwiran",
+      "username": "sudip",
       "first_name": "",
       "last_name": "",
-      "email": "bnwiran@gmail.com",
+      "email": "sudip@concordia.ca",
       "is_staff": false,
       "is_active": true,
-      "date_joined": "2025-02-15T12:04:30.008Z",
+      "date_joined": "2025-04-06T01:38:29.914Z",
       "groups": [],
       "user_permissions": []
     }
@@ -21,16 +21,16 @@
     "model": "auth.user",
     "pk": 2,
     "fields": {
-      "password": "pbkdf2_sha256$870000$1XeaQtwCCVLxQHhgghuwWQ$zwukUm94GfeYp7tYZec8R4LGUDashWlCeXovq5+1xWw=",
-      "last_login": "2025-02-15T12:17:04.094Z",
+      "password": "pbkdf2_sha256$870000$jO9mhRtiwMAWuPOt8PXb6E$ua1c7rBVGGOYZWc2VttKn6KVNaruVf2sjiJZbf+JMNQ=",
+      "last_login": "2025-04-06T01:38:59.348Z",
       "is_superuser": false,
-      "username": "andy",
+      "username": "hamed",
       "first_name": "",
       "last_name": "",
-      "email": "Zeyu.li@mail.concordia.ca",
+      "email": "hamed@concordia.ca",
       "is_staff": false,
       "is_active": true,
-      "date_joined": "2025-02-15T12:17:03.379Z",
+      "date_joined": "2025-04-06T01:38:58.916Z",
       "groups": [],
       "user_permissions": []
     }
@@ -39,16 +39,16 @@
     "model": "auth.user",
     "pk": 3,
     "fields": {
-      "password": "pbkdf2_sha256$870000$ameA9G7bey98ZccY1L73c9$y+BlI4crncWpgccQtoGQBrg6M75TlSM4PO60CMLumBQ=",
-      "last_login": "2025-02-15T12:20:10.510Z",
+      "password": "pbkdf2_sha256$870000$tQTlUaiIh33SZ5yDEkvcy3$ueThNnQ8sQWC4xtMUZbavANvSVy+Y/avLgQmhcocSO0=",
+      "last_login": "2025-04-06T01:39:18.348Z",
       "is_superuser": false,
-      "username": "aurora",
+      "username": "andy",
       "first_name": "",
       "last_name": "",
-      "email": "aurora@mail.concordia.ca",
+      "email": "andy@concordia.ca",
       "is_staff": false,
       "is_active": true,
-      "date_joined": "2025-02-15T12:20:09.822Z",
+      "date_joined": "2025-04-06T01:39:17.898Z",
       "groups": [],
       "user_permissions": []
     }
@@ -57,16 +57,16 @@
     "model": "auth.user",
     "pk": 4,
     "fields": {
-      "password": "pbkdf2_sha256$870000$DD1hiFabBYUiJbEDtrnAkC$FdjICY3c8emhE/wb62RdlqHX0uWJgL7wwcicTPvpAfU=",
-      "last_login": "2025-02-15T12:20:45.600Z",
+      "password": "pbkdf2_sha256$870000$ulqnDdJS9MhaVTWkdI60gj$S7+V1Rb8HOQ29W0RtMLpvNlj+9rnrgaeuPiUG5EUwMQ=",
+      "last_login": "2025-04-06T01:39:38.627Z",
       "is_superuser": false,
-      "username": "sudip",
+      "username": "aurora",
       "first_name": "",
       "last_name": "",
-      "email": "sudip@mail.concordia.ca",
+      "email": "aurora@concordia.ca",
       "is_staff": false,
       "is_active": true,
-      "date_joined": "2025-02-15T12:20:44.998Z",
+      "date_joined": "2025-04-06T01:39:38.194Z",
       "groups": [],
       "user_permissions": []
     }
@@ -75,36 +75,103 @@
     "model": "auth.user",
     "pk": 5,
     "fields": {
-      "password": "pbkdf2_sha256$870000$330VRLFpsYRdYoVflgxBts$wHRdDZugLuRN9WmV6i1AlDnATscc8/WmK2j4P9aP5WE=",
-      "last_login": "2025-02-15T12:21:09.102Z",
+      "password": "pbkdf2_sha256$870000$QhwZuSEGrvP9mmZzWCnBWY$AvMOsLjEYV2E2zyJw9mkz2ZLtN4CsQvmr2kMTrsZ+OY=",
+      "last_login": "2025-04-06T01:39:57.497Z",
       "is_superuser": false,
-      "username": "hamed",
+      "username": "belal",
       "first_name": "",
       "last_name": "",
-      "email": "hamed@mail.concordia.ca",
+      "email": "belal@concordia.ca",
       "is_staff": false,
       "is_active": true,
-      "date_joined": "2025-02-15T12:21:08.520Z",
+      "date_joined": "2025-04-06T01:39:57.044Z",
       "groups": [],
       "user_permissions": []
     }
   },
   {
-    "model": "auth.user",
-    "pk": 6,
+    "model": "users.userprofile",
+    "pk": 1,
     "fields": {
-      "password": "pbkdf2_sha256$870000$6iQrQudRhHqf6tPiZZ9Rcz$rwKzZ+LcQ0BOymMMyVj5K4xvM7xf+O6sVuwRv4tyfQ4=",
-      "last_login": "2025-02-15T12:21:36.769Z",
-      "is_superuser": false,
-      "username": "belal",
-      "first_name": "",
-      "last_name": "",
-      "email": "b_nwiran@live.concordia.ca",
-      "is_staff": false,
-      "is_active": true,
-      "date_joined": "2025-02-15T12:21:36.044Z",
-      "groups": [],
-      "user_permissions": []
+      "user": 1,
+      "first_name": "Sudip",
+      "last_name": "Sarker",
+      "birth_date": "1996-03-04",
+      "height": 170,
+      "allergies": "None",
+      "dietary_preferences": "Non vegetarian",
+      "gender": "Male",
+      "current_weight": 70.0,
+      "selected_workout_plan": null,
+      "selected_sub_plan": null
+    }
+  },
+  {
+    "model": "users.userprofile",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "first_name": "Mirhamed",
+      "last_name": "Mola",
+      "birth_date": "1981-01-01",
+      "height": 182,
+      "allergies": "None.",
+      "dietary_preferences": "Non vegetarian.",
+      "gender": "Male",
+      "current_weight": 82.0,
+      "selected_workout_plan": null,
+      "selected_sub_plan": null
+    }
+  },
+  {
+    "model": "users.userprofile",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "first_name": "Andy",
+      "last_name": "Li",
+      "birth_date": "1990-01-18",
+      "height": 180,
+      "allergies": "Peanut.",
+      "dietary_preferences": "Vegetarian.",
+      "gender": "Male",
+      "current_weight": 70.0,
+      "selected_workout_plan": null,
+      "selected_sub_plan": null
+    }
+  },
+  {
+    "model": "users.userprofile",
+    "pk": 4,
+    "fields": {
+      "user": 4,
+      "first_name": "Yunxing",
+      "last_name": "Tao",
+      "birth_date": "2003-01-01",
+      "height": 165,
+      "allergies": "Squid-Ink Sauce.",
+      "dietary_preferences": "Balanced, prefer spicy food.",
+      "gender": "Female",
+      "current_weight": 49.0,
+      "selected_workout_plan": null,
+      "selected_sub_plan": null
+    }
+  },
+  {
+    "model": "users.userprofile",
+    "pk": 5,
+    "fields": {
+      "user": 5,
+      "first_name": "Belal",
+      "last_name": "Nwiran",
+      "birth_date": "1990-08-15",
+      "height": 168,
+      "allergies": "None.",
+      "dietary_preferences": "Vegan.",
+      "gender": "Male",
+      "current_weight": 78.0,
+      "selected_workout_plan": null,
+      "selected_sub_plan": null
     }
   }
 ]
