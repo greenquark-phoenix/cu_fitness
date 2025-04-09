@@ -73,7 +73,7 @@ def generate_schedule(request):
 
     except Exception:
         messages.error(request, "No workouts found in your MyList. Please add meals first.")
-        return redirect('mylist:view_mylist')
+        return redirect('schedule:view_mylist')
 
     username = request.user.username
     ScheduleService.create_schedule(username, start_date, weeks, meals, workout_sub_plans)
@@ -178,7 +178,7 @@ def add_to_mylist(request, meal_id):
         meal = get_object_or_404(Meal, pk=meal_id)
         mylist, _ = MyList.objects.get_or_create(user=request.user)
         mylist.meals.add(meal)
-    return redirect('mylist:view_mylist')
+    return redirect('schedule:view_mylist')
 
 
 @login_required
@@ -187,7 +187,7 @@ def remove_from_mylist(request, meal_id):
         meal = get_object_or_404(Meal, pk=meal_id)
         mylist, _ = MyList.objects.get_or_create(user=request.user)
         mylist.meals.remove(meal)
-    return redirect('mylist:view_mylist')
+    return redirect('schedule:view_mylist')
 
 
 @login_required
@@ -237,4 +237,4 @@ def remove_from_mylist_workout(request, workout_id):
         plan = get_object_or_404(WorkoutPlan, pk=workout_id)
         mylist, _ = MyList.objects.get_or_create(user=request.user)
         mylist.workout_plans.remove(plan)
-    return redirect('mylist:view_mylist')
+    return redirect('schedule:view_mylist')

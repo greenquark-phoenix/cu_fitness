@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var planId = this.getAttribute('data-plan-id');
             var csrfToken = '{{ csrf_token }}';
             var btn = this;
-            fetch("{% url 'mylist:toggle_mylist_workout' %}", {
+            fetch("{% url 'schedule:toggle_mylist_workout' %}", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
