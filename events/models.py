@@ -14,8 +14,15 @@ class FitnessEvent(models.Model):
         ('completed', 'Completed')
     ], default='upcoming')
 
+    favorited_by = models.ManyToManyField(
+        User,
+        related_name='favorite_events',
+        blank=True
+    )
+
     def __str__(self):
         return self.title
+
 
 class EventParticipation(models.Model):
     event = models.ForeignKey(FitnessEvent, on_delete=models.CASCADE)
@@ -24,5 +31,3 @@ class EventParticipation(models.Model):
 
     class Meta:
         unique_together = ('event', 'user')
-
-

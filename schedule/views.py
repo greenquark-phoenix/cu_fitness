@@ -1,13 +1,13 @@
 import datetime
-import random
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render
 
 from meals.models import Meal
-from workouts.models import WorkoutPlan
-from .models import Schedule
+from service.service import ScheduleService
+
 
 def ordinal_day(day):
     if 11 <= day <= 13:
@@ -21,21 +21,21 @@ def ordinal_day(day):
     else:
         return f"{day}th"
 
+
 def format_date(date_obj):
     day_str = ordinal_day(date_obj.day)
     month_str = date_obj.strftime('%B')
     year_str = str(date_obj.year)
     return f"{month_str} {day_str}, {year_str}"
 
+
 @login_required
 def generate_schedule(request):
-
-    schedule, _ = Schedule.objects.get_or_create(user=request.user)
-    
     start_date_str = request.GET.get('start_date')
     weeks_str = request.GET.get('weeks')
     try:
-        start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else datetime.date.today()
+        start_date = datetime.datetime.strptime(start_date_str,
+                                                '%Y-%m-%d').date() if start_date_str else datetime.date.today()
     except ValueError:
         start_date = datetime.date.today()
 
@@ -48,177 +48,122 @@ def generate_schedule(request):
     except ValueError:
         weeks = 2
 
-    end_date = start_date + datetime.timedelta(days=weeks * 7 - 1)
+    workout_sub_plans = []
+    workout_days = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
-    # ----- MEALS SCHEDULE -----
     try:
         mylist = request.user.mylist
-        all_meals = list(mylist.meals.all())
+        meals = [m.meal_name for m in mylist.meals.all()]
+
+        if mylist.workout_plans.exists():
+            workout_plan = mylist.workout_plans.first()
+            sub_plans = list(workout_plan.sub_plans.all())
+            index = 0
+            for w in range(weeks):
+                for day in workout_days:
+                    sub_plan = sub_plans[index]
+                    workout_sub_plans.append({
+                        'day': day,
+                        'name': sub_plan.name
+                    })
+                    index = (index + 1) % len(sub_plans)
+
     except Exception:
-        messages.error(request, "No meals found in your MyList. Please add meals first.")
+        messages.error(request, "No workouts found in your MyList. Please add meals first.")
         return redirect('mylist:view_mylist')
 
-    if not all_meals:
-        messages.error(request, "Your MyList is empty. Please add meals first.")
-        return redirect('mylist:view_mylist')
-    categorized_meals = {
-        'breakfast': [],
-        'lunch': [],
-        'dinner': [],
-        'snack': []
-    }
-    for meal in all_meals:
-        mt_lower = meal.meal_type.lower()
-        if mt_lower in categorized_meals:
-            categorized_meals[mt_lower].append(meal)
-
-    meal_schedule = {
-        'metadata': {
-            'start_date': start_date.isoformat(),
-            'end_date': end_date.isoformat()
-        },
-        'days': {}
-    }
-
-    current_date = start_date
-    while current_date <= end_date:
-        day_str = current_date.isoformat()
-        day_name = current_date.strftime('%A')
-        day_entries = []
-        for mt_key in ['breakfast', 'lunch', 'dinner', 'snack']:
-            if categorized_meals[mt_key]:
-                chosen_meal = random.choice(categorized_meals[mt_key])
-                day_entries.append({
-                    'meal_id': chosen_meal.id,
-                    'meal_type': chosen_meal.meal_type,
-                    'meal_category': mt_key,
-                })
-        meal_schedule['days'][day_str] = {
-            'day_name': day_name,
-            'entries': day_entries
-        }
-        current_date += datetime.timedelta(days=1)
-
-    # ----- WORKOUTS SCHEDULE -----
-    workout_schedule = None
-    if mylist.workout_plans.exists():
-        workout_plan = mylist.workout_plans.first()
-        subplans = list(workout_plan.sub_plans.all().order_by('pk'))
-        workout_schedule = {
-            'metadata': {
-                'start_date': start_date.isoformat(),
-                'end_date': end_date.isoformat()
-            },
-            'weeks': []
-        }
-        current_week_start = start_date
-        while current_week_start <= end_date:
-            week_days = {}
-            for i in range(7):
-                day = current_week_start + datetime.timedelta(days=i)
-                day_name = day.strftime('%A')
-                if day.weekday() < 5:  # Monday to Friday
-                    if day.weekday() < len(subplans):
-                        subplan = subplans[day.weekday()]
-                        assigned_workout = subplan.name
-                        workout_description = subplan.schedule.strip() or "No schedule info provided"
-                        workout_focus = subplan.focus.strip() or "No focus info provided"
-                    else:
-                        assigned_workout = "Workout"
-                        workout_description = "No schedule info provided"
-                        workout_focus = "No focus info provided"
-                else:
-                    assigned_workout = "Rest Day"
-                    workout_description = ""
-                    workout_focus = ""
-                week_days[day.isoformat()] = {
-                    'day_name': day_name,
-                    'workout': assigned_workout,
-                    'workout_description': workout_description,
-                    'workout_focus': workout_focus,
-                }
-            week_range = f"{format_date(current_week_start)} – {format_date(current_week_start + datetime.timedelta(days=6))}"
-            workout_schedule['weeks'].append({
-                'week_range': week_range,
-                'days': week_days,
-            })
-            current_week_start += datetime.timedelta(days=7)
-
-    # ----- COMBINE SCHEDULES -----
-    combined_schedule = {
-        'meals': meal_schedule,
-        'workouts': workout_schedule  
-    }
-    schedule.scheduled_meals = combined_schedule
-    schedule.save()
+    username = request.user.username
+    ScheduleService.create_schedule(username, start_date, weeks, meals, workout_sub_plans)
 
     messages.success(request, f"Meal and workout schedule generated successfully for {weeks} week(s).")
     return redirect('schedule:view_schedule')
 
+
 @login_required
 def view_schedule(request):
-    schedule_obj = getattr(request.user, 'schedule', None)
-    if not schedule_obj or not schedule_obj.scheduled_meals:
+    schedule = getattr(request.user, 'schedule', None)
+
+    if not schedule:
         return render(request, 'schedule/schedule.html', {'page_obj': None})
 
-    data = schedule_obj.scheduled_meals
-    meal_data = data.get('meals', {})
-    workout_data = data.get('workouts', None)
+    schedule_days = _get_selected_days(schedule)
+    meal_data = schedule.scheduled_meals or {}
+    workout_data = schedule.scheduled_workouts or {}
 
-    workout_lookup = {}
-    if workout_data:
-        for week in workout_data.get('weeks', []):
-            for day_iso, info in week.get('days', {}).items():
-                workout_lookup[day_iso] = {
-                    'workout': info.get('workout'),
-                    'workout_description': info.get('workout_description'),
-                    'workout_focus': info.get('workout_focus'),
-                }
+    meal_days = {day_iso: info for day_iso, info in meal_data.items()}
+    workout_days = {day_iso: info for day_iso, info in workout_data.items()}
 
-    sorted_meal_days = sorted(meal_data.get('days', {}).items(), key=lambda x: x[0])
-    enhanced_schedule = []
-    for date_str, day_info in sorted_meal_days:
-        date_obj = datetime.date.fromisoformat(date_str)
-        display_date = f"{day_info.get('day_name')}, {date_obj.strftime('%d-%m-%Y')}"
-        meals_by_category = {'breakfast': None, 'lunch': None, 'dinner': None, 'snack': None}
-        for item in day_info.get('entries', []):
-            cat = item.get('meal_category')
-            try:
-                meal_obj = Meal.objects.get(pk=item.get('meal_id'))
-            except Meal.DoesNotExist:
-                meal_obj = None
-            meals_by_category[cat] = meal_obj
-        enhanced_schedule.append({
-            'date_obj': date_obj,
-            'display_date': display_date,
-            'meals': meals_by_category,
-            'workout': workout_lookup.get(date_str, {}).get('workout'),
-            'workout_description': workout_lookup.get(date_str, {}).get('workout_description'),
-            'workout_focus': workout_lookup.get(date_str, {}).get('workout_focus'),
-        })
+    display_schedule = []
+    for day in schedule_days:
+        entry = {}
+        key = day['day_str']
+        date_obj = day['date_obj']
+        display_date = f"{day['day_name']}, {key}"
+        entry['date_obj'] = date_obj
+        entry['display_date'] = display_date
+
+        if key in workout_days:
+            entry['workout'] = workout_days[key].get('workout')
+            entry['workout_description'] = workout_days[key].get('workout_description')
+            entry['workout_focus'] = workout_days[key].get('workout_focus')
+
+        if key in meal_days:
+            meals_by_category = {'breakfast': None, 'lunch': None, 'dinner': None, 'snack': None}
+            for item in meal_days[key].get('entries', []):
+                cat = item.get('meal_category')
+                try:
+                    meal_obj = Meal.objects.get(pk=item.get('meal_id'))
+                except Meal.DoesNotExist:
+                    meal_obj = None
+                meals_by_category[cat] = meal_obj
+
+
+            entry['meals'] = meals_by_category
+
+        display_schedule.append(entry)
 
     # Group days into weeks (7 days per week)
-    weeks = []
+    workout_weeks = []
     CHUNK_SIZE = 7
     i = 0
-    while i < len(enhanced_schedule):
-        chunk = enhanced_schedule[i:i+CHUNK_SIZE]
+    while i < len(display_schedule):
+        chunk = display_schedule[i:i + CHUNK_SIZE]
         if chunk:
             week_start_date = chunk[0]['date_obj']
             week_end_date = chunk[-1]['date_obj']
             week_range = f"{format_date(week_start_date)} – {format_date(week_end_date)}"
-            weeks.append({
-                'week_index': len(weeks) + 1,
+            workout_weeks.append({
+                'week_index': len(workout_weeks) + 1,
                 'week_range': week_range,
                 'days': chunk,
             })
         i += CHUNK_SIZE
 
-    paginator = Paginator(weeks, 1)
+    paginator = Paginator(workout_weeks, 1)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     context = {
         'page_obj': page_obj,
     }
+
     return render(request, 'schedule/schedule.html', context)
+
+
+def _get_selected_days(schedule):
+    result = []
+    start_date = schedule.start_date
+    end_date = schedule.end_date
+    current_day = start_date
+
+    while current_day <= end_date:
+        day_str = current_day.strftime('%Y-%m-%d')
+        day_name = current_day.strftime('%A')
+        result.append({
+            'day_str': day_str,
+            'day_name': day_name,
+            'date_obj': current_day,
+        })
+        current_day += datetime.timedelta(days=1)
+
+    return result
