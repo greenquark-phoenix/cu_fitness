@@ -10,4 +10,7 @@ urlpatterns = [
     path('my-events/', views.my_events, name='my_events'),
     path('calendar/', views.calendar_view, name='calendar_view'),
     path('calendar/data/', views.event_json, name='event_json'),
+    path('<int:event_id>/favorite/', views.toggle_favorite, name='toggle_favorite'),
+    path('favorites/', views.my_favorites, name='my_favorites'),
+
 ]
