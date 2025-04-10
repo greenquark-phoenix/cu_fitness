@@ -1,93 +1,119 @@
 {% extends "base.html" %}
 {% load static %}
+{% load dict_filters %}
 
 {% block content %}
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: url("{% static 'images/workouts.jpg' %}") no-repeat center center fixed;
-            background-size: cover;
-            color: white;
-            text-align: center;
-        }
-
-        .card {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s ease-in-out;
-            color: white;
-        }
-
-        .card h2, .card h3 {
-            color: #f8c146;
-        }
-
-        .card-text {
-            font-size: 14px;
-            color: #ddd;
-        }
-    </style>
-
 <div class="container py-5">
-    <h1 class="mb-4">Select Your Workout Plan</h1>
+  <h1 class="text-center mb-4">Workout Plans Log</h1>
 
-    <!-- Show Current Selection -->
-    {% if selected_workout_plan %}
-        <div class="card mb-4 p-3">
-            <h3>Registered Workout Plan: {{ selected_workout_plan.name }}</h3>
-            {% if selected_sub_plan %}
-                <p><strong>Selected Sub-Plan:</strong> {{ selected_sub_plan.name }}</p>
-            {% endif %}
-            <form method="POST">
-                {% csrf_token %}
-                <button type="submit" name="unregister" class="btn btn-danger">Unregister</button>
-            </form>
-        </div>
-    {% endif %}
+  <h4 class="text-success">
+    Total Burned Calories: {{ total_burned_calories|floatformat:0 }} kcal
+    <br>
+    <small class="text-primary">{{ total_progress_percent|floatformat:1 }}% total progress</small>
+  </h4>
 
-    <!-- Select Workout Plan -->
-    <form method="POST">
-        {% csrf_token %}
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            {% for plan in workout_plans %}
-                <div class="col">
-                    <div class="card h-100 shadow-lg p-3 rounded">
-                        <div class="card-body">
-                            <h2 class="card-title">{{ plan.name }}</h2>
-                            <p class="card-text"><strong>Target Group:</strong> {{ plan.target_group }}</p>
-                            <p class="card-text"><strong>Price:</strong> ${{ plan.price }}</p>
-                            <input type="radio" name="workout_plan" value="{{ plan.id }}"
-                                onchange="this.form.submit()" {% if selected_workout_plan.id == plan.id %}checked{% endif %}>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </form>
+  {% if selected_plans %}
+    <h3 class="mt-4">Selected Workout Plans</h3>
+    <ul class="list-group mb-3">
+      {% for workout in selected_plans %}
+        <li class="list-group-item">{{ workout.name }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No workout plans selected.</p>
+  {% endif %}
 
-    <!-- Select Sub-Plan (Only Visible If a Main Plan Is Selected) -->
-    {% if selected_workout_plan %}
-        <h2 class="mt-4">Select a Sub-Plan for {{ selected_workout_plan.name }}</h2>
-        <form method="POST">
-            {% csrf_token %}
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                {% for sub_plan in sub_plans %}
-                    <div class="col">
-                        <div class="card h-100 shadow-lg p-3 rounded">
-                            <div class="card-body">
-                                <h3 class="card-title">{{ sub_plan.name }}</h3>
-                                <p><strong>Focus:</strong> {{ sub_plan.focus }}</p>
-                                <input type="radio" name="sub_plan" value="{{ sub_plan.id }}"
-                                    onchange="this.form.submit()" {% if selected_sub_plan.id == sub_plan.id %}checked{% endif %}>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
+  {% if selected_subplans %}
+    <h3>Sub-Plan Log</h3>
+    <table class="table table-bordered align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Subplan</th>
+          <th>Assign Dates</th>
+          <th>Confirm Days</th>
+          <th>Progress</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sub in selected_subplans %}
+        <tr>
+          <td>
+            <div class="d-flex flex-column">
+              <strong>{{ sub.name }}</strong>
+              <small><span class="badge bg-primary mt-1">{{ sub.total_calories }} kcal</span></small>
             </div>
-        </form>
-    {% endif %}
+          </td>
+
+          <!-- Assign Form -->
+          <td>
+            <form method="POST" action="{% url 'assign_simple' %}">
+              {% csrf_token %}
+              <input type="hidden" name="subplan_id" value="{{ sub.id }}">
+              <input type="date" name="start_date" required class="form-control mb-1">
+              <input type="date" name="end_date" required class="form-control mb-1">
+              <button type="submit" class="btn btn-sm btn-primary">Assign</button>
+            </form>
+            {% with entry=simple_entries|get_entry_for_subplan:sub %}
+              {% if entry %}
+                <form method="POST" action="{% url 'remove_simple' %}" class="mt-2">
+                  {% csrf_token %}
+                  <input type="hidden" name="subplan_id" value="{{ sub.id }}">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                </form>
+                <small class="text-muted d-block mt-1">Assigned: {{ entry.start_date }} to {{ entry.end_date }}</small>
+                <small class="text-muted">({{ entry.total_days }} days)</small>
+              {% endif %}
+            {% endwith %}
+          </td>
+
+          <!-- Confirm Form -->
+          <td>
+            <form method="POST" action="{% url 'confirm_simple' %}">
+              {% csrf_token %}
+              <input type="hidden" name="subplan_id" value="{{ sub.id }}">
+              <input type="date" name="confirm_start" required class="form-control mb-1">
+              <input type="date" name="confirm_end" required class="form-control mb-1">
+              <button type="submit" class="btn btn-sm btn-success">Confirm</button>
+            </form>
+            {% with entry=simple_entries|get_entry_for_subplan:sub %}
+              {% if entry and entry.completed_dates %}
+                {% with sorted_dates=entry.completed_dates|sort_dates %}
+                  {% with first=sorted_dates.0 last=sorted_dates|last %}
+                    <form method="POST" action="{% url 'remove_confirmed' %}" class="mt-2">
+                      {% csrf_token %}
+                      <input type="hidden" name="subplan_id" value="{{ sub.id }}">
+                      <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                    </form>
+                    <small class="text-muted d-block mt-1">
+                      Confirmed: {{ first|format_date }} to {{ last|format_date }}
+                    </small>
+                    <small class="text-muted">({{ entry.completed_count }} days)</small>
+                  {% endwith %}
+                {% endwith %}
+              {% endif %}
+            {% endwith %}
+          </td>
+
+          <!-- Progress -->
+          <td>
+            {% with entry=simple_entries|get_entry_for_subplan:sub %}
+              {% if entry %}
+                {{ entry.progress_percent }}%
+                <br>
+                <small class="text-primary">
+                  {{ entry.burned_kcal|floatformat:0 }} kcal burned
+                </small>
+              {% else %}
+                —
+              {% endif %}
+            {% endwith %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No sub-plans selected.</p>
+  {% endif %}
 </div>
-{% endblock content %}
+{% endblock %}

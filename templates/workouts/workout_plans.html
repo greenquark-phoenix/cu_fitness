@@ -50,8 +50,9 @@
                         <a href="{% url 'workout_plan_detail' plan.id %}" class="btn btn-warning">
                             View Sub-Plans
                         </a>
-                        <button class="btn btn-warning toggle-workout-btn mt-2" data-plan-id="{{ plan.id }}">
-                            {% if plan in request.user.mylist.workout_plans.all %}Selected{% else %}Select{% endif %}
+                        <button class="btn {% if plan in selected_plans %}btn-success{% else %}btn-warning{% endif %} toggle-workout-btn mt-2"
+                                data-plan-id="{{ plan.id }}">
+                            {% if plan in selected_plans %}Selected{% else %}Select{% endif %}
                         </button>
                     </div>
                 </div>
@@ -69,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var planId = this.getAttribute('data-plan-id');
             var csrfToken = '{{ csrf_token }}';
             var btn = this;
-            fetch("{% url 'schedule:toggle_mylist_workout' %}", {
+            fetch("{% url 'toggle_workout_selection' %}", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
