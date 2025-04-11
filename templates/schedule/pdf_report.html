@@ -4,141 +4,222 @@
   <meta charset="UTF-8">
   <title>Fitness Report for {{ user.username }}</title>
   <style>
+    /* Import a modern font */
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
     body {
-      font-family: Arial, sans-serif;
-      margin: 30px;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
     }
-    h1, h2, h3 {
+
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 20px 40px;
+      box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    /* Updated Header Styles */
+    header {
       text-align: center;
+      margin-bottom: 20px;
+      /* No changes to container margins as per instruction */
     }
+    header .report-title {
+      font-size: 38px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin: 0;
+    }
+    header .user-info {
+      font-size: 24px;
+      font-weight: 500;
+      color: #34495e;
+      margin: 5px 0 0;
+    }
+    header .report-date {
+      font-size: 20px;
+      color: #7f8c8d;
+      margin: 5px 0 0;
+    }
+
     .section {
       margin-bottom: 30px;
     }
+    .section h3 {
+      border-bottom: 2px solid #3498db;
+      color: #3498db;
+      padding-bottom: 5px;
+      margin-bottom: 15px;
+      font-size: 22px;
+    }
+
+    /* Meal Card Styles */
+    .meal-card {
+      display: flex;
+      align-items: center;
+      background: #f1f7fa;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .meal-card img {
+      max-height: 100px;
+      max-width: 100px;
+      object-fit: cover;
+      margin-right: 15px;
+      border-radius: 4px;
+    }
+    .meal-card .meal-info {
+      flex: 1;
+    }
+    .meal-card .meal-header {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0;
+      color: #2c3e50;
+    }
+    .meal-card p {
+      margin: 5px 0 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    /* Table Styling */
     table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 15px;
     }
     table, th, td {
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
     }
     th, td {
-      padding: 8px;
+      padding: 10px;
       text-align: left;
     }
     th {
-      background-color: #f2f2f2;
+      background: #ecf0f1;
+      color: #2c3e50;
     }
-    .meal {
-      margin-bottom: 15px;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 10px;
-    }
-    .meal img {
-      max-height: 100px;
-      max-width: 100px;
-      object-fit: cover;
-      margin-right: 15px;
-    }
-    .meal-header {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    .flex-container {
-      display: flex;
-      align-items: center;
+    tr:nth-child(even) {
+      background: #fafafa;
     }
     .no-data {
       font-style: italic;
-      color: #666;
+      color: #999;
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: #aaa;
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
+      margin-top: 30px;
     }
   </style>
 </head>
 <body>
-  <h1>Fitness Report</h1>
-  <h2>User: {{ user.username }}</h2>
-  <p style="text-align:center;">Report Date: {{ report_date }}</p>
-  <hr>
+  <div class="container">
+    <header>
+      <h1 class="report-title">Fitness Report</h1>
+      <h2 class="user-info">User: {{ user.username }}</h2>
+      <p class="report-date">Report Date: {{ report_date }}</p>
+    </header>
 
-  <!-- Selected Meals Section -->
-  <div class="section">
-    <h3>Selected Meals</h3>
-    {% if meals %}
-      {% for meal in meals %}
-        <div class="meal">
-          <div class="flex-container">
+    <!-- Selected Meals Section -->
+    <section class="section">
+      <h3>Selected Meals</h3>
+      {% if meals %}
+        {% for meal in meals %}
+          <div class="meal-card">
             {% if meal.image_url %}
               <img src="{{ meal.image_url }}" alt="{{ meal.meal_name }}">
             {% endif %}
-            <div class="meal-header">{{ meal.meal_name }} ({{ meal.meal_category|title }})</div>
+            <div class="meal-info">
+              <p class="meal-header">{{ meal.meal_name }} <small>({{ meal.meal_category|title }})</small></p>
+              <p>{{ meal.recipe_description|truncatewords:20 }}</p>
+            </div>
           </div>
-          <p>{{ meal.recipe_description|truncatewords:20 }}</p>
-        </div>
-      {% endfor %}
-    {% else %}
-      <p class="no-data">No meals selected.</p>
-    {% endif %}
-  </div>
-
-  <!-- Selected Workouts Section -->
-  <div class="section">
-    <h3>Selected Workouts</h3>
-    {% if workouts %}
-      <ul>
-        {% for workout in workouts %}
-          <li>{{ workout.workout_name }}</li>
         {% endfor %}
-      </ul>
-    {% else %}
-      <p class="no-data">No workouts selected.</p>
-    {% endif %}
-  </div>
+      {% else %}
+        <p class="no-data">No meals selected.</p>
+      {% endif %}
+    </section>
 
-  <!-- Fitness Goals Section -->
-  <div class="section">
-    <h3>Fitness Goals</h3>
-    {% if goals %}
-      <table>
-        <tr>
-          <th>Goal Name</th>
-          <th>Target</th>
-          <th>Current</th>
-          <th>Progress (%)</th>
-        </tr>
-        {% for goal in goals %}
+    <!-- Selected Workouts Section -->
+    <section class="section">
+      <h3>Selected Workouts</h3>
+      {% if workouts %}
+        <ul>
+          {% for workout in workouts %}
+            <li style="font-size:16px; margin-bottom:8px;">{{ workout.workout_name }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="no-data">No workouts selected.</p>
+      {% endif %}
+    </section>
+
+    <!-- Fitness Goals Section -->
+    <section class="section">
+      <h3>Fitness Goals</h3>
+      {% if goals %}
+        <table>
           <tr>
-            <td>{{ goal.goal.name }}</td>
-            <td>{{ goal.target_value }}</td>
-            <td>{{ goal.current_value }}</td>
-            <td>{{ goal.progress|default:"N/A" }}</td>
+            <th>Goal Name</th>
+            <th>Target</th>
+            <th>Current</th>
+            <th>Progress (%)</th>
           </tr>
-        {% endfor %}
-      </table>
-    {% else %}
-      <p class="no-data">No fitness goals available.</p>
-    {% endif %}
-  </div>
+          {% for goal in goals %}
+            <tr>
+              <td>{{ goal.goal.name }}</td>
+              <td>{{ goal.target_value }}</td>
+              <td>{{ goal.current_value }}</td>
+              <td>{{ goal.progress|default:"N/A" }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% else %}
+        <p class="no-data">No fitness goals available.</p>
+      {% endif %}
+    </section>
 
-  <!-- Shopping List Section -->
-  <div class="section">
-    <h3>Shopping List</h3>
-    {% if shopping_list %}
-      <table>
-        <tr>
-          <th>Ingredient</th>
-          <th>Quantity</th>
-        </tr>
-        {% for ingredient, details in shopping_list.items %}
+    <!-- Shopping List Section -->
+    <section class="section">
+      <h3>Shopping List</h3>
+      {% if shopping_list %}
+        <table>
           <tr>
-            <td>{{ ingredient }}</td>
-            <td>{{ details.quantity }} ({{ details.unit }})</td>
+            <th>Ingredient</th>
+            <th>Quantity</th>
           </tr>
-        {% endfor %}
-      </table>
-    {% else %}
-      <p class="no-data">No shopping items required.</p>
-    {% endif %}
+          {% for ingredient, details in shopping_list.items %}
+            <tr>
+              <td>{{ ingredient }}</td>
+              <td>{{ details.quantity }} ({{ details.unit }})</td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% else %}
+        <p class="no-data">No shopping items required.</p>
+      {% endif %}
+    </section>
+    
+    <footer>
+      <p>&copy; {{ report_date.year }} Fitness App. All Rights Reserved.</p>
+    </footer>
   </div>
-  
 </body>
 </html>
