@@ -1,57 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Fitness Report for {{ user.username }}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-        }
-        h1, h2 {
-            text-align: center;
-        }
-        section {
-            margin-bottom: 20px;
-        }
-        .no-data {
-            font-style: italic;
-            color: #666;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Fitness Report for {{ user.username }}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    h1, h2, h3 {
+      text-align: center;
+    }
+    .section {
+      margin-bottom: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .meal {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+    .meal img {
+      max-height: 100px;
+      max-width: 100px;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+    .meal-header {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .flex-container {
+      display: flex;
+      align-items: center;
+    }
+    .no-data {
+      font-style: italic;
+      color: #666;
+    }
+  </style>
 </head>
 <body>
-    <h1>Fitness Report</h1>
-    <h2>User: {{ user.username }}</h2>
-    <p>Report Date: {{ report_date }}</p>
-    <hr>
-    <section>
-        <h2>Schedule</h2>
-        {% if schedule %}
-            <p>Schedule Duration: {{ schedule.start_date }} to {{ schedule.end_date }}</p>
-            {% if schedule.scheduled_meals %}
-                <h3>Meals</h3>
-                <ul>
-                    {% for day, entries in schedule.scheduled_meals.items %}
-                        <li>{{ day }}: {{ entries|join:", " }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="no-data">No meal data available.</p>
+  <h1>Fitness Report</h1>
+  <h2>User: {{ user.username }}</h2>
+  <p style="text-align:center;">Report Date: {{ report_date }}</p>
+  <hr>
+
+  <!-- Selected Meals Section -->
+  <div class="section">
+    <h3>Selected Meals</h3>
+    {% if meals %}
+      {% for meal in meals %}
+        <div class="meal">
+          <div class="flex-container">
+            {% if meal.image_url %}
+              <img src="{{ meal.image_url }}" alt="{{ meal.meal_name }}">
             {% endif %}
-            {% if schedule.scheduled_workouts %}
-                <h3>Workouts</h3>
-                <ul>
-                    {% for day, entries in schedule.scheduled_workouts.items %}
-                        <li>{{ day }}: {{ entries|join:", " }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="no-data">No workout data available.</p>
-            {% endif %}
-        {% else %}
-            <p class="no-data">No data available.</p>
-        {% endif %}
-    </section>
+            <div class="meal-header">{{ meal.meal_name }} ({{ meal.meal_category|title }})</div>
+          </div>
+          <p>{{ meal.recipe_description|truncatewords:20 }}</p>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="no-data">No meals selected.</p>
+    {% endif %}
+  </div>
+
+  <!-- Selected Workouts Section -->
+  <div class="section">
+    <h3>Selected Workouts</h3>
+    {% if workouts %}
+      <ul>
+        {% for workout in workouts %}
+          <li>{{ workout.workout_name }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="no-data">No workouts selected.</p>
+    {% endif %}
+  </div>
+
+  <!-- Fitness Goals Section -->
+  <div class="section">
+    <h3>Fitness Goals</h3>
+    {% if goals %}
+      <table>
+        <tr>
+          <th>Goal Name</th>
+          <th>Target</th>
+          <th>Current</th>
+          <th>Progress (%)</th>
+        </tr>
+        {% for goal in goals %}
+          <tr>
+            <td>{{ goal.goal.name }}</td>
+            <td>{{ goal.target_value }}</td>
+            <td>{{ goal.current_value }}</td>
+            <td>{{ goal.progress|default:"N/A" }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p class="no-data">No fitness goals available.</p>
+    {% endif %}
+  </div>
+
+  <!-- Shopping List Section -->
+  <div class="section">
+    <h3>Shopping List</h3>
+    {% if shopping_list %}
+      <table>
+        <tr>
+          <th>Ingredient</th>
+          <th>Quantity</th>
+        </tr>
+        {% for ingredient, details in shopping_list.items %}
+          <tr>
+            <td>{{ ingredient }}</td>
+            <td>{{ details.quantity }} ({{ details.unit }})</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p class="no-data">No shopping items required.</p>
+    {% endif %}
+  </div>
+  
 </body>
 </html>

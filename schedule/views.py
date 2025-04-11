@@ -1,17 +1,22 @@
 import datetime
+from datetime import date
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
-from meals.models import Meal
-from schedule.models import MyList
-from service.service import ScheduleService
-from workouts.models import WorkoutPlan
-# For PDF generation
-from datetime import date
 from django.template.loader import render_to_string
 from weasyprint import HTML
+
+from meals.models import Meal
+from schedule.models import MyList, Schedule
+from service.service import ScheduleService
+from workouts.models import WorkoutPlan
+
+# For goals and ingredient data
+from goals.models import UserFitnessGoal
+from meals.models import MealIngredient
+
 
 def ordinal_day(day):
     if 11 <= day <= 13:
@@ -25,14 +30,20 @@ def ordinal_day(day):
     else:
         return f"{day}th"
 
+
 def format_date(date_obj):
     day_str = ordinal_day(date_obj.day)
     month_str = date_obj.strftime('%B')
     year_str = str(date_obj.year)
     return f"{month_str} {day_str}, {year_str}"
 
+
 @login_required
 def generate_schedule(request):
+    """
+    Generates a schedule using the user's MyList data.
+    Meals are stored as simple strings (meal names) for compatibility.
+    """
     start_date_str = request.GET.get('start_date')
     weeks_str = request.GET.get('weeks')
     try:
@@ -54,6 +65,7 @@ def generate_schedule(request):
 
     try:
         mylist = request.user.mylist
+        # Store only meal names as simple strings for API compatibility.
         meals = [m.meal_name for m in mylist.meals.all()]
         if mylist.workout_plans.exists():
             workout_plan = mylist.workout_plans.first()
@@ -76,8 +88,13 @@ def generate_schedule(request):
     messages.success(request, f"Meal and workout schedule generated successfully for {weeks} week(s).")
     return redirect('schedule:view_schedule')
 
+
 @login_required
 def view_schedule(request):
+    """
+    Displays the generated schedule.
+    This view remains unchanged so that the schedule page (with images) is not affected.
+    """
     schedule = getattr(request.user, 'schedule', None)
     if not schedule:
         return render(request, 'schedule/schedule.html', {'page_obj': None})
@@ -86,6 +103,7 @@ def view_schedule(request):
     workout_data = schedule.scheduled_workouts or {}
     meal_days = {day_iso: info for day_iso, info in meal_data.items()}
     workout_days = {day_iso: info for day_iso, info in workout_data.items()}
+
     display_schedule = []
     for day in schedule_days:
         entry = {}
@@ -109,6 +127,7 @@ def view_schedule(request):
                 meals_by_category[cat] = meal_obj
             entry['meals'] = meals_by_category
         display_schedule.append(entry)
+
     workout_weeks = []
     CHUNK_SIZE = 7
     i = 0
@@ -124,6 +143,7 @@ def view_schedule(request):
                 'days': chunk,
             })
         i += CHUNK_SIZE
+
     paginator = Paginator(workout_weeks, 1)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -132,7 +152,11 @@ def view_schedule(request):
     }
     return render(request, 'schedule/schedule.html', context)
 
+
 def _get_selected_days(schedule):
+    """
+    Helper function to enumerate days between start_date and end_date.
+    """
     result = []
     start_date = schedule.start_date
     end_date = schedule.end_date
@@ -148,6 +172,7 @@ def _get_selected_days(schedule):
         current_day += datetime.timedelta(days=1)
     return result
 
+
 @login_required
 def add_to_mylist(request, meal_id):
     if request.method == "POST":
@@ -156,6 +181,7 @@ def add_to_mylist(request, meal_id):
         mylist.meals.add(meal)
     return redirect('schedule:view_mylist')
 
+
 @login_required
 def remove_from_mylist(request, meal_id):
     if request.method == "POST":
@@ -163,6 +189,7 @@ def remove_from_mylist(request, meal_id):
         mylist, _ = MyList.objects.get_or_create(user=request.user)
         mylist.meals.remove(meal)
     return redirect('schedule:view_mylist')
+
 
 @login_required
 def toggle_mylist(request):
@@ -178,6 +205,7 @@ def toggle_mylist(request):
             return JsonResponse({"selected": True})
     return JsonResponse({"error": "Invalid request"}, status=400)
 
+
 @login_required
 def view_mylist(request):
     mylist, _ = MyList.objects.get_or_create(user=request.user)
@@ -185,6 +213,7 @@ def view_mylist(request):
         'selected_meals': mylist.meals.all(),
         'selected_workouts': mylist.workout_plans.all(),
     })
+
 
 @login_required
 def toggle_mylist_workout(request):
@@ -200,6 +229,7 @@ def toggle_mylist_workout(request):
             return JsonResponse({"selected": True})
     return JsonResponse({"error": "Invalid request"}, status=400)
 
+
 @login_required
 def remove_from_mylist_workout(request, workout_id):
     if request.method == "POST":
@@ -209,25 +239,74 @@ def remove_from_mylist_workout(request, workout_id):
     return redirect('schedule:view_mylist')
 
 
-# --- New: Download Report View --- #
+# --- New: Download Report View ---
 @login_required
 def download_report(request):
-    # Retrieve the current user's schedule data; adjust if you need to include more data
-    user_schedule = getattr(request.user, 'schedule', None)
-    
+    """
+    Generates a PDF report that includes:
+      - The selected meals and workouts (from the user's MyList)
+      - The user's fitness goals (with progress)
+      - A shopping list based on the ingredients of the selected meals.
+    (This report no longer shows the generated schedule.)
+    """
+    # Retrieve selected meals and workouts from MyList
+    try:
+        mylist = request.user.mylist
+        selected_meals = mylist.meals.all()
+        selected_workouts = mylist.workout_plans.all()
+    except Exception:
+        selected_meals = []
+        selected_workouts = []
+
+    # Build a shopping list with ingredient units
+    shopping_list = {}
+    for meal in selected_meals:
+        for mi in meal.meal_ingredients.all():
+            name = mi.ingredient.name
+            quantity = mi.quantity
+            unit = mi.ingredient.unit  # for example, 'gram', 'ml', 'piece'
+            if name in shopping_list:
+                shopping_list[name]['quantity'] += quantity
+            else:
+                shopping_list[name] = {'quantity': quantity, 'unit': unit}
+
+    # Build a list of meal dictionaries with names and categories
+    meal_list = []
+    for meal in selected_meals:
+        meal_list.append({
+            'meal_id': meal.pk,
+            'meal_name': meal.meal_name,
+            'meal_category': meal.meal_type,  # using meal_type as the category
+            'image_url': meal.image.url if meal.image else "",
+            'recipe_description': meal.recipe_description,
+        })
+
+    # Build a list of workout dictionaries (if needed)
+    workout_list = []
+    for workout in selected_workouts:
+        workout_list.append({
+            'workout_id': workout.pk,
+            'workout_name': workout.name,
+            # add more fields if needed
+        })
+
+    # Retrieve the user's fitness goals
+    goals = request.user.userfitnessgoal_set.all()
+
     context = {
         'user': request.user,
         'report_date': date.today(),
-        'schedule': user_schedule,
+        'meals': meal_list,
+        'workouts': workout_list,
+        'goals': goals,
+        'shopping_list': shopping_list,
     }
-    
-    # Render the HTML template for the PDF report
+
+    # Use base_url to resolve image URLs in the PDF
     html_string = render_to_string('schedule/pdf_report.html', context)
-    
-    # Generate PDF using WeasyPrint
-    pdf_file = HTML(string=html_string).write_pdf()
-    
-    # Prepare response headers with correct file naming format
+    base_url = request.build_absolute_uri('/')  # Absolute URL for static media
+    pdf_file = HTML(string=html_string, base_url=base_url).write_pdf()
+
     filename = f"fitness_report_{request.user.username}_{date.today()}.pdf"
     response = HttpResponse(pdf_file, content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename="{filename}"'
