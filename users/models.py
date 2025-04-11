@@ -23,6 +23,8 @@ class UserProfile(models.Model):
     current_weight = models.FloatField(null=True, blank=True)
     selected_workout_plan = models.ForeignKey(WorkoutPlan, on_delete=models.SET_NULL, null=True, blank=True)
     selected_sub_plan = models.ForeignKey(SubPlan, on_delete=models.SET_NULL, null=True, blank=True)
+    selected_workout_plans = models.ManyToManyField(WorkoutPlan, blank=True, related_name='selected_by_users')
+    selected_sub_plans = models.ManyToManyField(SubPlan, blank=True, related_name='selected_by_users')
 
     def __str__(self):
         return self.user.username

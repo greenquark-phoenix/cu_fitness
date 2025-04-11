@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class WorkoutPlan(models.Model):
     name = models.CharField(max_length=255)
@@ -57,7 +58,15 @@ class SubPlanExercise(models.Model):
     def __str__(self):
         return f"{self.subplan.name} - {self.exercise.name} ({self.exercise.unit}): {self.duration_or_sets}"
 
+class WorkoutCalendarEntry(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    subplan = models.ForeignKey("SubPlan", on_delete=models.CASCADE)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    completed_dates = models.JSONField(default=list)  # Stores confirmed dates as strings like "2025-04-10"
 
+    def __str__(self):
+        return f"{self.user.username} - {self.subplan.name} ({self.start_date} to {self.end_date})"
 
 
 

@@ -2,62 +2,112 @@
 {% load static %}
 
 {% block additional_style %}
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: url("{% static 'images/workouts.jpg' %}") no-repeat center center fixed;
-            background-size: cover;
-            color: white;
-            text-align: center;
-        }
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: url("{% static 'images/workouts.jpg' %}") no-repeat center center fixed;
+        background-size: cover;
+        color: white;
+        text-align: center;
+    }
 
-        .card {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s ease-in-out;
-            color: white;
-        }
+    .card {
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s ease-in-out;
+        color: white;
+    }
 
-        .card h2 {
-            color: #f8c146;
-        }
+    .card h2 {
+        color: #f8c146;
+    }
 
-        .card-text {
-            font-size: 14px;
-            color: #ddd;
-        }
-    </style>
+    .card-text {
+        font-size: 14px;
+        color: #ddd;
+    }
+</style>
 {% endblock additional_style %}
 
 {% block content %}
-    <div class="container py-5">
-        <h1 class="mb-4">{{ plan.name }} - Sub-Plans</h1>
+<div class="container py-5">
+    <h1 class="mb-4">{{ plan.name }} - Sub-Plans</h1>
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            {% for sub_plan in sub_plans %}
-                <div class="col">
-                    <div class="card h-100 shadow-lg p-3 rounded">
-                        <div class="card-body">
-                            <h2 class="card-title">{{ sub_plan.name }}</h2>
-                            <p class="card-text"><strong>Focus:</strong> {{ sub_plan.focus }}</p>
-                            <p class="card-text"><strong>Schedule:</strong> {{ sub_plan.schedule }}</p>
-                            <p class="card-text"><strong>Exercises & Calories Burned:</strong></p>
-                            <ul class="card-text">
-                                {% for exercise in sub_plan.subplanexercise_set.all %}
-                                    <li>{{ exercise.exercise.name }} - {{ exercise.duration_or_sets }} {{ exercise.exercise.unit }} = {{ exercise.calories_burned }} kcal</li>
-                                {% endfor %}
-                            </ul>
-                            <p class="card-text"><strong>Total Calories Burned:</strong> {{ sub_plan.total_calories }} kcal</p>
-                        </div>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for sub_plan in sub_plans %}
+            <div class="col">
+                <div class="card h-100 shadow-lg p-3 rounded">
+                    <div class="card-body">
+                        <h2 class="card-title">{{ sub_plan.name }}</h2>
+                        <p class="card-text"><strong>Focus:</strong> {{ sub_plan.focus }}</p>
+                        <p class="card-text"><strong>Schedule:</strong> {{ sub_plan.schedule }}</p>
+                        <p class="card-text"><strong>Exercises & Calories Burned:</strong></p>
+                        <ul class="card-text">
+                            {% for exercise in sub_plan.subplanexercise_set.all %}
+                                <li>{{ exercise.exercise.name }} - {{ exercise.duration_or_sets }} {{ exercise.exercise.unit }} = {{ exercise.calories_burned }} kcal</li>
+                            {% endfor %}
+                        </ul>
+                        <p class="card-text"><strong>Total Calories Burned:</strong> {{ sub_plan.total_calories }} kcal</p>
+
+                        {% if plan in selected_plans %}
+                            <button class="btn {% if sub_plan in selected_subplans %}btn-success{% else %}btn-warning{% endif %} toggle-subplan-btn mt-2"
+                                    data-subplan-id="{{ sub_plan.id }}">
+                                {% if sub_plan in selected_subplans %}Selected{% else %}Select{% endif %}
+                            </button>
+                        {% else %}
+                            <button class="btn btn-secondary mt-2" disabled>
+                                Select main plan to choose
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
-            {% empty %}
-                <p>No sub-plans available for this workout plan.</p>
-            {% endfor %}
-        </div>
-
-        <a href="{% url 'workouts' %}" class="btn btn-secondary mt-4">Back to All Workout Plans</a>
+            </div>
+        {% empty %}
+            <p>No sub-plans available for this workout plan.</p>
+        {% endfor %}
     </div>
+
+    <a href="{% url 'workouts' %}" class="btn btn-secondary mt-4">Back to All Workout Plans</a>
+</div>
 {% endblock content %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.toggle-subplan-btn').forEach(function(button) {
+        button.addEventListener('click', function () {
+            var subplanId = this.getAttribute('data-subplan-id');
+            var csrfToken = '{{ csrf_token }}';
+            var btn = this;
+
+            fetch("{% url 'toggle_subplan_selection' %}", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
+                },
+                body: new URLSearchParams({ 'subplan_id': subplanId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.selected === true) {
+                    btn.classList.remove('btn-warning');
+                    btn.classList.add('btn-success');
+                    btn.textContent = 'Selected';
+                } else {
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-warning');
+                    btn.textContent = 'Select';
+                }
+            })
+            .catch(error => {
+                alert('Error toggling subplan selection.');
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+</script>
+{% endblock scripts %}
