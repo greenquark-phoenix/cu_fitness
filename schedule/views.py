@@ -13,7 +13,6 @@ from schedule.models import MyList, Schedule
 from service.service import ScheduleService
 from workouts.models import WorkoutPlan
 
-# For goals and ingredient data
 from goals.models import UserFitnessGoal
 from meals.models import MealIngredient
 
@@ -239,7 +238,6 @@ def remove_from_mylist_workout(request, workout_id):
     return redirect('schedule:view_mylist')
 
 
-# --- New: Download Report View ---
 @login_required
 def download_report(request):
     """
@@ -264,33 +262,30 @@ def download_report(request):
         for mi in meal.meal_ingredients.all():
             name = mi.ingredient.name
             quantity = mi.quantity
-            unit = mi.ingredient.unit  # for example, 'gram', 'ml', 'piece'
+            unit = mi.ingredient.unit 
             if name in shopping_list:
                 shopping_list[name]['quantity'] += quantity
             else:
                 shopping_list[name] = {'quantity': quantity, 'unit': unit}
 
-    # Build a list of meal dictionaries with names and categories
     meal_list = []
     for meal in selected_meals:
         meal_list.append({
             'meal_id': meal.pk,
             'meal_name': meal.meal_name,
-            'meal_category': meal.meal_type,  # using meal_type as the category
+            'meal_category': meal.meal_type, 
             'image_url': meal.image.url if meal.image else "",
             'recipe_description': meal.recipe_description,
         })
 
-    # Build a list of workout dictionaries (if needed)
     workout_list = []
     for workout in selected_workouts:
         workout_list.append({
             'workout_id': workout.pk,
             'workout_name': workout.name,
-            # add more fields if needed
         })
 
-    # Retrieve the user's fitness goals
+
     goals = request.user.userfitnessgoal_set.all()
 
     context = {
@@ -302,9 +297,8 @@ def download_report(request):
         'shopping_list': shopping_list,
     }
 
-    # Use base_url to resolve image URLs in the PDF
     html_string = render_to_string('schedule/pdf_report.html', context)
-    base_url = request.build_absolute_uri('/')  # Absolute URL for static media
+    base_url = request.build_absolute_uri('/')
     pdf_file = HTML(string=html_string, base_url=base_url).write_pdf()
 
     filename = f"fitness_report_{request.user.username}_{date.today()}.pdf"
