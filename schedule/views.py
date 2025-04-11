@@ -1,16 +1,17 @@
 import datetime
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
-
 from meals.models import Meal
 from schedule.models import MyList
 from service.service import ScheduleService
 from workouts.models import WorkoutPlan
-
+# For PDF generation
+from datetime import date
+from django.template.loader import render_to_string
+from weasyprint import HTML
 
 def ordinal_day(day):
     if 11 <= day <= 13:
@@ -24,21 +25,18 @@ def ordinal_day(day):
     else:
         return f"{day}th"
 
-
 def format_date(date_obj):
     day_str = ordinal_day(date_obj.day)
     month_str = date_obj.strftime('%B')
     year_str = str(date_obj.year)
     return f"{month_str} {day_str}, {year_str}"
 
-
 @login_required
 def generate_schedule(request):
     start_date_str = request.GET.get('start_date')
     weeks_str = request.GET.get('weeks')
     try:
-        start_date = datetime.datetime.strptime(start_date_str,
-                                                '%Y-%m-%d').date() if start_date_str else datetime.date.today()
+        start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else datetime.date.today()
     except ValueError:
         start_date = datetime.date.today()
 
@@ -57,7 +55,6 @@ def generate_schedule(request):
     try:
         mylist = request.user.mylist
         meals = [m.meal_name for m in mylist.meals.all()]
-
         if mylist.workout_plans.exists():
             workout_plan = mylist.workout_plans.first()
             sub_plans = list(workout_plan.sub_plans.all())
@@ -70,32 +67,25 @@ def generate_schedule(request):
                         'name': sub_plan.name
                     })
                     index = (index + 1) % len(sub_plans)
-
     except Exception:
         messages.error(request, "No workouts found in your MyList. Please add meals first.")
         return redirect('schedule:view_mylist')
 
     username = request.user.username
     ScheduleService.create_schedule(username, start_date, weeks, meals, workout_sub_plans)
-
     messages.success(request, f"Meal and workout schedule generated successfully for {weeks} week(s).")
     return redirect('schedule:view_schedule')
-
 
 @login_required
 def view_schedule(request):
     schedule = getattr(request.user, 'schedule', None)
-
     if not schedule:
         return render(request, 'schedule/schedule.html', {'page_obj': None})
-
     schedule_days = _get_selected_days(schedule)
     meal_data = schedule.scheduled_meals or {}
     workout_data = schedule.scheduled_workouts or {}
-
     meal_days = {day_iso: info for day_iso, info in meal_data.items()}
     workout_days = {day_iso: info for day_iso, info in workout_data.items()}
-
     display_schedule = []
     for day in schedule_days:
         entry = {}
@@ -104,12 +94,10 @@ def view_schedule(request):
         display_date = f"{day['day_name']}, {key}"
         entry['date_obj'] = date_obj
         entry['display_date'] = display_date
-
         if key in workout_days:
             entry['workout'] = workout_days[key].get('workout')
             entry['workout_description'] = workout_days[key].get('workout_description')
             entry['workout_focus'] = workout_days[key].get('workout_focus')
-
         if key in meal_days:
             meals_by_category = {'breakfast': None, 'lunch': None, 'dinner': None, 'snack': None}
             for item in meal_days[key].get('entries', []):
@@ -119,13 +107,8 @@ def view_schedule(request):
                 except Meal.DoesNotExist:
                     meal_obj = None
                 meals_by_category[cat] = meal_obj
-
-
             entry['meals'] = meals_by_category
-
         display_schedule.append(entry)
-
-    # Group days into weeks (7 days per week)
     workout_weeks = []
     CHUNK_SIZE = 7
     i = 0
@@ -141,24 +124,19 @@ def view_schedule(request):
                 'days': chunk,
             })
         i += CHUNK_SIZE
-
     paginator = Paginator(workout_weeks, 1)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-
     context = {
         'page_obj': page_obj,
     }
-
     return render(request, 'schedule/schedule.html', context)
-
 
 def _get_selected_days(schedule):
     result = []
     start_date = schedule.start_date
     end_date = schedule.end_date
     current_day = start_date
-
     while current_day <= end_date:
         day_str = current_day.strftime('%Y-%m-%d')
         day_name = current_day.strftime('%A')
@@ -168,9 +146,7 @@ def _get_selected_days(schedule):
             'date_obj': current_day,
         })
         current_day += datetime.timedelta(days=1)
-
     return result
-
 
 @login_required
 def add_to_mylist(request, meal_id):
@@ -180,7 +156,6 @@ def add_to_mylist(request, meal_id):
         mylist.meals.add(meal)
     return redirect('schedule:view_mylist')
 
-
 @login_required
 def remove_from_mylist(request, meal_id):
     if request.method == "POST":
@@ -189,14 +164,12 @@ def remove_from_mylist(request, meal_id):
         mylist.meals.remove(meal)
     return redirect('schedule:view_mylist')
 
-
 @login_required
 def toggle_mylist(request):
     if request.method == "POST":
         meal_id = request.POST.get('meal_id')
         meal = get_object_or_404(Meal, pk=meal_id)
         mylist, _ = MyList.objects.get_or_create(user=request.user)
-
         if meal in mylist.meals.all():
             mylist.meals.remove(meal)
             return JsonResponse({"selected": False})
@@ -204,7 +177,6 @@ def toggle_mylist(request):
             mylist.meals.add(meal)
             return JsonResponse({"selected": True})
     return JsonResponse({"error": "Invalid request"}, status=400)
-
 
 @login_required
 def view_mylist(request):
@@ -214,14 +186,12 @@ def view_mylist(request):
         'selected_workouts': mylist.workout_plans.all(),
     })
 
-
 @login_required
 def toggle_mylist_workout(request):
     if request.method == "POST":
         workout_id = request.POST.get("workout_id")
         plan = get_object_or_404(WorkoutPlan, pk=workout_id)
         mylist, _ = MyList.objects.get_or_create(user=request.user)
-
         if plan in mylist.workout_plans.all():
             mylist.workout_plans.remove(plan)
             return JsonResponse({"selected": False})
@@ -230,7 +200,6 @@ def toggle_mylist_workout(request):
             return JsonResponse({"selected": True})
     return JsonResponse({"error": "Invalid request"}, status=400)
 
-
 @login_required
 def remove_from_mylist_workout(request, workout_id):
     if request.method == "POST":
@@ -238,3 +207,28 @@ def remove_from_mylist_workout(request, workout_id):
         mylist, _ = MyList.objects.get_or_create(user=request.user)
         mylist.workout_plans.remove(plan)
     return redirect('schedule:view_mylist')
+
+
+# --- New: Download Report View --- #
+@login_required
+def download_report(request):
+    # Retrieve the current user's schedule data; adjust if you need to include more data
+    user_schedule = getattr(request.user, 'schedule', None)
+    
+    context = {
+        'user': request.user,
+        'report_date': date.today(),
+        'schedule': user_schedule,
+    }
+    
+    # Render the HTML template for the PDF report
+    html_string = render_to_string('schedule/pdf_report.html', context)
+    
+    # Generate PDF using WeasyPrint
+    pdf_file = HTML(string=html_string).write_pdf()
+    
+    # Prepare response headers with correct file naming format
+    filename = f"fitness_report_{request.user.username}_{date.today()}.pdf"
+    response = HttpResponse(pdf_file, content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
+    return response

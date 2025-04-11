@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fitness Report for {{ user.username }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        section {
+            margin-bottom: 20px;
+        }
+        .no-data {
+            font-style: italic;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fitness Report</h1>
+    <h2>User: {{ user.username }}</h2>
+    <p>Report Date: {{ report_date }}</p>
+    <hr>
+    <section>
+        <h2>Schedule</h2>
+        {% if schedule %}
+            <p>Schedule Duration: {{ schedule.start_date }} to {{ schedule.end_date }}</p>
+            {% if schedule.scheduled_meals %}
+                <h3>Meals</h3>
+                <ul>
+                    {% for day, entries in schedule.scheduled_meals.items %}
+                        <li>{{ day }}: {{ entries|join:", " }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-data">No meal data available.</p>
+            {% endif %}
+            {% if schedule.scheduled_workouts %}
+                <h3>Workouts</h3>
+                <ul>
+                    {% for day, entries in schedule.scheduled_workouts.items %}
+                        <li>{{ day }}: {{ entries|join:", " }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-data">No workout data available.</p>
+            {% endif %}
+        {% else %}
+            <p class="no-data">No data available.</p>
+        {% endif %}
+    </section>
+</body>
+</html>

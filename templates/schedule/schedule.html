@@ -2,6 +2,14 @@
 {% load static %}
 {% block content %}
     <div class="container my-4">
+        
+        <!-- Download Report Button Added Here -->
+        <div class="d-flex justify-content-end mb-3">
+            <a href="{% url 'schedule:download_report' %}" class="btn btn-success">
+                Download Report
+            </a>
+        </div>
+
         <!-- Pagination Controls -->
         {% if page_obj %}
             <div class="d-flex justify-content-between align-items-center mt-4">
@@ -123,8 +131,7 @@
                                     {% if day.workout != "Rest Day" %}
                                         <h2 class="card-title text-dark">{{ day.workout }}</h2>
                                         <p class="card-text"><strong>Focus:</strong> {{ day.workout_focus }}</p>
-                                        <p class="card-text"><strong>Schedule:</strong> {{ day.workout_description }}
-                                        </p>
+                                        <p class="card-text"><strong>Schedule:</strong> {{ day.workout_description }}</p>
                                     {% else %}
                                         <h2 class="card-title text-secondary">Rest Day</h2>
                                     {% endif %}
