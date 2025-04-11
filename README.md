@@ -9,28 +9,36 @@ This project is to fulfill COEN 6311 requirements.
 - Python version required Python 3.11+
 
 ### Steps
+#### Clone the repository
 ```sh
-# Clone the repository
 git clone https://github.com/greenquark-phoenix/cu_fitness.git
 cd cu_fitness
+```
 
-# Create virtual environment
+#### Create virtual environment
+```sh
 python -m venv .venv
 source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
+```
 
-# Install dependencies
+#### Install dependencies
+```sh
 pip install -r requirements.txt
+```
 
-# Setup
+## Setup
+```sh
 echo OPENAI_API_KEY=<add_your_key> > .env # Replace <add_your_key> with a valid key
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser
 
 # Load initial data
-# Initially there are 5 users with usernames: belal, hamed, aurora, andy, sudip. The password is the username followed by 123.
+# Initially there are 5 users with usernames: belal, hamed, aurora, andy, and sudip. 
+# The password is the username followed by 123.
 
 ./scripts/init_data.sh # On Windows use: .\scripts\init_data.bat
+```
 
 ## Usage
 ```sh

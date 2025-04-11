@@ -83,7 +83,7 @@ def _create_get_basic_info_tool(username: str):
 def _create_get_dietary_info_tool(username: str):
     @tool
     def _get_dietary_info():
-        """Retrieves and dietary preferences or allergies"""
+        """Retrieves dietary preferences or allergies"""
         print("Retrieving dietary info")
         return ProfileService.get_dietary_info(username=username)
 
