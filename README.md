@@ -1,8 +1,15 @@
 # CU Fitness
 
 ## Description
-This project is to fulfill COEN 6311 requirements.
+The purpose of this project is to develop an intelligent fitness application that helps users achieve their fitness 
+goals through personalized guidance. The app integrates an AI assistant capable of providing tailored workout and meal 
+recommendations based on user’s profile, fitness objectives, and dietary preferences and restrictions.
 
+The goal is to create a user-friendly platform that empowers individuals to maintain a healthier lifestyle, while 
+leveraging modern AI technologies to offer dynamic and context-aware suggestions. The application aims to simulate 
+a real-life personal coach and nutritionist in a digital form, providing support through a chat-based interface.
+
+This project is to fulfill COEN 6311 requirements.
 ## Installation
 
 ### Prerequisites
