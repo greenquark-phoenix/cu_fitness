@@ -80,7 +80,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'cu_fitness.wsgi.application'
 ASGI_APPLICATION = "cu_fitness.asgi.application"
 LOGIN_URL = '/users/login/'
 
